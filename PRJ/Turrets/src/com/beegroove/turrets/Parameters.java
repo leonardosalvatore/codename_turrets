@@ -4,14 +4,14 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Parameters {
 
-	public static final Vector3 INITIAL_SHIP_POSITION = new Vector3(-45f, -5, -10);
-	public static final Vector3 INITIAL_TURRET_POSITION = new Vector3(-45f, -5, -10.15f);
+	public static final Vector3 INITIAL_SHIP_POSITION = new Vector3(-25f, -5, -10);
+	public static final Vector3 INITIAL_TURRET_POSITION = new Vector3(-25f, -5, -10.15f);
 
 	public static final float CAMERA_FOV = 60;
 	public static final float CAMERA_FOV_STEP = 1;
 	public static final float CAMERA_STEP = 1;
 	public static final float CAMERA_X = 0;
-	public static final float CAMERA_Y = 50;
+	public static final float CAMERA_Y = 30;
 	public static final float CAMERA_Z = 0;
 	public static final float CAMERA_DIRECTION_X = 0;
 	public static final float CAMERA_DIRECTION_Y = 0;
@@ -32,5 +32,6 @@ public class Parameters {
 	public static final float KEY_Y_SCALE = 60;
 	public static final float KEY_ANGLE_STEP = 3f;
 	public static final float TURRET_HALF_DIAMETER = 1.4f;
+	public static final int FPS = 30;
 
 }

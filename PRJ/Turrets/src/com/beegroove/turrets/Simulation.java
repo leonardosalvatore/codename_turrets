@@ -24,8 +24,9 @@ public class Simulation {
 	
 	public void ApplyForceToShip(Vector3 force)
 	{
-		starship.force = force;
+		starship.ApplyForce(force);
 	}
+	
 
 	public void StopShip() {
 		starship.StopShip();

@@ -1,9 +1,11 @@
 package com.beegroove.turrets;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 
 public class PlayScreen extends GenericScreen implements SimulationListener {
@@ -33,25 +35,39 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 	public void draw(float delta) {
 		renderer.render(simulation, delta);
 	}
+	
+	private float deltaX,deltaY,X,Y;
+	private void ApplyInput(int finger)
+	{
+		if (Gdx.input.isTouched(finger)) {
+			
+			deltaY = Gdx.input.getDeltaY(finger);
+			deltaX = Gdx.input.getDeltaX(finger);
+			Y = Gdx.input.getY(finger);
+			X = Gdx.input.getX(finger);
+			
+			Gdx.app.log("PlayScreen", String.format("Finger %d touch: %f,%f",finger,X,Y));
+			
+			if(X < Gdx.graphics.getWidth()/2)
+			{
+				simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_FORCE.cpy().mul(deltaY));
+			}
+			else
+			{
+				simulation.rotateTurret((Gdx.graphics.getHeight()/2-Y)/Gdx.graphics.getHeight());
+			}
+		} else {
+			simulation.StopShip();
+		}
+
+	}
 
 	@Override
 	public void update(float delta) {
 
-		float deltaY = Gdx.input.getDeltaY();
-
-		if (false) {
-			if (Gdx.input.isTouched()) {
-				simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_FORCE.cpy()
-						.mul(deltaY));
-			} else {
-				simulation.StopShip();
-			}
-		}
-
-
-		if (Gdx.input.isKeyPressed(Keys.Q))
-			simulation.StopShip();
-
+		ApplyInput(0);
+		ApplyInput(1);
+		
 		if (Gdx.input.isKeyPressed(Keys.W))
 			simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_UP_FORCE);
 

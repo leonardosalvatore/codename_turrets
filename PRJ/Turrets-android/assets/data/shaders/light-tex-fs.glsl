@@ -9,6 +9,7 @@ precision lowp float;
 #define HIGP
 #endif
 
+
 uniform sampler2D u_diffuse;
 
 varying LOWP float intensity;
@@ -17,3 +18,5 @@ varying MEDP vec2 texCoords;
 void main() {
 	gl_FragColor = intensity * texture2D(u_diffuse, texCoords);
 }
+
+
