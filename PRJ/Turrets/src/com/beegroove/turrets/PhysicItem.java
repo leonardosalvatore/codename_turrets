@@ -3,6 +3,7 @@ package com.beegroove.turrets;
 import java.util.Hashtable;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 
@@ -12,8 +13,6 @@ public class PhysicItem {
 	public Vector3 position = Vector3.Zero;
 	protected Vector3 speed = Vector3.Zero;
 	public Vector3 lastStep = Vector3.Zero;
-	private Vector3 destination = Vector3.Zero;
-	public float mass = 1;
 	public float y_angle;
 
 	public PhysicItem() {
@@ -22,28 +21,21 @@ public class PhysicItem {
 	public void Create() {
 	}
 
-	public void MoveTo(Vector3 newdestination)
-	{
-		destination = newdestination;
-	}
-	
-	public void ApplyForce(Vector3 force) {
-		Vector3 acceleration = Vector3.Zero;
-		// a=f/m
-		acceleration = force.div(mass);
-		// v=a*t
-		
-		speed.add(acceleration.mul(0.3f));
-
-		if (speed.len() >= Parameters.SHIP_MAX_SPEED) {
-			speed.nor().mul(Parameters.SHIP_MAX_SPEED);
-		}
-	}
-	
 	public void Update(float deltaTime) {
 		// s=v*t
 		lastStep = speed.cpy().mul(deltaTime);
 		position.add(lastStep);
+	}
+	
+
+	public void SetDestination(Vector3 destination) {
+		destination.x += Parameters.THUMB_CORRECTION;
+		speed = destination.sub(position).mul(Parameters.SHIP_MAX_SPEED);
+	}
+	
+	public void SetTarget(Vector3 target) {
+		y_angle= (float) - MathUtils.radiansToDegrees * MathUtils.atan2(target.z - position.z ,target.x - position.x);
+		Gdx.app.log("PhysicItem", String.format("Target:%s Position:%s Angle:%f",target,position,y_angle));
 	}
 	
 	public void Stop()
@@ -54,9 +46,8 @@ public class PhysicItem {
 	@Override
 	public String toString() {
 		String ret = String
-				.format("Position: %s \nSpeed:%s \nMass:%f \nY_Angle:%f",
-						position, speed, mass, y_angle);
-
+				.format("Position: %s \nSpeed:%s \n\nY_Angle:%f",
+						position, speed, y_angle);
 		return ret;
 
 	}

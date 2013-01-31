@@ -19,7 +19,9 @@ import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class SceneManager {
@@ -49,7 +51,8 @@ public class SceneManager {
 	ShaderProgram toonShader;
 
 	ShaderProgram currentShader;
-
+	
+	
 	public SceneManager() {
 		try {
 			spriteBatch = new SpriteBatch();
@@ -104,6 +107,7 @@ public class SceneManager {
 
 			camera = new PerspectiveCamera(Parameters.CAMERA_FOV,
 					Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			Gdx.app.exit();
@@ -143,7 +147,7 @@ public class SceneManager {
 		renderShip(simulation.starship);
 		gl.glDisable(GL20.GL_CULL_FACE);
 		gl.glDisable(GL20.GL_DEPTH_TEST);
-
+		
 		spriteBatch.setProjectionMatrix(viewMatrix);
 		// spriteBatch.begin();
 
@@ -192,6 +196,7 @@ public class SceneManager {
 		transform.set(camera.combined);
 		transform.translate(shoot.position.x, shoot.position.y,
 				shoot.position.z);
+		transform.rotate(0, 1, 0, shoot.y_angle);
 		currentShader.setUniformMatrix("u_projView", transform);
 		normal.idt();
 		normal.rotate(0, 1, 0, 180);
@@ -225,5 +230,9 @@ public class SceneManager {
 		spriteBatch.dispose();
 		shipTexture.dispose();
 		shipMesh.dispose();
+	}
+
+	public Ray unproject(int x, int y) {
+		return camera.getPickRay(x, y).cpy();
 	}
 }

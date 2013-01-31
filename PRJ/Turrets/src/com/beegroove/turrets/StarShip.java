@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 public class StarShip extends PhysicItem {
 
 	ArrayList<Turret> turrets = new ArrayList<Turret>();
+	private boolean firing;
 	
 	@Override
 	public void Create() {
@@ -29,13 +30,17 @@ public class StarShip extends PhysicItem {
 		super.Update(deltaTime);
 
 		for (Turret turret : turrets) {
-			turret.fire = true;
+			turret.fire = firing;
+			turret.position.add(lastStep);
 			turret.Update(deltaTime);
 		}
 
 	}
 
-	
+	public void Fire(boolean b)
+	{
+		firing = b;
+	}
 	
 	public void StopShip() {
 
@@ -45,6 +50,9 @@ public class StarShip extends PhysicItem {
 			turret.Stop();
 		}
 	}
+
+
+
 
 
 	}

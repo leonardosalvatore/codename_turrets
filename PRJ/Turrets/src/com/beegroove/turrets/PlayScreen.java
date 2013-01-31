@@ -6,18 +6,24 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 
 public class PlayScreen extends GenericScreen implements SimulationListener {
 	/** the simulation **/
 	private final Simulation simulation;
 	/** the renderer **/
 	private final SceneManager renderer;
+	
+	public Plane gamePlane;
 
 	public PlayScreen() {
 		simulation = new Simulation();
 		simulation.listener = this;
 		renderer = new SceneManager();
+		gamePlane = new Plane(Vector3.Y, 0);
 	}
 
 	@Override
@@ -36,49 +42,74 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 		renderer.render(simulation, delta);
 	}
 	
-	private float deltaX,deltaY,X,Y;
-	private void ApplyInput(int finger)
+
+
+	private Ray rayFromCamera;
+	private Vector3 pointOnPlane=new Vector3();
+	private Vector3 lastLeftPointOnPlane=new Vector3();
+	private Vector3 lastRightPointOnPlane=new Vector3();
+	
+	private int ApplyInput(int pointer)
 	{
-		if (Gdx.input.isTouched(finger)) {
+		if (Gdx.input.isTouched(pointer)) {
+			rayFromCamera = renderer.unproject(Gdx.input.getX(pointer),Gdx.input.getY(pointer));
 			
-			deltaY = Gdx.input.getDeltaY(finger);
-			deltaX = Gdx.input.getDeltaX(finger);
-			Y = Gdx.input.getY(finger);
-			X = Gdx.input.getX(finger);
+			Intersector.intersectRayPlane(rayFromCamera, gamePlane, pointOnPlane);
 			
-			Gdx.app.log("PlayScreen", String.format("Finger %d touch: %f,%f",finger,X,Y));
 			
-			if(X < Gdx.graphics.getWidth()/2)
+			if(pointOnPlane.x < 0)
 			{
-				simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_FORCE.cpy().mul(deltaY));
+				Gdx.app.log("PlayScreen", String.format("LEFT Int[%d]:%s",pointer,pointOnPlane));	
+				lastLeftPointOnPlane = pointOnPlane.cpy();
+				return Parameters.LEFT_FINGER;
 			}
 			else
 			{
-				simulation.rotateTurret((Gdx.graphics.getHeight()/2-Y)/Gdx.graphics.getHeight());
+				Gdx.app.log("PlayScreen", String.format("RIGHT Int[%d]:%s",pointer,pointOnPlane));	
+				simulation.Fire(true);
+				lastRightPointOnPlane = pointOnPlane.cpy();
+				return Parameters.RIGHT_FINGER;
 			}
-		} else {
-			simulation.StopShip();
 		}
-
+		return Parameters.NO_FINGER;
 	}
 
 	@Override
 	public void update(float delta) {
-
-		ApplyInput(0);
-		ApplyInput(1);
+		int pointer0result = ApplyInput(0);
+		int pointer1result = ApplyInput(1);	
+		
+		if( pointer0result != Parameters.LEFT_FINGER &&
+				pointer1result != Parameters.LEFT_FINGER )
+		{
+			simulation.StopShip();
+		}
+		else
+		{
+			simulation.SetStarshipDestination(lastLeftPointOnPlane);					
+		}
+		
+		if( pointer0result != Parameters.RIGHT_FINGER &&
+			pointer1result != Parameters.RIGHT_FINGER )
+		{
+			simulation.Fire(false);
+		}
+		else
+		{
+			simulation.SetTurretTarget(lastRightPointOnPlane);
+		}
 		
 		if (Gdx.input.isKeyPressed(Keys.W))
-			simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_UP_FORCE);
+		//	simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_UP_FORCE);
 
 		if (Gdx.input.isKeyPressed(Keys.S))
-			simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_DOWN_FORCE);
+		//	simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_DOWN_FORCE);
 
 		if (Gdx.input.isKeyPressed(Keys.A))
-			simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_BACK_FORCE);
+		//	simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_BACK_FORCE);
 
 		if (Gdx.input.isKeyPressed(Keys.D))
-			simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_FWD_FORCE);
+		//	simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_FWD_FORCE);
 
 		if (Gdx.input.isKeyPressed(Keys.DPAD_UP))
 			simulation.rotateTurret(Parameters.KEY_ANGLE_STEP);
@@ -97,9 +128,6 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 
 		if (Gdx.input.isKeyPressed(Keys.L))
 			simulation.FOVPlus(Parameters.CAMERA_FOV_STEP);
-
-		// if (Gdx.input.isTouched() || Gdx.input.isKeyPressed(Keys.SPACE))
-		// simulation.shot();
 
 		simulation.update(delta);
 

@@ -6,8 +6,7 @@ public class SpaceCraftFactory {
 		//TODO complete... read from file
 		StarShip ret = new StarShip();
 		ret.turrets.add(new Turret());
-		return ret;
-		
+		return ret;		
 	}
 	
 }

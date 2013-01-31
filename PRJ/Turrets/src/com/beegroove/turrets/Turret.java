@@ -14,17 +14,16 @@ public class Turret extends PhysicItem {
 		position = Parameters.INITIAL_TURRET_POSITION;
 	}
 
+	private long lastfire,firerate=300;
 	@Override
 	public void Update(float deltaTime) {
 		super.Update(deltaTime);
 		if (fire) {
-			if (0 == (System.currentTimeMillis() / 10)%33) {
-				Shoot s = new Shoot();
-				s.Create();
-				s.position = this.position.cpy();
-				s.speed = new Vector3(20, 0, 0);
-				shoots.add(s);
-			}
+				if(lastfire < System.currentTimeMillis() - firerate )
+				{
+					shoots.add(WeaponFactory.NewBasicShoot(this));
+					lastfire = System.currentTimeMillis();
+				}
 		}
 		
 		
@@ -40,4 +39,6 @@ public class Turret extends PhysicItem {
 	}
 
 	public boolean fire;
+
+	
 }
