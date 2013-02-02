@@ -37,8 +37,6 @@ public class TGdxGame extends Game {
 	@Override
 	public void create() {
 		setScreen(new PlayScreen());
-
-		
 		Gdx.input.setInputProcessor(new InputAdapter() {
 			@Override
 			public boolean keyUp (int keycode) {

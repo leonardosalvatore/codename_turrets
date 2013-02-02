@@ -9,20 +9,23 @@ import com.badlogic.gdx.math.Vector3;
 
 public class StarShip extends PhysicItem {
 
+	enum STYPE
+ 	{
+		BASIC,
+		STANDARD,
+		ADVANCED,
+		PRO
+	}
+	
 	ArrayList<Turret> turrets = new ArrayList<Turret>();
 	private boolean firing;
+	public STYPE type;
 	
 	@Override
 	public void Create() {
 		super.Create();
-		position = Parameters.INITIAL_SHIP_POSITION;
-		turrets.add(new Turret());
-
-		for (Turret turret : turrets) {
-			turret.Create();
-		}
+		
 	}
-	
 	
 
 	@Override
@@ -50,9 +53,4 @@ public class StarShip extends PhysicItem {
 			turret.Stop();
 		}
 	}
-
-
-
-
-
 	}

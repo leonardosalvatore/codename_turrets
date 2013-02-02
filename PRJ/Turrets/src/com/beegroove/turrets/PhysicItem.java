@@ -14,7 +14,9 @@ public class PhysicItem {
 	protected Vector3 speed = Vector3.Zero;
 	public Vector3 lastStep = Vector3.Zero;
 	public float y_angle;
-
+	public float size;
+	public int Energy;
+	
 	public PhysicItem() {
 	}
 
@@ -46,8 +48,8 @@ public class PhysicItem {
 	@Override
 	public String toString() {
 		String ret = String
-				.format("Position: %s \nSpeed:%s \n\nY_Angle:%f",
-						position, speed, y_angle);
+				.format("Speed:%s\nLastStep:%s\nPosition: %s\nY_Angle:%f",
+						speed,lastStep,position,y_angle);
 		return ret;
 
 	}

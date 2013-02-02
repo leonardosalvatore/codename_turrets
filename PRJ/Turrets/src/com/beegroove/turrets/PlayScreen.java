@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import com.beegroove.turrets.Parameters.DIRECTION;
 
 public class PlayScreen extends GenericScreen implements SimulationListener {
 	/** the simulation **/
@@ -22,8 +23,11 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 	public PlayScreen() {
 		simulation = new Simulation();
 		simulation.listener = this;
+		simulation.starship = SpaceshipFactory.NewSingleBasicSpaceship();
+		
 		renderer = new SceneManager();
 		gamePlane = new Plane(Vector3.Y, 0);
+		
 	}
 
 	@Override
@@ -49,33 +53,21 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 	private Vector3 lastLeftPointOnPlane=new Vector3();
 	private Vector3 lastRightPointOnPlane=new Vector3();
 	
-	private int ApplyInput(int pointer)
-	{
-		if (Gdx.input.isTouched(pointer)) {
-			rayFromCamera = renderer.unproject(Gdx.input.getX(pointer),Gdx.input.getY(pointer));
-			
-			Intersector.intersectRayPlane(rayFromCamera, gamePlane, pointOnPlane);
-			
-			
-			if(pointOnPlane.x < 0)
-			{
-				Gdx.app.log("PlayScreen", String.format("LEFT Int[%d]:%s",pointer,pointOnPlane));	
-				lastLeftPointOnPlane = pointOnPlane.cpy();
-				return Parameters.LEFT_FINGER;
-			}
-			else
-			{
-				Gdx.app.log("PlayScreen", String.format("RIGHT Int[%d]:%s",pointer,pointOnPlane));	
-				simulation.Fire(true);
-				lastRightPointOnPlane = pointOnPlane.cpy();
-				return Parameters.RIGHT_FINGER;
-			}
-		}
-		return Parameters.NO_FINGER;
-	}
+	
 
 	@Override
 	public void update(float delta) {
+		
+		ProcessImput(delta);
+		simulation.update(delta);
+		
+		if(simulation.Score>10)
+		{
+			//simulation.starship =  SpaceshipFactory.NewDoubleBasicSpaceship();
+		}
+	}
+
+	private void ProcessImput(float delta) {
 		int pointer0result = ApplyInput(0);
 		int pointer1result = ApplyInput(1);	
 		
@@ -100,16 +92,16 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.W))
-		//	simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_UP_FORCE);
+			simulation.SetStarshipDirection(DIRECTION.UP);
 
 		if (Gdx.input.isKeyPressed(Keys.S))
-		//	simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_DOWN_FORCE);
+			simulation.SetStarshipDirection(DIRECTION.DOWN);
 
 		if (Gdx.input.isKeyPressed(Keys.A))
-		//	simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_BACK_FORCE);
+			simulation.SetStarshipDirection(DIRECTION.LEFT);
 
 		if (Gdx.input.isKeyPressed(Keys.D))
-		//	simulation.ApplyForceToShip(Parameters.SHIP_TRUSTER_FWD_FORCE);
+			simulation.SetStarshipDirection(DIRECTION.RIGHT);
 
 		if (Gdx.input.isKeyPressed(Keys.DPAD_UP))
 			simulation.rotateTurret(Parameters.KEY_ANGLE_STEP);
@@ -128,9 +120,31 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 
 		if (Gdx.input.isKeyPressed(Keys.L))
 			simulation.FOVPlus(Parameters.CAMERA_FOV_STEP);
-
-		simulation.update(delta);
-
+	}
+	
+	private int ApplyInput(int pointer)
+	{
+		if (Gdx.input.isTouched(pointer)) {
+			rayFromCamera = renderer.unproject(Gdx.input.getX(pointer),Gdx.input.getY(pointer));
+			
+			Intersector.intersectRayPlane(rayFromCamera, gamePlane, pointOnPlane);
+			
+			
+			if(pointOnPlane.x < 0)
+			{
+				Gdx.app.log("PlayScreen", String.format("LEFT Int[%d]:%s",pointer,pointOnPlane));	
+				lastLeftPointOnPlane = pointOnPlane.cpy();
+				return Parameters.LEFT_FINGER;
+			}
+			else
+			{
+				Gdx.app.log("PlayScreen", String.format("RIGHT Int[%d]:%s",pointer,pointOnPlane));	
+				simulation.Fire(true);
+				lastRightPointOnPlane = pointOnPlane.cpy();
+				return Parameters.RIGHT_FINGER;
+			}
+		}
+		return Parameters.NO_FINGER;
 	}
 
 	@Override
