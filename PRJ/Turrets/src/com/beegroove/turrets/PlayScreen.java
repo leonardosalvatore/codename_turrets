@@ -53,7 +53,6 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 	private Vector3 lastLeftPointOnPlane=new Vector3();
 	private Vector3 lastRightPointOnPlane=new Vector3();
 	
-	
 
 	@Override
 	public void update(float delta) {
@@ -61,9 +60,10 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 		ProcessImput(delta);
 		simulation.update(delta);
 		
-		if(simulation.Score>10)
+		if(simulation.Score == 30 &&
+				simulation.starship.type != StarShip.STYPE.BASIC_DOUBLE)
 		{
-			//simulation.starship =  SpaceshipFactory.NewDoubleBasicSpaceship();
+			simulation.starship =  SpaceshipFactory.NewDoubleBasicSpaceship();
 		}
 	}
 

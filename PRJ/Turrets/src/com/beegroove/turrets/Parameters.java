@@ -3,15 +3,18 @@ package com.beegroove.turrets;
 import com.badlogic.gdx.math.Vector3;
 
 public class Parameters {
+	
 
-	public static final Vector3 SPACESHIP_BASIC_POSITION = new Vector3(-25f, 0,
-			-10);
-	public static final Vector3 SPACESHIP_STANDARD_POSITION = new Vector3(-25f, 0,
-			-10);
-	public static final Vector3 SINGLE_TURRET_POSITION = new Vector3(-25f, 0,
-			-10.15f);
-	public static final Vector3 DOUBLE_TURRET_POSITION = new Vector3(-27f, 0,
-			-12.15f);
+
+	public static Vector3 SPACESHIP_BASIC_POSITION() { return new Vector3(-25f, 0,-10);}
+	public static Vector3 SPACESHIP_STANDARD_POSITION() { return new Vector3(-25f, 0,-10);}
+	public static Vector3 SINGLE_TURRET_POSITION() { return new Vector3(-25f, 0,-10.15f);}
+	public static Vector3 DOUBLE_TURRET_POSITION() { return new Vector3(-25f, 0,-10.15f);}
+	public static Vector3 SHOOT_BASIC_SPEED() {return new Vector3(40, 0, 0);}
+	public static final float SHOOT_SINGLE_TURRET_Z_CORRECTION = 1.4f;
+	public static final float SHOOT_DOUBLE_TURRET_LEFT_TURRET_Z_CORRECTION = 1.1f;
+	public static final float SHOOT_DOUBLE_TURRET_RIGHT_TURRET_Z_CORRECTION = 1.7f;
+
 	public static final float CAMERA_FOV = 60;
 	public static final float CAMERA_FOV_STEP = 1;
 	public static final float CAMERA_STEP = 1;
@@ -49,7 +52,11 @@ public class Parameters {
 	public static final String MSG_HIT = "HIT";
 	public static final String MSG_NEW_ENEMY_WAVE = "ALERT -- ALERT -- NEW ENEMY WAVE APPROACHING -- ALERT -- ALERT";
 
+
+
+	
 	enum DIRECTION {
 		UP, DOWN, LEFT, RIGHT
 	}
+
 }

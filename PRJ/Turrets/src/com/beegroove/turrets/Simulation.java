@@ -45,16 +45,16 @@ public class Simulation {
 
 	private void UpdateEnemyAndCollisionCheck(float delta) {
 
-		for (Iterator<Enemy> iterator = enemies.iterator(); iterator.hasNext();) {
-			Enemy k = (Enemy) iterator.next();
+		for (Iterator<Enemy> iteratorEnemy = enemies.iterator(); iteratorEnemy.hasNext();) {
+			Enemy k = (Enemy) iteratorEnemy.next();
 			k.Update(delta);
 			
 			if (starship.position.dst(k.position) < (k.size + starship.size)) {
-				iterator.remove();
+				iteratorEnemy.remove();
 				starship.Energy--;
 			}
 			else if (k.position.x < -40) {
-				iterator.remove();
+				iteratorEnemy.remove();
 				Missed++;
 			} else {
 				for (Turret t : starship.turrets) {
@@ -63,8 +63,9 @@ public class Simulation {
 						Shoot s = (Shoot) iteratorShoot.next();
 						if (s.position.dst(k.position) < k.size) {
 							iteratorShoot.remove();
-							iterator.remove();
+							iteratorEnemy.remove();
 							Score++;						
+							break;
 							}
 					}
 				}

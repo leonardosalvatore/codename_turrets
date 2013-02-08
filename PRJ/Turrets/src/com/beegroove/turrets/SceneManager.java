@@ -200,6 +200,7 @@ public class SceneManager {
 		case ADVANCED:
 			break;
 		case BASIC:
+		case BASIC_DOUBLE:
 			spaceshipBasicMesh.render(currentShader);
 			break;
 		case PRO:
@@ -243,7 +244,8 @@ public class SceneManager {
 		case SINGLE_MEDIUM:
 			break;
 		case SINGLE_SMALL:
-			singleSmallTurretMesh.render(currentShader);	break;
+			singleSmallTurretMesh.render(currentShader);	
+			break;
 		case TRIPLE_LARGE:
 			break;
 		default:

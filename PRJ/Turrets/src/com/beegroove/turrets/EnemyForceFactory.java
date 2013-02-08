@@ -78,13 +78,13 @@ public class EnemyForceFactory {
 		WaveNumber++;
 		Array<Enemy> ret = new Array<Enemy>();
 		HUD.Instance().NewMessageRoller(Parameters.MSG_NEW_ENEMY_WAVE);
-		int number = Parameters.INITIAL_WAVE_NUMBER + WaveNumber*2;
+		int number = Parameters.INITIAL_WAVE_NUMBER + WaveNumber*3;
 		for (int i = 0; i < number; i++) {
 			Enemy temp = new Enemy();
-			temp.position = new Vector3(50 + (rand.nextInt(25)-10) + WaveNumber*4, //WAVE LENGTH
-					Parameters.SPACESHIP_BASIC_POSITION.y, //
+			temp.position = new Vector3(50 + (rand.nextInt(25)-10) + WaveNumber*10, //WAVE LENGTH
+					0, //
 					rand.nextInt(25) - 20); // WAVE WITDH
-			temp.speed = new Vector3(-(rand.nextInt(7) + 2*WaveNumber), 0, 0);
+			temp.speed = new Vector3(-(rand.nextInt(7) + WaveNumber), 0, 0);
 			temp.y_angle = (float) rand.nextInt(360);
 			temp.type = ETYPE.METEORITE;
 			temp.y_angle_speed = (float) rand.nextInt(10)-5;
