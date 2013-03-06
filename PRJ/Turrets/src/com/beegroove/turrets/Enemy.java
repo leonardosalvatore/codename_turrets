@@ -13,13 +13,13 @@ public class Enemy extends PhysicItem {
 		DESTROYER
 	}
 	
-	public ETYPE type;
-	public float y_angle_speed;
+	public ETYPE mType;
+	public float mYAngleSpeed;
 
 	
 	@Override
 	public void Update(float deltaTime) {
-		y_angle+=y_angle_speed;
+		mYAangle+=mYAngleSpeed;
 		super.Update(deltaTime);
 	}
 	

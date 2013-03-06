@@ -19,8 +19,9 @@ public class StarShip extends PhysicItem {
 	}
 	
 	ArrayList<Turret> turrets = new ArrayList<Turret>();
-	private boolean firing;
+	private boolean mFiring = false;
 	public STYPE type;
+	private boolean mSuperFire = false;
 	
 	@Override
 	public void Create() {
@@ -34,16 +35,18 @@ public class StarShip extends PhysicItem {
 		super.Update(deltaTime);
 
 		for (Turret turret : turrets) {
-			turret.fire = firing;
-			turret.position.add(lastStep);
+			turret.mFire = mFiring;
+			turret.mSuperFire = mSuperFire;
+			turret.mPosition.add(mLastStep);
 			turret.Update(deltaTime);
 		}
 
 	}
 
-	public void Fire(boolean b)
+	public void Fire(boolean b, boolean sFire)
 	{
-		firing = b;
+		mFiring = b;
+		mSuperFire = sFire;
 	}
 	
 	public void StopShip() {

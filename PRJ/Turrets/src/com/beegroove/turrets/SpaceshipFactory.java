@@ -8,8 +8,8 @@ public class SpaceshipFactory {
 	{
 		StarShip ret = new StarShip();
 		ret.Create();
-		ret.size = 2;
-		ret.position = Parameters.SPACESHIP_BASIC_POSITION();
+		ret.mSize = 2;
+		ret.mPosition = Par.SPACESHIP_BASIC_POSITION.cpy();
 		ret.turrets.add(NewSingleSmallTurret());
 		ret.type = STYPE.BASIC;
 		for (Turret turret : ret.turrets) {
@@ -22,8 +22,8 @@ public class SpaceshipFactory {
 	{
 		StarShip ret = new StarShip();
 		ret.Create();
-		ret.size = 2;
-		ret.position = Parameters.SPACESHIP_BASIC_POSITION();
+		ret.mSize = 2;
+		ret.mPosition = Par.SPACESHIP_BASIC_POSITION.cpy();
 		ret.turrets.add(NewDoubleSmallTurret());
 		ret.type = STYPE.BASIC_DOUBLE;
 		for (Turret turret : ret.turrets) {
@@ -36,8 +36,8 @@ public class SpaceshipFactory {
 	{
 		StarShip ret = new StarShip();
 		ret.Create();
-		ret.size = 2;
-		ret.position = Parameters.SPACESHIP_BASIC_POSITION();
+		ret.mSize = 2;
+		ret.mPosition = Par.SPACESHIP_STANDARD_POSITION.cpy();
 		ret.turrets.add(NewSingleSmallTurret());
 		ret.type = STYPE.STANDARD;
 		for (Turret turret : ret.turrets) {
@@ -50,10 +50,11 @@ public class SpaceshipFactory {
 	{
 		StarShip ret = new StarShip();
 		ret.Create();
-		ret.size = 2;
-		ret.position = Parameters.SPACESHIP_BASIC_POSITION();
+		ret.mSize = 2;
+		ret.mPosition = Par.SPACESHIP_STANDARD_POSITION.cpy();
 		ret.turrets.add(NewDoubleSmallTurret());
 		ret.type = STYPE.STANDARD;
+		
 		for (Turret turret : ret.turrets) {
 			turret.Create();
 		}
@@ -63,7 +64,7 @@ public class SpaceshipFactory {
 	private static Turret NewSingleSmallTurret()
 	{
 		Turret t = new Turret();
-		t.position = Parameters.SINGLE_TURRET_POSITION();
+		t.mPosition = Par.SINGLE_TURRET_POSITION.cpy();
 		t.type = TTYPE.SINGLE_SMALL;
 		return t;
 	}
@@ -71,7 +72,7 @@ public class SpaceshipFactory {
 	private static Turret NewDoubleSmallTurret()
 	{
 		Turret t = new Turret();
-		t.position = Parameters.DOUBLE_TURRET_POSITION();
+		t.mPosition = Par.DOUBLE_TURRET_POSITION.cpy();
 		t.type = TTYPE.DOUBLE_SMALL;
 		return t;
 	}

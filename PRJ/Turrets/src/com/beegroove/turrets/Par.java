@@ -2,15 +2,14 @@ package com.beegroove.turrets;
 
 import com.badlogic.gdx.math.Vector3;
 
-public class Parameters {
-	
+public class Par {
 
+	public static final Vector3 SPACESHIP_BASIC_POSITION 	= new Vector3(-25f, 0, -10);
+	public static final Vector3 SPACESHIP_STANDARD_POSITION = new Vector3(-25f, 0, -10);
+	public static final Vector3 SINGLE_TURRET_POSITION 	= new Vector3(-25f, 0, -10.15f);
+	public static final Vector3 DOUBLE_TURRET_POSITION 	= new Vector3(-25f, 0, -10.15f);
+	public static final Vector3 SHOOT_BASIC_SPEED 		= new Vector3(40, 0, 0);
 
-	public static Vector3 SPACESHIP_BASIC_POSITION() { return new Vector3(-25f, 0,-10);}
-	public static Vector3 SPACESHIP_STANDARD_POSITION() { return new Vector3(-25f, 0,-10);}
-	public static Vector3 SINGLE_TURRET_POSITION() { return new Vector3(-25f, 0,-10.15f);}
-	public static Vector3 DOUBLE_TURRET_POSITION() { return new Vector3(-25f, 0,-10.15f);}
-	public static Vector3 SHOOT_BASIC_SPEED() {return new Vector3(40, 0, 0);}
 	public static final float SHOOT_SINGLE_TURRET_Z_CORRECTION = 1.4f;
 	public static final float SHOOT_DOUBLE_TURRET_LEFT_TURRET_Z_CORRECTION = 1.1f;
 	public static final float SHOOT_DOUBLE_TURRET_RIGHT_TURRET_Z_CORRECTION = 1.7f;
@@ -43,18 +42,19 @@ public class Parameters {
 	public static final float TURRET_DOUBLE_HALF_DIAMETER = 1.4f;
 	public static final float TURRET_DOUBLE_QUARTER_DIAMETER = 0.6f;
 	public static final int FPS = 30;
-	public static final float THUMB_CORRECTION = 4f;
+	public static final float THUMB_CORRECTION = 5f;
 	public static final int LEFT_FINGER = 1;
 	public static final int RIGHT_FINGER = 2;
 	public static final int NO_FINGER = 0;
-	public static final int INITIAL_WAVE_NUMBER = 10;
+	public static final int INITIAL_WAVE_NUMBER = 30;
 	public static final int STANDARD_FONT_SIZE = 26;
 	public static final String MSG_HIT = "HIT";
 	public static final String MSG_NEW_ENEMY_WAVE = "ALERT -- ALERT -- NEW ENEMY WAVE APPROACHING -- ALERT -- ALERT";
+	public static final float BACKGROUND_BASIC_SPEED = 5;
+	public static final float BACKGROUND_BASIC_SPEED_SHIP_FACTOR = 12;
+	public static final long SHIP_ALIGNMENT_TIME = 2000;
+	public static final long STATE_INTRO_DURATION = 1000;
 
-
-
-	
 	enum DIRECTION {
 		UP, DOWN, LEFT, RIGHT
 	}

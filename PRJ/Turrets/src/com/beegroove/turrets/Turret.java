@@ -20,11 +20,21 @@ public class Turret extends PhysicItem {
 	}
 
 	private long lastfire, firerate = 100;
-
+	
 	@Override
 	public void Update(float deltaTime) {
 		super.Update(deltaTime);
-		if (fire) {
+		
+		if(mSuperFire)
+		{
+			firerate = 300;
+		}
+		else
+		{
+			firerate = 100;
+		}
+		
+		if (mFire) {
 			if (lastfire < System.currentTimeMillis() - firerate) {
 
 				switch (type) {
@@ -50,19 +60,19 @@ public class Turret extends PhysicItem {
 				}
 				lastfire = System.currentTimeMillis();
 			}
-
 		}
 
 		for (Iterator<Shoot> iterator = shoots.iterator(); iterator.hasNext();) {
 			Shoot s = (Shoot) iterator.next();
 			s.Update(deltaTime);
-			if (s.position.x > 25) {
+			if (s.mPosition.x > 25) {
 				iterator.remove();
 			}
 		}
 
 	}
 
-	public boolean fire;
+	public boolean mFire;
+	public boolean mSuperFire;
 
 }

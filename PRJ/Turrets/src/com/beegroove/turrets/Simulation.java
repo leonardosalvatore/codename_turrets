@@ -7,28 +7,23 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.beegroove.turrets.Parameters.DIRECTION;
+import com.beegroove.turrets.Par.DIRECTION;
 
 import de.matthiasmann.twlthemeeditor.datamodel.Param;
 
 public class Simulation {
-	public float FOV = 0;
 	public transient SimulationListener listener;
 	public StarShip starship;
-	public Vector3 camera_position;
+	public CameraMan mCameraMan;
 	public Array<Enemy> enemies = new Array<Enemy>();
 	public int WaveNumber = 0;
 	private Random rand;
-	public int Score=0,Missed=0;
+	public int Score = 0, Missed = 0;
 
 	public Simulation() {
 		rand = new Random(System.currentTimeMillis());
 
-		
-		camera_position = new Vector3(Parameters.CAMERA_X, Parameters.CAMERA_Y,
-				Parameters.CAMERA_Z);
-		FOV = Parameters.CAMERA_FOV;
-
+		mCameraMan  = new CameraMan();
 	}
 
 	public void update(float delta) {
@@ -38,22 +33,21 @@ public class Simulation {
 
 		UpdateEnemyAndCollisionCheck(delta);
 
-		if (enemies.size == 0) {
-			enemies.addAll(EnemyForceFactory.Instance().LaunchMeteoriteWave());
+		if (null == enemies.first()) {
+			enemies.addAll(EnemyForceFactory.Instance().getMeteoriteWave());
 		}
 	}
 
 	private void UpdateEnemyAndCollisionCheck(float delta) {
 
-		for (Iterator<Enemy> iteratorEnemy = enemies.iterator(); iteratorEnemy.hasNext();) {
+		for (Iterator<Enemy> iteratorEnemy = enemies.iterator(); iteratorEnemy
+				.hasNext();) {
 			Enemy k = (Enemy) iteratorEnemy.next();
 			k.Update(delta);
-			
-			if (starship.position.dst(k.position) < (k.size + starship.size)) {
-				iteratorEnemy.remove();
-				starship.Energy--;
-			}
-			else if (k.position.x < -40) {
+
+			if (starship.mPosition.dst(k.mPosition) < (k.mSize + starship.mSize)) {
+				starship.mEnergy--;
+			} else if (k.mPosition.x < -30) {
 				iteratorEnemy.remove();
 				Missed++;
 			} else {
@@ -61,12 +55,16 @@ public class Simulation {
 					for (Iterator<Shoot> iteratorShoot = t.shoots.iterator(); iteratorShoot
 							.hasNext();) {
 						Shoot s = (Shoot) iteratorShoot.next();
-						if (s.position.dst(k.position) < k.size) {
+						if (s.mPosition.dst(k.mPosition) < k.mSize) {
 							iteratorShoot.remove();
-							iteratorEnemy.remove();
-							Score++;						
-							break;
+							k.mEnergy--;
+							if(k.mEnergy == 0)
+							{
+								iteratorEnemy.remove();
+								Score++;
 							}
+							break;
+						}
 					}
 				}
 			}
@@ -79,43 +77,45 @@ public class Simulation {
 
 	public void rotateTurret(float angle) {
 		for (Turret turret : starship.turrets) {
-			turret.y_angle += angle;
+			turret.mYAangle += angle;
 		}
 	}
 
 	public void moveCameraDown(float camerastep) {
-		camera_position.add(0, -camerastep, 0);
+		mCameraMan.mPosition.add(0, -camerastep, 0);
 	}
 
 	public void moveCameraUp(float camerastep) {
-		camera_position.add(0, camerastep, 0);
+		mCameraMan.mPosition.add(0, camerastep, 0);
 	}
 
 	public void FOVMinus(float cameraFovStep) {
-		FOV -= cameraFovStep;
+		mCameraMan.FOV -= cameraFovStep;
 	}
 
 	public void FOVPlus(float cameraFovStep) {
-		FOV += cameraFovStep;
+		mCameraMan.FOV += cameraFovStep;
 	}
 
 	public void SetStarshipDestination(Vector3 v1) {
+		mCameraMan.mPosition.set(Par.CAMERA_X, Par.CAMERA_Y,
+				Par.CAMERA_Z+v1.z/6);
 		starship.SetDestination(v1);
 	}
 
 	public void SetStarshipDirection(DIRECTION direction) {
 		switch (direction) {
 		case UP:
-			// TODO
+			starship.SetDestinationRelative(Vector3.Y);
 			break;
 		case DOWN:
-			// TODO
+			starship.SetDestinationRelative(Vector3.Y.mul(-1));
 			break;
 		case LEFT:
-			// TODO
+			starship.SetDestinationRelative(Vector3.X);
 			break;
 		case RIGHT:
-			// TODO
+			starship.SetDestinationRelative(Vector3.X.mul(-1));
 			break;
 		}
 	}
@@ -126,8 +126,8 @@ public class Simulation {
 		}
 	}
 
-	public void Fire(boolean b) {
-		starship.Fire(b);
+	public void Fire(boolean b, boolean superFire) {
+		starship.Fire(b,superFire);
 	}
 
 }

@@ -1,13 +1,10 @@
 package com.beegroove.turrets;
 
 import java.util.Iterator;
-import java.util.Random;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.beegroove.turrets.HUD.Message;
 
 public class HUD {
 	
@@ -15,7 +12,7 @@ public class HUD {
 
 	protected HUD() {
 		statusBar = new Message();
-		statusBar.position = new Vector3(20,20,0);
+		statusBar.mPosition = new Vector3(Par.VIEWPORT_MAX_X/3,20,0);
 	}
 
 	public static HUD Instance() {
@@ -77,9 +74,9 @@ public class HUD {
 	{
 		Message m = new Message();
 		
-		m.speed = Vector3.X.mul(150f);
+		m.mSpeed = Vector3.X.mul(-150f);
 		m.durationTime = 20000;
-		m.position = new Vector3(-1000,Parameters.VIEWPORT_MAX_Y,0);
+		m.mPosition = new Vector3(1500,Par.VIEWPORT_MAX_Y,0);
 		m.creationTime=System.currentTimeMillis();
 		m.msg = s;
 		
@@ -89,8 +86,8 @@ public class HUD {
 	public void NewMessage(String s, Vector3 position)
 	{
 		Message m = new Message();
-		m.speed = Vector3.Z.mul(100f);
-		m.position = position;
+		m.mSpeed = Vector3.Z.mul(-100f);
+		m.mPosition = position;
 		m.creationTime=System.currentTimeMillis();
 		m.msg = s;
 		m.durationTime = 1000;

@@ -74,21 +74,22 @@ public class EnemyForceFactory {
 		return ret;
 	}
 	
-	public Array<Enemy> LaunchMeteoriteWave() {
+	public Array<Enemy> getMeteoriteWave() {
 		WaveNumber++;
 		Array<Enemy> ret = new Array<Enemy>();
-		HUD.Instance().NewMessageRoller(Parameters.MSG_NEW_ENEMY_WAVE);
-		int number = Parameters.INITIAL_WAVE_NUMBER + WaveNumber*3;
+		HUD.Instance().NewMessageRoller(Par.MSG_NEW_ENEMY_WAVE);
+		int number = Par.INITIAL_WAVE_NUMBER + WaveNumber*2;
 		for (int i = 0; i < number; i++) {
 			Enemy temp = new Enemy();
-			temp.position = new Vector3(50 + (rand.nextInt(25)-10) + WaveNumber*10, //WAVE LENGTH
+			temp.mPosition = new Vector3(40 + (rand.nextInt(30)) , //WAVE LENGTH
 					0, //
-					rand.nextInt(25) - 20); // WAVE WITDH
-			temp.speed = new Vector3(-(rand.nextInt(7) + WaveNumber), 0, 0);
-			temp.y_angle = (float) rand.nextInt(360);
-			temp.type = ETYPE.METEORITE;
-			temp.y_angle_speed = (float) rand.nextInt(10)-5;
-			temp.size = 1;
+					rand.nextInt(30) - 20); // WAVE WITDH
+			temp.mSpeed = new Vector3(-(rand.nextInt(10+ WaveNumber) + 3), 0, 0);
+			temp.mYAangle = (float) rand.nextInt(360);
+			temp.mType = ETYPE.METEORITE;
+			temp.mYAngleSpeed = (float) rand.nextInt(10)-5;
+			temp.mSize = rand.nextInt((int) (2+WaveNumber*.5));
+			temp.mEnergy = (int) (temp.mSize * 3);
 			ret.add(temp);
 		}
 		
