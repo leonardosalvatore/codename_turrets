@@ -123,11 +123,28 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 		else if (Gdx.input.isKeyPressed(Keys.DPAD_DOWN))
 			simulation.rotateTurret(-Par.KEY_ANGLE_STEP);
 
-		if (Gdx.input.isKeyPressed(Keys.I))
-			simulation.moveCameraDown(Par.CAMERA_STEP);
-		else if (Gdx.input.isKeyPressed(Keys.K))
-			simulation.moveCameraUp(Par.CAMERA_STEP);
+		if (Gdx.input.isKeyPressed(Keys.Y))
+			simulation.moveCameraAddX(-Par.CAMERA_STEP,Gdx.input.isKeyPressed(Keys.SHIFT_LEFT));
+		else if (Gdx.input.isKeyPressed(Keys.H))
+			simulation.moveCameraAddX(Par.CAMERA_STEP,Gdx.input.isKeyPressed(Keys.SHIFT_LEFT));
 
+		if (Gdx.input.isKeyPressed(Keys.U))
+			simulation.moveCameraAddY(-Par.CAMERA_STEP,Gdx.input.isKeyPressed(Keys.SHIFT_LEFT));
+		else if (Gdx.input.isKeyPressed(Keys.J))
+			simulation.moveCameraAddY(Par.CAMERA_STEP,Gdx.input.isKeyPressed(Keys.SHIFT_LEFT));
+		
+		if (Gdx.input.isKeyPressed(Keys.I))
+			simulation.moveCameraAddZ(-Par.CAMERA_STEP,Gdx.input.isKeyPressed(Keys.SHIFT_LEFT));
+		else if (Gdx.input.isKeyPressed(Keys.K))
+			simulation.moveCameraAddZ(Par.CAMERA_STEP,Gdx.input.isKeyPressed(Keys.SHIFT_LEFT));
+		
+		if (Gdx.input.isKeyPressed(Keys.B))
+			simulation.moveCameraRotate(-Par.CAMERA_STEP/10);
+		else if (Gdx.input.isKeyPressed(Keys.M))
+			simulation.moveCameraRotate(Par.CAMERA_STEP/10);
+		else if (Gdx.input.isKeyPressed(Keys.N))
+			simulation.moveCameraRotate(0);
+			
 		if (Gdx.input.isKeyPressed(Keys.O))
 			simulation.FOVMinus(Par.CAMERA_FOV_STEP);
 		else if (Gdx.input.isKeyPressed(Keys.L))

@@ -3,7 +3,7 @@ package com.beegroove.turrets;
 import com.badlogic.gdx.math.Vector3;
 
 public class Par {
-
+	public static final boolean HUD_DEBUG = true;
 	public static final Vector3 SPACESHIP_BASIC_POSITION 	= new Vector3(-25f, 0, -10);
 	public static final Vector3 SPACESHIP_STANDARD_POSITION = new Vector3(-25f, 0, -10);
 	public static final Vector3 SINGLE_TURRET_POSITION 	= new Vector3(-25f, 0, -10.15f);
@@ -16,7 +16,7 @@ public class Par {
 
 	public static final float CAMERA_FOV = 60;
 	public static final float CAMERA_FOV_STEP = 1;
-	public static final float CAMERA_STEP = 1;
+	public static final float CAMERA_STEP = 0.1f;
 	public static final float CAMERA_X = 0;
 	public static final float CAMERA_Y = 30;
 	public static final float CAMERA_Z = 0;
@@ -53,7 +53,7 @@ public class Par {
 	public static final float BACKGROUND_BASIC_SPEED = 5;
 	public static final float BACKGROUND_BASIC_SPEED_SHIP_FACTOR = 12;
 	public static final long SHIP_ALIGNMENT_TIME = 2000;
-	public static final long STATE_INTRO_DURATION = 1000;
+	public static final long STATE_INTRO_DURATION = 3000;
 
 	enum DIRECTION {
 		UP, DOWN, LEFT, RIGHT

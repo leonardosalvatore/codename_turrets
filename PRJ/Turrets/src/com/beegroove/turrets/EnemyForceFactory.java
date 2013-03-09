@@ -8,8 +8,9 @@ import com.badlogic.gdx.utils.Array;
 import com.beegroove.turrets.Enemy.ETYPE;
 
 public class EnemyForceFactory {
-
+	private  Random rand;
 	private static EnemyForceFactory instance = null;
+	private int WaveNumber;
 
 	protected EnemyForceFactory() {
 		rand = new Random(System.currentTimeMillis());
@@ -22,59 +23,8 @@ public class EnemyForceFactory {
 		return instance;
 	}
 
-
-	class Task {
-		Vector2 speed;
-		Vector2 position;
-		int duration;
-		boolean wait;
-		int gotoBack;
-		int repeat;
-		ETYPE type;
-		boolean launched;
-	}
-
-	private Array<Task> tasks = new Array<EnemyForceFactory.Task>();
-	private int current = 0;
-	private long start_time;
-	private int WaveNumber;
-	private  Random rand;
-
-	public void ScheduleTask(Vector2 s, Vector2 p, int mill, boolean wait,
-			int gotoBack, int repeat, ETYPE type) {
-		Task t = new Task();
-		t.speed = s;
-		t.position = p;
-		t.duration = mill;
-		t.wait = wait;
-		t.gotoBack = gotoBack;
-		t.repeat = repeat;
-		t.type = type;
-		tasks.add(t);
-	}
-
-	public void LaunchTask() {
-		start_time = System.currentTimeMillis();
-	}
 	
-
-	public Task getNext() {
-		Task ret = tasks.get(current);
-
-		if (ret != null) {
-			if (start_time + ret.duration < System.currentTimeMillis()) {
-				if (!ret.launched) {
-					ret = tasks.get(current);
-					ret.launched = true;
-					current++;
-				}
-			}
-		}
-
-		return ret;
-	}
-	
-	public Array<Enemy> getMeteoriteWave() {
+	public Array<Enemy> getMeteoriteWave(Vector3 mShipPosition) {
 		WaveNumber++;
 		Array<Enemy> ret = new Array<Enemy>();
 		HUD.Instance().NewMessageRoller(Par.MSG_NEW_ENEMY_WAVE);
@@ -84,14 +34,24 @@ public class EnemyForceFactory {
 			temp.mPosition = new Vector3(40 + (rand.nextInt(30)) , //WAVE LENGTH
 					0, //
 					rand.nextInt(30) - 20); // WAVE WITDH
-			temp.mSpeed = new Vector3(-(rand.nextInt(10+ WaveNumber) + 3), 0, 0);
+			
 			temp.mYAangle = (float) rand.nextInt(360);
 			temp.mType = ETYPE.METEORITE;
 			temp.mYAngleSpeed = (float) rand.nextInt(10)-5;
 			temp.mSize = rand.nextInt((int) (2+WaveNumber*.5));
 			temp.mEnergy = (int) (temp.mSize * 3);
+	
+			
+			temp.scheduleTask(new Vector3(-(rand.nextInt(10+ WaveNumber) + 3), 0, -2 + rand.nextInt(4)), null,50+10 * rand.nextInt(10), true, 0, 0);
+			temp.scheduleTask(new Vector3(-(rand.nextInt(10+ WaveNumber) + 3), 0, -2 + rand.nextInt(4)), null,50+10 * rand.nextInt(10), true, 0, 0);
+			temp.scheduleTask(new Vector3(-(rand.nextInt(10+ WaveNumber) + 3), 0, -2 + rand.nextInt(4)), null,50+10 * rand.nextInt(10), true, 0, 0);	
+			temp.scheduleTask(new Vector3(-(rand.nextInt(10+ WaveNumber) + 3), 0, -2 + rand.nextInt(4)), null,50+10 * rand.nextInt(10), true, 0, 0);	
+			temp.scheduleTask(new Vector3(-(rand.nextInt(10+ WaveNumber) + 3), 0, -2 + rand.nextInt(4)), null,50+10 * rand.nextInt(10), true, 0, 0);	
+			temp.scheduleTask(null, mShipPosition,100, true, 0, 0);
+			
 			ret.add(temp);
 		}
+		
 		
 		return ret;
 	}
@@ -100,7 +60,7 @@ public class EnemyForceFactory {
 	{
 		for (int k=0;k<number;k++)
 		{
-			
+			//TODO use the Physic item tasks... 
 		}
 	
 	}

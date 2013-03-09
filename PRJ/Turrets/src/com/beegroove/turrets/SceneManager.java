@@ -49,7 +49,7 @@ public class SceneManager {
 	private final Matrix3 normal3 = new Matrix3();
 
 	/** perspective camera **/
-	private PerspectiveCamera camera;
+	private PerspectiveCamera mCamera;
 
 	/** shaders **/
 	ShaderProgram texShader;
@@ -58,8 +58,7 @@ public class SceneManager {
 	ShaderProgram toonShader;
 
 	ShaderProgram currentShader;
-	
-	
+
 	public SceneManager() {
 		try {
 			spriteBatch = new SpriteBatch();
@@ -79,10 +78,10 @@ public class SceneManager {
 
 			lightTexShader = new ShaderProgram(fh_vs, fh_fs);
 
-			//fh_vs = Gdx.files.internal("data/shaders/toon-vs.glsl");
-			//fh_fs = Gdx.files.internal("data/shaders/toon-fs.glsl");
+			// fh_vs = Gdx.files.internal("data/shaders/toon-vs.glsl");
+			// fh_fs = Gdx.files.internal("data/shaders/toon-fs.glsl");
 
-			//toonShader = new ShaderProgram(fh_vs, fh_fs);
+			// toonShader = new ShaderProgram(fh_vs, fh_fs);
 
 			if (!texShader.isCompiled())
 				throw new GdxRuntimeException("Couldn't compile tex shader");
@@ -91,20 +90,22 @@ public class SceneManager {
 			if (!lightTexShader.isCompiled())
 				throw new GdxRuntimeException(
 						"Couldn't compile light/tex shader");
-			//if (!toonShader.isCompiled())
-			//	throw new GdxRuntimeException("Couldn't compile toon shader");
+			// if (!toonShader.isCompiled())
+			// throw new GdxRuntimeException("Couldn't compile toon shader");
 
 			spaceshipBasicMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Starship0.obj"));
-			spaceshipStandardMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
-					.internal("data/SpaceShip1.obj"));singleSmallTurretMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
-					.internal("data/Turret0.obj"));
-			doubleSmallTurretMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
-					.internal("data/TurretsDoubleSmall.obj"));
-			
+			spaceshipStandardMesh = ModelLoaderRegistry
+					.loadStillModel(Gdx.files.internal("data/SpaceShip1.obj"));
+			singleSmallTurretMesh = ModelLoaderRegistry
+					.loadStillModel(Gdx.files.internal("data/Turret0.obj"));
+			doubleSmallTurretMesh = ModelLoaderRegistry
+					.loadStillModel(Gdx.files
+							.internal("data/TurretsDoubleSmall.obj"));
+
 			shootMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Shoot0.obj"));
-			
+
 			shipTexture = new Texture(Gdx.files.internal("data/ship.png"),
 					Format.RGBA4444, true);
 			shipTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
@@ -114,34 +115,37 @@ public class SceneManager {
 			turretTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
 			backgroundTexture = new Texture(
 					Gdx.files.internal("data/background.png"));
-			
+
 			meteroriteMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Meteorite.obj"));
 			cubeMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Cube.obj"));
-			
-			FileHandle fontFile = Gdx.files.internal("data/font.ttf");
-			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
-			FreeTypeBitmapFontData fontData = generator.generateData(Par.STANDARD_FONT_SIZE, FreeTypeFontGenerator.DEFAULT_CHARS, false);		
-			generator.dispose();
-			fontStandard = new BitmapFont(fontData, fontData.getTextureRegion(), false);
 
-			camera = new PerspectiveCamera(Par.CAMERA_FOV,
+			FileHandle fontFile = Gdx.files.internal("data/font.ttf");
+			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
+					fontFile);
+			FreeTypeBitmapFontData fontData = generator.generateData(
+					Par.STANDARD_FONT_SIZE,
+					FreeTypeFontGenerator.DEFAULT_CHARS, false);
+			generator.dispose();
+			fontStandard = new BitmapFont(fontData,
+					fontData.getTextureRegion(), false);
+
+			mCamera = new PerspectiveCamera(Par.CAMERA_FOV,
 					Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-			
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			Gdx.app.exit();
 		}
 	}
 
-	private void setProjectionAndCamera(Vector3 cameraposition,Vector3 cameradirection,float FOV) {
-		camera.position.set(cameraposition);
-		camera.fieldOfView = FOV;
-		camera.direction.set(cameradirection).sub(camera.position)
-				.nor();
-		camera.update();
+	private void setProjectionAndCamera(Cameraman cameraMan) {
+		mCamera.position.set(cameraMan.mPosition);
+		mCamera.fieldOfView = cameraMan.FOV;
+		mCamera.rotate(cameraMan.mDirection, cameraMan.mAngle);
+		mCamera.direction.set(cameraMan.mDirection).sub(cameraMan.mPosition).nor();
+		mCamera.update();
 	}
 
 	public void render(Simulation simulation, float delta) {
@@ -150,8 +154,9 @@ public class SceneManager {
 		renderBackground(simulation.starship.mSpeed.x);
 		gl.glEnable(GL20.GL_DEPTH_TEST);
 		gl.glEnable(GL20.GL_CULL_FACE);
+		//gl.glEnable(GL20.GL_TEXTURE_2D);
 
-		setProjectionAndCamera(simulation.mCameraMan.mPosition, simulation.mCameraMan.mDirection, simulation.mCameraMan.FOV);
+		setProjectionAndCamera(simulation.mCameraMan);
 
 		/* Shader selection */
 		currentShader = lightTexShader;
@@ -162,20 +167,17 @@ public class SceneManager {
 				renderShoot(shoot);
 			}
 		}
-		
+
 		renderShip(simulation.starship);
-		
-		
-		for(Enemy k : simulation.enemies)
-		{
+
+		for (Enemy k : simulation.enemies) {
 			renderEnemy(k);
 		}
 
-		
 		gl.glDisable(GL20.GL_CULL_FACE);
 		gl.glDisable(GL20.GL_DEPTH_TEST);
 
-		renderHUD(HUD.Instance(),simulation);
+		renderHUD(HUD.Instance(), simulation);
 
 	}
 
@@ -183,15 +185,15 @@ public class SceneManager {
 		shipTexture.bind();
 		currentShader.begin();
 		currentShader.setUniformi("u_diffuse", 0);
-		transform.set(camera.combined);
-		transform.translate(ship.mPosition.x, ship.mPosition.y, ship.mPosition.z);
+		transform.set(mCamera.combined);
+		transform.translate(ship.mPosition.x, ship.mPosition.y,
+				ship.mPosition.z);
 		currentShader.setUniformMatrix("u_projView", transform);
 		normal.idt();
 		normal.rotate(0, 1, 0, 180);
 		normal3.set(normal.toNormalMatrix());
 		currentShader.setUniformMatrix("u_normal", normal3);
-		switch(ship.type)
-		{
+		switch (ship.type) {
 		case ADVANCED:
 			break;
 		case BASIC:
@@ -205,7 +207,7 @@ public class SceneManager {
 			break;
 		default:
 			break;
-			
+
 		}
 		currentShader.end();
 	}
@@ -214,7 +216,7 @@ public class SceneManager {
 		turretTexture.bind();
 		currentShader.begin();
 		currentShader.setUniformi("u_diffuse", 0);
-		transform.set(camera.combined);
+		transform.set(mCamera.combined);
 		transform.translate(turret.mPosition.x, turret.mPosition.y,
 				turret.mPosition.z - Par.TURRET_SINGLE_HALF_DIAMETER);
 		transform.rotate(0, 1, 0, turret.mYAangle);
@@ -224,9 +226,8 @@ public class SceneManager {
 		normal.rotate(0, 1, 0, 180);
 		normal3.set(normal.toNormalMatrix());
 		currentShader.setUniformMatrix("u_normal", normal3);
-		
-		switch(turret.type)
-		{
+
+		switch (turret.type) {
 		case DOUBLE_CANNON:
 			break;
 		case DOUBLE_LARGE:
@@ -239,21 +240,21 @@ public class SceneManager {
 		case SINGLE_MEDIUM:
 			break;
 		case SINGLE_SMALL:
-			singleSmallTurretMesh.render(currentShader);	
+			singleSmallTurretMesh.render(currentShader);
 			break;
 		case TRIPLE_LARGE:
 			break;
 		default:
 			break;
 		}
-		
+
 		currentShader.end();
 	}
-	
+
 	private void renderShoot(Shoot shoot) {
 		currentShader.begin();
 		currentShader.setUniformi("u_diffuse", 0);
-		transform.set(camera.combined);
+		transform.set(mCamera.combined);
 		transform.translate(shoot.mPosition.x, shoot.mPosition.y,
 				shoot.mPosition.z);
 		transform.rotate(0, 1, 0, shoot.mYAangle);
@@ -265,11 +266,11 @@ public class SceneManager {
 		shootMesh.render(currentShader);
 		currentShader.end();
 	}
-	
+
 	private void renderEnemy(Enemy enemy) {
 		currentShader.begin();
 		currentShader.setUniformi("u_diffuse", 0);
-		transform.set(camera.combined);
+		transform.set(mCamera.combined);
 		transform.translate(enemy.mPosition.x, enemy.mPosition.y,
 				enemy.mPosition.z);
 		transform.scale(enemy.mSize, enemy.mSize, enemy.mSize);
@@ -279,8 +280,7 @@ public class SceneManager {
 		normal.rotate(0, 1, 0, 180);
 		normal3.set(normal.toNormalMatrix());
 		currentShader.setUniformMatrix("u_normal", normal3);
-		switch ( enemy.mType)
-		{
+		switch (enemy.mType) {
 		case BOMBER:
 			break;
 		case BONUS:
@@ -305,51 +305,70 @@ public class SceneManager {
 	}
 
 	private int backgroundscroolingX = 0;
-	//TODO Move to an external class and generate scenery
-	private Color backgroundColor = new Color(1.0f,1.0f,1.0f,0);
+	// TODO Move to an external class and generate scenery
+	private Color backgroundColor = new Color(1.0f, 1.0f, 1.0f, 0);
+
 	private void renderBackground(float speed) {
-		
-		backgroundscroolingX += speed/Par.BACKGROUND_BASIC_SPEED_SHIP_FACTOR + Par.BACKGROUND_BASIC_SPEED;
-		if (backgroundscroolingX  >= 1280)
-			backgroundscroolingX  = 0;
+
+		backgroundscroolingX += speed / Par.BACKGROUND_BASIC_SPEED_SHIP_FACTOR
+				+ Par.BACKGROUND_BASIC_SPEED;
+		if (backgroundscroolingX >= 1280)
+			backgroundscroolingX = 0;
 
 		viewMatrix.setToOrtho2D(0, 0, 1280, 800);
 		spriteBatch.setProjectionMatrix(viewMatrix);
 		spriteBatch.begin();
 		spriteBatch.disableBlending();
-		
+
 		spriteBatch.setColor(backgroundColor);
-		
-		spriteBatch.draw(backgroundTexture, 1280 - backgroundscroolingX , 0);
-		spriteBatch.draw(backgroundTexture, -backgroundscroolingX , 0);
+
+		spriteBatch.draw(backgroundTexture, 1280 - backgroundscroolingX, 0);
+		spriteBatch.draw(backgroundTexture, -backgroundscroolingX, 0);
 
 		spriteBatch.end();
 	}
-	
-	private void renderHUD(HUD hud,Simulation simulation) {
+
+	private void renderHUD(HUD hud, Simulation simulation) {
 		spriteBatch.setProjectionMatrix(viewMatrix);
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
-		for(Message m :hud.GetMessage())
-		{
+		for (Message m : hud.GetMessage()) {
 			fontStandard.setColor(Color.BLACK);
-			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x-1, m.mPosition.y-1);
+			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x - 1,
+					m.mPosition.y - 1);
 			fontStandard.setColor(Color.RED);
 			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x, m.mPosition.y);
 		}
-		for(Message m :hud.GetMessageRoller())
-		{
+		for (Message m : hud.GetMessageRoller()) {
 			fontStandard.setColor(Color.BLACK);
-			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x-1, m.mPosition.y-1);
+			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x - 1,
+					m.mPosition.y - 1);
 			fontStandard.setColor(Color.WHITE);
 			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x, m.mPosition.y);
 		}
-		
-		Message statusmsg = hud.GetStatusBar(simulation.Score,simulation.Missed,simulation.starship.mEnergy);
+
+		Message statusmsg = hud.GetStatusBar(simulation.Score,
+				simulation.Missed, simulation.starship.mEnergy);
 		fontStandard.setColor(Color.BLACK);
-		fontStandard.draw(spriteBatch, statusmsg.msg, statusmsg.mPosition.x-1, statusmsg.mPosition.y-1);
+		fontStandard.draw(spriteBatch, statusmsg.msg,
+				statusmsg.mPosition.x - 1, statusmsg.mPosition.y - 1);
 		fontStandard.setColor(Color.WHITE);
-		fontStandard.draw(spriteBatch, statusmsg.msg, statusmsg.mPosition.x, statusmsg.mPosition.y);
+		fontStandard.draw(spriteBatch, statusmsg.msg, statusmsg.mPosition.x,
+				statusmsg.mPosition.y);
+
+		if (Par.HUD_DEBUG) {
+			fontStandard.setColor(Color.WHITE);
+			fontStandard.drawMultiLine(spriteBatch, String
+					.format("Cam.Pos:%2.2f %2.2f %2.2f\nCam.Dir:%2.2f %2.2f %2.2f\nCam.Angle:%2.2f\nCam.FOV:%s",
+							simulation.mCameraMan.mPosition.x,
+							simulation.mCameraMan.mPosition.y,
+							simulation.mCameraMan.mPosition.z,
+							simulation.mCameraMan.mDirection.x,
+							simulation.mCameraMan.mDirection.y,
+							simulation.mCameraMan.mDirection.z,
+							simulation.mCameraMan.mAngle,
+							simulation.mCameraMan.FOV), 800, 300);
+		}
 
 		spriteBatch.end();
 	}
@@ -360,10 +379,10 @@ public class SceneManager {
 		spaceshipBasicMesh.dispose();
 		spaceshipStandardMesh.dispose();
 		shootMesh.dispose();
-		//TODO others...
+		// TODO others...
 	}
 
 	public Ray unproject(int x, int y) {
-		return camera.getPickRay(x, y).cpy();
+		return mCamera.getPickRay(x, y).cpy();
 	}
 }

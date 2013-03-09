@@ -3,18 +3,14 @@ package com.beegroove.turrets;
 import java.util.Iterator;
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.beegroove.turrets.Par.DIRECTION;
 
-import de.matthiasmann.twlthemeeditor.datamodel.Param;
-
 public class Simulation {
 	public transient SimulationListener listener;
 	public StarShip starship;
-	public CameraMan mCameraMan;
+	public Cameraman mCameraMan;
 	public Array<Enemy> enemies = new Array<Enemy>();
 	public int WaveNumber = 0;
 	private Random rand;
@@ -23,18 +19,24 @@ public class Simulation {
 	public Simulation() {
 		rand = new Random(System.currentTimeMillis());
 
-		mCameraMan  = new CameraMan();
+		mCameraMan = new Cameraman();
+
+		//mCameraMan.scheduleTask(null, Vector3.Zero, 300, false, 0, 0);
+		//mCameraMan.scheduleTask(null, new Vector3(Par.CAMERA_X,Par.CAMERA_DIRECTION_Y,Par.CAMERA_DIRECTION_Z), 300, false, 0, 0);
+		//mCameraMan.scheduleTask(Vector3.Zero,null, 1000, false, 0, 0);
 	}
 
 	public void update(float delta) {
+		
+		mCameraMan.Update(delta);
 		starship.Update(delta);
-
+		
 		HUD.Instance().Update(delta);
 
 		UpdateEnemyAndCollisionCheck(delta);
 
 		if (null == enemies.first()) {
-			enemies.addAll(EnemyForceFactory.Instance().getMeteoriteWave());
+			enemies.addAll(EnemyForceFactory.Instance().getMeteoriteWave(starship.mPosition));
 		}
 	}
 
@@ -58,8 +60,7 @@ public class Simulation {
 						if (s.mPosition.dst(k.mPosition) < k.mSize) {
 							iteratorShoot.remove();
 							k.mEnergy--;
-							if(k.mEnergy == 0)
-							{
+							if (k.mEnergy == 0) {
 								iteratorEnemy.remove();
 								Score++;
 							}
@@ -81,12 +82,32 @@ public class Simulation {
 		}
 	}
 
-	public void moveCameraDown(float camerastep) {
-		mCameraMan.mPosition.add(0, -camerastep, 0);
+	public void moveCameraAddX(float camerastep, boolean direction) {
+		if (direction) {
+			mCameraMan.mPosition.add(camerastep, 0, 0);
+		} else {
+			mCameraMan.mDirection.add(camerastep, 0, 0);
+		}
 	}
 
-	public void moveCameraUp(float camerastep) {
-		mCameraMan.mPosition.add(0, camerastep, 0);
+	public void moveCameraAddY(float camerastep, boolean direction) {
+		if (direction) {
+			mCameraMan.mPosition.add(0, camerastep, 0);
+		} else {
+			mCameraMan.mDirection.add(0, camerastep, 0);
+		}
+	}
+
+	public void moveCameraAddZ(float camerastep, boolean direction) {
+		if (direction) {
+			mCameraMan.mPosition.add(0, 0, camerastep);
+		} else {
+			mCameraMan.mDirection.add(0, 0, camerastep);
+		}
+	}
+	
+	public void moveCameraRotate(float f) {
+		mCameraMan.mAngle = f;
 	}
 
 	public void FOVMinus(float cameraFovStep) {
@@ -98,9 +119,7 @@ public class Simulation {
 	}
 
 	public void SetStarshipDestination(Vector3 v1) {
-		mCameraMan.mPosition.set(Par.CAMERA_X, Par.CAMERA_Y,
-				Par.CAMERA_Z+v1.z/6);
-		starship.SetDestination(v1);
+		starship.setDestination(v1);
 	}
 
 	public void SetStarshipDirection(DIRECTION direction) {
@@ -127,7 +146,9 @@ public class Simulation {
 	}
 
 	public void Fire(boolean b, boolean superFire) {
-		starship.Fire(b,superFire);
+		starship.Fire(b, superFire);
 	}
+
+
 
 }
