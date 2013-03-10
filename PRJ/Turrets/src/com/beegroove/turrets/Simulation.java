@@ -3,8 +3,10 @@ package com.beegroove.turrets;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.beegroove.turrets.Enemy.ETYPE;
 import com.beegroove.turrets.Par.DIRECTION;
 
 public class Simulation {
@@ -21,22 +23,25 @@ public class Simulation {
 
 		mCameraMan = new Cameraman();
 
-		//mCameraMan.scheduleTask(null, Vector3.Zero, 300, false, 0, 0);
-		//mCameraMan.scheduleTask(null, new Vector3(Par.CAMERA_X,Par.CAMERA_DIRECTION_Y,Par.CAMERA_DIRECTION_Z), 300, false, 0, 0);
-		//mCameraMan.scheduleTask(Vector3.Zero,null, 1000, false, 0, 0);
+		// mCameraMan.scheduleTask(null, Vector3.Zero, 300, false, 0, 0);
+		// mCameraMan.scheduleTask(null, new
+		// Vector3(Par.CAMERA_X,Par.CAMERA_DIRECTION_Y,Par.CAMERA_DIRECTION_Z),
+		// 300, false, 0, 0);
+		// mCameraMan.scheduleTask(Vector3.Zero,null, 1000, false, 0, 0);
 	}
 
 	public void update(float delta) {
-		
+
 		mCameraMan.Update(delta);
 		starship.Update(delta);
-		
+
 		HUD.Instance().Update(delta);
 
 		UpdateEnemyAndCollisionCheck(delta);
 
-		if (null == enemies.first()) {
-			enemies.addAll(EnemyForceFactory.Instance().getMeteoriteWave(starship.mPosition));
+		if (enemies.size < 3) {
+			enemies.addAll(WaveFactory.Instance().getMeteoriteWave(
+					starship.mPosition));
 		}
 	}
 
@@ -48,7 +53,19 @@ public class Simulation {
 			k.Update(delta);
 
 			if (starship.mPosition.dst(k.mPosition) < (k.mSize + starship.mSize)) {
-				starship.mEnergy--;
+				if (k.mType == ETYPE.METEORITE) {
+					starship.mEnergy--;
+				} else if (k.mType == ETYPE.SPUTNIK) {
+					if (starship.type == StarShip.STYPE.BASIC) {
+						starship = SpaceshipFactory.NewDoubleBasicSpaceship();
+					} else if (starship.type == StarShip.STYPE.BASIC_DOUBLE) {
+						starship = SpaceshipFactory
+								.NewSingleStandardSpaceship();
+					} else if (starship.type == StarShip.STYPE.STANDARD) {
+						starship = SpaceshipFactory
+								.NewDoubleStandardSpaceship();
+					}
+				}
 			} else if (k.mPosition.x < -30) {
 				iteratorEnemy.remove();
 				Missed++;
@@ -105,7 +122,7 @@ public class Simulation {
 			mCameraMan.mDirection.add(0, 0, camerastep);
 		}
 	}
-	
+
 	public void moveCameraRotate(float f) {
 		mCameraMan.mAngle = f;
 	}
@@ -148,7 +165,5 @@ public class Simulation {
 	public void Fire(boolean b, boolean superFire) {
 		starship.Fire(b, superFire);
 	}
-
-
 
 }

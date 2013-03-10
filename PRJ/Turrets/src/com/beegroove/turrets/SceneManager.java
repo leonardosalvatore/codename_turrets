@@ -33,6 +33,7 @@ public class SceneManager {
 	private StillModel singleSmallTurretMesh;
 	private StillModel doubleSmallTurretMesh;
 	private StillModel meteroriteMesh;
+	private StillModel sputnikMesh;
 	private StillModel cubeMesh;
 	private Texture shipTexture;
 	private Texture turretTexture;
@@ -118,6 +119,8 @@ public class SceneManager {
 
 			meteroriteMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Meteorite.obj"));
+			sputnikMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
+					.internal("data/Sputnik.obj"));
 			cubeMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Cube.obj"));
 
@@ -144,7 +147,8 @@ public class SceneManager {
 		mCamera.position.set(cameraMan.mPosition);
 		mCamera.fieldOfView = cameraMan.FOV;
 		mCamera.rotate(cameraMan.mDirection, cameraMan.mAngle);
-		mCamera.direction.set(cameraMan.mDirection).sub(cameraMan.mPosition).nor();
+		mCamera.direction.set(cameraMan.mDirection).sub(cameraMan.mPosition)
+				.nor();
 		mCamera.update();
 	}
 
@@ -154,7 +158,7 @@ public class SceneManager {
 		renderBackground(simulation.starship.mSpeed.x);
 		gl.glEnable(GL20.GL_DEPTH_TEST);
 		gl.glEnable(GL20.GL_CULL_FACE);
-		//gl.glEnable(GL20.GL_TEXTURE_2D);
+		// gl.glEnable(GL20.GL_TEXTURE_2D);
 
 		setProjectionAndCamera(simulation.mCameraMan);
 
@@ -273,32 +277,29 @@ public class SceneManager {
 		transform.set(mCamera.combined);
 		transform.translate(enemy.mPosition.x, enemy.mPosition.y,
 				enemy.mPosition.z);
+
 		transform.scale(enemy.mSize, enemy.mSize, enemy.mSize);
-		transform.rotate(0, 1, 0, enemy.mYAangle);
+
+		switch (enemy.mType) {
+		case METEORITE:
+			transform.rotate(0, 1, 0, enemy.mYAangle);
+			break;
+		case SPUTNIK:
+			break;
+		}
+		
 		currentShader.setUniformMatrix("u_projView", transform);
 		normal.idt();
 		normal.rotate(0, 1, 0, 180);
 		normal3.set(normal.toNormalMatrix());
 		currentShader.setUniformMatrix("u_normal", normal3);
+
 		switch (enemy.mType) {
-		case BOMBER:
-			break;
-		case BONUS:
-			break;
-		case DESTROYER:
-			break;
-		case FIGHTER:
-			break;
-		case INTERCEPTOR:
-			break;
 		case METEORITE:
 			meteroriteMesh.render(currentShader);
 			break;
-		case SCOUT:
-			break;
-		case TRANSPORT:
-			break;
-		default:
+		case SPUTNIK:
+			sputnikMesh.render(currentShader);
 			break;
 		}
 		currentShader.end();
@@ -358,16 +359,19 @@ public class SceneManager {
 
 		if (Par.HUD_DEBUG) {
 			fontStandard.setColor(Color.WHITE);
-			fontStandard.drawMultiLine(spriteBatch, String
-					.format("Cam.Pos:%2.2f %2.2f %2.2f\nCam.Dir:%2.2f %2.2f %2.2f\nCam.Angle:%2.2f\nCam.FOV:%s",
-							simulation.mCameraMan.mPosition.x,
-							simulation.mCameraMan.mPosition.y,
-							simulation.mCameraMan.mPosition.z,
-							simulation.mCameraMan.mDirection.x,
-							simulation.mCameraMan.mDirection.y,
-							simulation.mCameraMan.mDirection.z,
-							simulation.mCameraMan.mAngle,
-							simulation.mCameraMan.FOV), 800, 300);
+			fontStandard
+					.drawMultiLine(
+							spriteBatch,
+							String.format(
+									"Cam.Pos:%2.2f %2.2f %2.2f\nCam.Dir:%2.2f %2.2f %2.2f\nCam.Angle:%2.2f\nCam.FOV:%s",
+									simulation.mCameraMan.mPosition.x,
+									simulation.mCameraMan.mPosition.y,
+									simulation.mCameraMan.mPosition.z,
+									simulation.mCameraMan.mDirection.x,
+									simulation.mCameraMan.mDirection.y,
+									simulation.mCameraMan.mDirection.z,
+									simulation.mCameraMan.mAngle,
+									simulation.mCameraMan.FOV), 800, 300);
 		}
 
 		spriteBatch.end();

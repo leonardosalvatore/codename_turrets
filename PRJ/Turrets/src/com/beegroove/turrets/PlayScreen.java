@@ -20,7 +20,6 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 		simulation = new Simulation();
 		simulation.listener = this;
 		simulation.starship = SpaceshipFactory.NewSingleBasicSpaceship();
-
 		renderer = new SceneManager();
 		gamePlane = new Plane(Vector3.Y, 0);
 
@@ -52,17 +51,6 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 
 		ProcessImput(delta);
 		simulation.update(delta);
-
-		if (simulation.Score > 10
-				&& simulation.starship.type == StarShip.STYPE.BASIC) {
-			simulation.starship = SpaceshipFactory.NewDoubleBasicSpaceship();
-		} else if (simulation.Score > 20
-				&& simulation.starship.type == StarShip.STYPE.BASIC_DOUBLE) {
-			simulation.starship = SpaceshipFactory.NewSingleStandardSpaceship();
-		} else if (simulation.Score > 30
-				&& simulation.starship.type == StarShip.STYPE.STANDARD) {
-			simulation.starship = SpaceshipFactory.NewDoubleStandardSpaceship();
-		}
 
 	}
 

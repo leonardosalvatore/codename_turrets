@@ -5,12 +5,7 @@ public class Enemy extends PhysicItem {
 	public enum ETYPE {
 		BONUS,
 		METEORITE,
-		SCOUT,
-		FIGHTER,
-		TRANSPORT,
-		INTERCEPTOR,
-		BOMBER,
-		DESTROYER
+		SPUTNIK
 	}
 	
 	public ETYPE mType;

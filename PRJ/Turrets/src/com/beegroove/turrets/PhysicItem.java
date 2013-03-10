@@ -18,20 +18,18 @@ public class PhysicItem {
 	public float mSize;
 	public int mEnergy;
 	public float mLastDestDist;
-	
-	public void Create()
-	{
-		
+
+	public void Create() {
+
 	}
 
 	public void Update(float deltaTime) {
 		applyCurrentTask(deltaTime);
 
-		
 		// s=v*t
 		mLastStep = mSpeed.cpy().mul(deltaTime);
 		mPosition.add(mLastStep);
-		
+
 	}
 
 	public void SetDestinationRelative(Vector3 relative) {
@@ -43,7 +41,7 @@ public class PhysicItem {
 		mDestination = destination.cpy();
 		destination.x += Par.THUMB_CORRECTION;
 		mSpeed = destination.sub(mPosition).mul(Par.SHIP_MAX_SPEED);
-		
+
 	}
 
 	public void SetTarget(Vector3 target) {
@@ -83,13 +81,11 @@ public class PhysicItem {
 	public void scheduleTask(Vector3 speed, Vector3 destination, int decSec,
 			boolean wait, int gotoBack, int repeat) {
 		Task t = new Task();
-		if(speed!=null)
-		{
-		t.mSpeed = speed.cpy();
+		if (speed != null) {
+			t.mSpeed = speed.cpy();
 		}
-		if(destination!=null)
-		{
-		t.mDestination = destination.cpy();
+		if (destination != null) {
+			t.mDestination = destination.cpy();
 		}
 		t.mDuration = decSec;
 		t.mWait = wait;
@@ -101,16 +97,12 @@ public class PhysicItem {
 	public void applyCurrentTask(float deltaTime) {
 		deltaTime *= 10;
 
-		
 		/*
-		 *  STOP ON DESTINANTION!
-		 * float currentDistant = mDestination.dst(mPosition);
-
-		if(mLastDestDist != 0 && mLastDestDist - currentDistant < 0)
-		{
-			mSpeed = Vector3.Zero;
-		}
-		mLastDestDist = currentDistant;
+		 * STOP ON DESTINANTION! float currentDistant =
+		 * mDestination.dst(mPosition);
+		 * 
+		 * if(mLastDestDist != 0 && mLastDestDist - currentDistant < 0) { mSpeed
+		 * = Vector3.Zero; } mLastDestDist = currentDistant;
 		 */
 		if (mCurrent != null) {
 			mCurrent.mDuration -= deltaTime;
@@ -127,9 +119,7 @@ public class PhysicItem {
 			mCurrent.mDuration -= deltaTime;
 			if (mCurrent.mSpeed != null) {
 				mSpeed = mCurrent.mSpeed;
-			}
-			else
-			{
+			} else {
 				mSpeed = Vector3.Zero;
 			}
 

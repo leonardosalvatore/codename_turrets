@@ -36,13 +36,20 @@ public class SpaceshipFactory {
 	{
 		StarShip ret = new StarShip();
 		ret.Create();
-		ret.mSize = 2;
+		ret.mSize = 3;
 		ret.mPosition = Par.SPACESHIP_STANDARD_POSITION.cpy();
 		ret.turrets.add(NewSingleSmallTurret());
+		ret.turrets.add(NewSingleSmallTurret());
 		ret.type = STYPE.STANDARD;
-		for (Turret turret : ret.turrets) {
-			turret.Create();
-		}
+
+		ret.turrets.get(0).Create();
+		ret.turrets.get(0).mPosition.z += 0.0;
+		ret.turrets.get(0).mPosition.x += 1.5;
+
+		ret.turrets.get(1).Create();
+		ret.turrets.get(1).mPosition.z += 3.1;
+		ret.turrets.get(1).mPosition.x += 1.5;
+
 		return ret;	
 	}
 	
@@ -50,14 +57,19 @@ public class SpaceshipFactory {
 	{
 		StarShip ret = new StarShip();
 		ret.Create();
-		ret.mSize = 2;
+		ret.mSize = 3;
 		ret.mPosition = Par.SPACESHIP_STANDARD_POSITION.cpy();
+		ret.turrets.add(NewDoubleSmallTurret());
 		ret.turrets.add(NewDoubleSmallTurret());
 		ret.type = STYPE.STANDARD;
 		
-		for (Turret turret : ret.turrets) {
-			turret.Create();
-		}
+		ret.turrets.get(0).Create();
+		ret.turrets.get(0).mPosition.z += 0.0;
+		ret.turrets.get(0).mPosition.x += 1.5;
+
+		ret.turrets.get(1).Create();
+		ret.turrets.get(1).mPosition.z += 3.1;
+		ret.turrets.get(1).mPosition.x += 1.5;
 		return ret;	
 	}
 	
