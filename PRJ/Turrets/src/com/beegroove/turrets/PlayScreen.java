@@ -19,7 +19,8 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 	public PlayScreen() {
 		simulation = new Simulation();
 		simulation.listener = this;
-		simulation.starship = SpaceshipFactory.NewSingleBasicSpaceship();
+		//simulation.starship = SpaceshipFactory.NewSingleBasicSpaceship();
+		simulation.starship = SpaceshipFactory.NewDoubleAdvancedSpaceship();
 		renderer = new SceneManager();
 		gamePlane = new Plane(Vector3.Y, 0);
 
@@ -57,6 +58,30 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 	long alignmentStart = 0;
 	boolean mSuperFire = false;
 	boolean mFire = false;
+
+	private int ApplyInput(int pointer) {
+		if (Gdx.input.isTouched(pointer)) {
+			rayFromCamera = renderer.unproject(Gdx.input.getX(pointer),
+					Gdx.input.getY(pointer));
+
+			Intersector.intersectRayPlane(rayFromCamera, gamePlane,
+					pointOnPlane);
+
+			if (pointOnPlane.x < 0) {
+				Gdx.app.log("PlayScreen",
+						String.format("LEFT Int[%d]:%s", pointer, pointOnPlane));
+				lastLeftPointOnPlane.set(pointOnPlane);
+				return Par.LEFT_FINGER;
+			} else {
+				Gdx.app.log("PlayScreen", String.format("RIGHT Int[%d]:%s",
+						pointer, pointOnPlane));
+				simulation.Fire(true,mSuperFire);
+				lastRightPointOnPlane.set(pointOnPlane);
+				return Par.RIGHT_FINGER;
+			}
+		}
+		return Par.NO_FINGER;
+	}
 	
 	private void ProcessImput(float delta) {
 		int pointer0result = ApplyInput(0);
@@ -139,29 +164,7 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 			simulation.FOVPlus(Par.CAMERA_FOV_STEP);
 	}
 
-	private int ApplyInput(int pointer) {
-		if (Gdx.input.isTouched(pointer)) {
-			rayFromCamera = renderer.unproject(Gdx.input.getX(pointer),
-					Gdx.input.getY(pointer));
 
-			Intersector.intersectRayPlane(rayFromCamera, gamePlane,
-					pointOnPlane);
-
-			if (pointOnPlane.x < 0) {
-				Gdx.app.log("PlayScreen",
-						String.format("LEFT Int[%d]:%s", pointer, pointOnPlane));
-				lastLeftPointOnPlane = pointOnPlane.cpy();
-				return Par.LEFT_FINGER;
-			} else {
-				Gdx.app.log("PlayScreen", String.format("RIGHT Int[%d]:%s",
-						pointer, pointOnPlane));
-				simulation.Fire(true,mSuperFire);
-				lastRightPointOnPlane = pointOnPlane.cpy();
-				return Par.RIGHT_FINGER;
-			}
-		}
-		return Par.NO_FINGER;
-	}
 
 	@Override
 	public void explosion() {

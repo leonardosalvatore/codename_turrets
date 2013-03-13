@@ -29,6 +29,7 @@ public class SceneManager {
 
 	private StillModel spaceshipBasicMesh;
 	private StillModel spaceshipStandardMesh;
+	private StillModel spaceshipAdvancedMesh;
 	private StillModel shootMesh;
 	private StillModel singleSmallTurretMesh;
 	private StillModel doubleSmallTurretMesh;
@@ -98,6 +99,8 @@ public class SceneManager {
 					.internal("data/Starship0.obj"));
 			spaceshipStandardMesh = ModelLoaderRegistry
 					.loadStillModel(Gdx.files.internal("data/SpaceShip1.obj"));
+			spaceshipAdvancedMesh = ModelLoaderRegistry
+					.loadStillModel(Gdx.files.internal("data/SpaceShip2.obj"));
 			singleSmallTurretMesh = ModelLoaderRegistry
 					.loadStillModel(Gdx.files.internal("data/Turret0.obj"));
 			doubleSmallTurretMesh = ModelLoaderRegistry
@@ -158,7 +161,7 @@ public class SceneManager {
 		renderBackground(simulation.starship.mSpeed.x);
 		gl.glEnable(GL20.GL_DEPTH_TEST);
 		gl.glEnable(GL20.GL_CULL_FACE);
-		// gl.glEnable(GL20.GL_TEXTURE_2D);
+		gl.glEnable(GL20.GL_TEXTURE_2D);
 
 		setProjectionAndCamera(simulation.mCameraMan);
 
@@ -198,8 +201,6 @@ public class SceneManager {
 		normal3.set(normal.toNormalMatrix());
 		currentShader.setUniformMatrix("u_normal", normal3);
 		switch (ship.type) {
-		case ADVANCED:
-			break;
 		case BASIC:
 		case BASIC_DOUBLE:
 			spaceshipBasicMesh.render(currentShader);
@@ -207,7 +208,12 @@ public class SceneManager {
 		case PRO:
 			break;
 		case STANDARD:
+		case STANDARD_DOUBLE:
 			spaceshipStandardMesh.render(currentShader);
+			break;
+		case ADVANCED:
+		case ADVANCED_DOUBLE:
+			spaceshipAdvancedMesh.render(currentShader);
 			break;
 		default:
 			break;
@@ -285,6 +291,9 @@ public class SceneManager {
 			transform.rotate(0, 1, 0, enemy.mYAangle);
 			break;
 		case SPUTNIK:
+			transform.rotate(1, 0, 0, enemy.mYAangle);
+			break;
+		default:
 			break;
 		}
 		
@@ -300,6 +309,10 @@ public class SceneManager {
 			break;
 		case SPUTNIK:
 			sputnikMesh.render(currentShader);
+			break;
+		case BONUS:
+			break;
+		default:
 			break;
 		}
 		currentShader.end();
@@ -363,7 +376,7 @@ public class SceneManager {
 					.drawMultiLine(
 							spriteBatch,
 							String.format(
-									"Cam.Pos:%2.2f %2.2f %2.2f\nCam.Dir:%2.2f %2.2f %2.2f\nCam.Angle:%2.2f\nCam.FOV:%s",
+									"Cam.Pos:%2.2f %2.2f %2.2f\nCam.Dir:%2.2f %2.2f %2.2f\nCam.Angle:%2.2f\nCam.FOV:%s\nWave size:%d\nShipPos:%2.2f %2.2f %2.2f\nShipDes:%2.2f %2.2f %2.2f\nShipSpeed:%2.2f %2.2f %2.2f\n",
 									simulation.mCameraMan.mPosition.x,
 									simulation.mCameraMan.mPosition.y,
 									simulation.mCameraMan.mPosition.z,
@@ -371,7 +384,17 @@ public class SceneManager {
 									simulation.mCameraMan.mDirection.y,
 									simulation.mCameraMan.mDirection.z,
 									simulation.mCameraMan.mAngle,
-									simulation.mCameraMan.FOV), 800, 300);
+									simulation.mCameraMan.FOV,
+									simulation.enemies.size,
+									simulation.starship.mPosition.x,
+									simulation.starship.mPosition.y,
+									simulation.starship.mPosition.z,
+									simulation.starship.mDestination.x,
+									simulation.starship.mDestination.y,
+									simulation.starship.mDestination.z,
+									simulation.starship.mSpeed.x,
+									simulation.starship.mSpeed.y,
+									simulation.starship.mSpeed.z), 750, 250);
 		}
 
 		spriteBatch.end();
@@ -382,6 +405,7 @@ public class SceneManager {
 		shipTexture.dispose();
 		spaceshipBasicMesh.dispose();
 		spaceshipStandardMesh.dispose();
+		spaceshipAdvancedMesh.dispose();
 		shootMesh.dispose();
 		// TODO others...
 	}

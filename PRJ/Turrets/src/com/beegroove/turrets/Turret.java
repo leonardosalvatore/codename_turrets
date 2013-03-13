@@ -14,11 +14,6 @@ public class Turret extends PhysicItem {
 
 	public TTYPE type;
 
-	@Override
-	public void Create() {
-		super.Create();
-	}
-
 	private long lastfire, firerate = 100;
 	
 	@Override

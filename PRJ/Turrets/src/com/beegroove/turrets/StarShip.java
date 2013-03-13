@@ -15,20 +15,16 @@ public class StarShip extends PhysicItem {
 		STANDARD,
 		ADVANCED,
 		PRO, 
-		BASIC_DOUBLE
+		BASIC_DOUBLE, 
+		STANDARD_DOUBLE,
+		ADVANCED_DOUBLE
 	}
 	
 	ArrayList<Turret> turrets = new ArrayList<Turret>();
 	private boolean mFiring = false;
 	public STYPE type;
 	private boolean mSuperFire = false;
-	
-	@Override
-	public void Create() {
-		super.Create();
-		
-	}
-	
+
 
 	@Override
 	public void Update(float deltaTime) {
@@ -57,4 +53,6 @@ public class StarShip extends PhysicItem {
 			turret.Stop();
 		}
 	}
+
+	
 	}

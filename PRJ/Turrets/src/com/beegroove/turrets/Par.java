@@ -9,6 +9,11 @@ public class Par {
 	public static final Vector3 SINGLE_TURRET_POSITION 	= new Vector3(-25f, 0, -10.15f);
 	public static final Vector3 DOUBLE_TURRET_POSITION 	= new Vector3(-25f, 0, -10.15f);
 	public static final Vector3 SHOOT_BASIC_SPEED 		= new Vector3(40, 0, 0);
+	public static final Vector3 SPACESHIP_STANDARD_POSITION_TURRET_LEFT_CORRECTION = new Vector3(0.45f,0.1f,0.1f);
+	public static final Vector3 SPACESHIP_STANDARD_POSITION_TURRET_RIGHT_CORRECTION = new Vector3(0.45f,0.1f,3.3f);
+	public static final Vector3 SPACESHIP_ADVANCED_POSITION_TURRET_LEFT_CORRECTION = new Vector3(0.45f,0.1f,0.1f);
+	public static final Vector3 SPACESHIP_ADVANCED_POSITION_TURRET_CENTER_CORRECTION = new Vector3(-1.8f,1.0f,1.5f);
+	public static final Vector3 SPACESHIP_ADVANCED_POSITION_TURRET_RIGHT_CORRECTION = new Vector3(0.45f,0.1f,3.3f);
 
 	public static final float SHOOT_SINGLE_TURRET_Z_CORRECTION = 1.4f;
 	public static final float SHOOT_DOUBLE_TURRET_LEFT_TURRET_Z_CORRECTION = 1.1f;
@@ -17,20 +22,13 @@ public class Par {
 	public static final float CAMERA_FOV = 60;
 	public static final float CAMERA_FOV_STEP = 1;
 	public static final float CAMERA_STEP = 0.1f;
-	public static final float CAMERA_X = 0;
-	public static final float CAMERA_Y = 30;
-	public static final float CAMERA_Z = 0;
-	public static final float CAMERA_DIRECTION_X = 0;
-	public static final float CAMERA_DIRECTION_Y = 0;
-	public static final float CAMERA_DIRECTION_Z = -5;
+	public static final Vector3 CAMERA_INITIAL_POSITION = new Vector3(0,30,0);
+	public static final Vector3 CAMERA_INITIAL_DIRECTION = new Vector3(0,0,-5);
 	public static final float SHIP_MASS = 1f;
 	public static final float SHIP_VELOCITY = 0.5f;
-	public static final float SHIP_MAX_SPEED = 1.5f;
-	public static final Vector3 SHIP_TRUSTER_FWD_FORCE = new Vector3(50, 0, 0);
-	public static final Vector3 SHIP_TRUSTER_BACK_FORCE = new Vector3(-50, 0, 0);
-	public static final Vector3 SHIP_TRUSTER_UP_FORCE = new Vector3(0, 0, -50);
-	public static final Vector3 SHIP_TRUSTER_DOWN_FORCE = new Vector3(0, 0, 50);
-	public static final Vector3 SHIP_TRUSTER_FORCE = new Vector3(0, 0, 50);
+	public static final float SHIP_MAX_SPEED = 2.5f;
+	public static final float SHIP_MAX_SPEED_KEYBOARD = 50f;
+	
 	public static final float VIEWPORT_MAX_X = 1280;
 	public static final float VIEWPORT_MIN_X = 0;
 	public static final float VIEWPORT_MIN_Y = 0;
@@ -53,7 +51,7 @@ public class Par {
 	public static final float BACKGROUND_BASIC_SPEED = 5;
 	public static final float BACKGROUND_BASIC_SPEED_SHIP_FACTOR = 12;
 	public static final long SHIP_ALIGNMENT_TIME = 2000;
-	public static final long STATE_INTRO_DURATION = 3000;
+	public static final long STATE_INTRO_DURATION = 1000;
 
 	enum DIRECTION {
 		UP, DOWN, LEFT, RIGHT

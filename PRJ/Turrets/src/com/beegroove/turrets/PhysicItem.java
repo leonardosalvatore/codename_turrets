@@ -8,40 +8,57 @@ import com.badlogic.gdx.utils.Array;
 
 public class PhysicItem {
 
-	Hashtable<String, Float> mTag;
-	public Vector3 mPosition = Vector3.Zero;
-	public Vector3 mSpeed = Vector3.Zero;
-	public Vector3 mDestination = Vector3.Zero;
-	public Vector3 mLastStep = Vector3.Zero;
-	public Vector3 mDirection = Vector3.Zero;
+	public Hashtable<String, Float> mTag;
+	public Vector3 mPosition;
+	public Vector3 mSpeed;
+	public Vector3 mDestination;
+	public Vector3 mLastStep;
+	public Vector3 mDirection;
 	public float mYAangle;
 	public float mSize;
 	public int mEnergy;
 	public float mLastDestDist;
-
-	public void Create() {
-
+	
+	public PhysicItem()
+	{
+		mPosition = new Vector3();
+		mPosition.set(Vector3.Zero);
+		mSpeed = new Vector3();
+		mSpeed.set(Vector3.Zero);
+		mDestination = new Vector3();
+		mDestination.set(Vector3.Zero);
+		mLastStep = new Vector3();
+		mLastStep.set(Vector3.Zero);
+		mDirection = new Vector3();
+		mDirection.set(Vector3.Zero);
 	}
 
 	public void Update(float deltaTime) {
 		applyCurrentTask(deltaTime);
 
+		// f=m*a;
+		// v=a*t
 		// s=v*t
-		mLastStep = mSpeed.cpy().mul(deltaTime);
-		mPosition.add(mLastStep);
-
+		mLastStep.set(mSpeed.tmp().mul(deltaTime));
+		mPosition.add(mLastStep);		
+	}
+	
+	public void SetDestinationSpeed(Vector3 cpy) {
+		mSpeed.set(cpy);
 	}
 
 	public void SetDestinationRelative(Vector3 relative) {
-		// TODO uhmmm....
-		setDestination(mPosition.cpy().add(relative));
+		mDestination.set(relative);
 	}
 
 	public void setDestination(Vector3 destination) {
-		mDestination = destination.cpy();
+		mDestination.set(destination);
 		destination.x += Par.THUMB_CORRECTION;
-		mSpeed = destination.sub(mPosition).mul(Par.SHIP_MAX_SPEED);
-
+		mSpeed.set(destination.tmp().sub(mPosition).mul(Par.SHIP_MAX_SPEED));
+	}
+	
+	private void setDirection(Vector3 mValue) {
+		mDirection.set(mValue);	
 	}
 
 	public void SetTarget(Vector3 target) {
@@ -66,27 +83,33 @@ public class PhysicItem {
 	}
 
 	class Task {
-		public Vector3 mSpeed;
+		public TASK_TYPE mType;
+		public Vector3 mValue = new Vector3(Vector3.Zero);
 		public int mDuration;
 		public boolean mWait;
 		public int mGotoBack;
 		public int mRepeat;
 		public boolean mLaunched;
-		public Vector3 mDestination;
+		
+		
 	}
 
+	enum TASK_TYPE
+	{
+		DIRECTION,
+		DESTINATION,
+		SPEED,
+		ACTION_DELETE
+	}
+	
 	private Array<Task> mTasks = new Array<Task>();
 	private Task mCurrent;
 
-	public void scheduleTask(Vector3 speed, Vector3 destination, int decSec,
+	public void scheduleTask(TASK_TYPE type,Vector3 value, int decSec,
 			boolean wait, int gotoBack, int repeat) {
 		Task t = new Task();
-		if (speed != null) {
-			t.mSpeed = speed.cpy();
-		}
-		if (destination != null) {
-			t.mDestination = destination.cpy();
-		}
+		t.mType = type;
+		t.mValue.set(value);		
 		t.mDuration = decSec;
 		t.mWait = wait;
 		t.mGotoBack = gotoBack;
@@ -117,15 +140,27 @@ public class PhysicItem {
 		if (mTasks.size > 0) {
 			mCurrent = mTasks.first();
 			mCurrent.mDuration -= deltaTime;
-			if (mCurrent.mSpeed != null) {
-				mSpeed = mCurrent.mSpeed;
-			} else {
-				mSpeed = Vector3.Zero;
+			
+			switch(mCurrent.mType)
+			{
+			case ACTION_DELETE:
+				break;
+			case DESTINATION:
+				setDestination(mCurrent.mValue);
+				break;
+			case DIRECTION:
+				setDirection(mCurrent.mValue);
+				break;
+			case SPEED:
+				mSpeed.set(mCurrent.mValue);
+				break;
+			default:
+				break;
+			
 			}
-
-			if (mCurrent.mDestination != null) {
-				setDestination(mCurrent.mDestination);
-			}
+			
 		}
 	}
+
+	
 }

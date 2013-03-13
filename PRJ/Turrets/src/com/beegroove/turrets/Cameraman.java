@@ -7,9 +7,8 @@ public class Cameraman extends PhysicItem {
 	
 	public Cameraman() {
 		
-		mPosition = new Vector3(Par.CAMERA_X, Par.CAMERA_Y, Par.CAMERA_Z);
-		mDirection = new Vector3(Par.CAMERA_DIRECTION_X,
-				Par.CAMERA_DIRECTION_Y, Par.CAMERA_DIRECTION_Z);
+		mPosition.set(Par.CAMERA_INITIAL_POSITION);
+		mDirection.set(Par.CAMERA_INITIAL_DIRECTION);
 		FOV = Par.CAMERA_FOV;
 		
 	}	

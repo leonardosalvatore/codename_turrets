@@ -74,7 +74,7 @@ public class HUD {
 	{
 		Message m = new Message();
 		
-		m.mSpeed = Vector3.X.mul(-150f);
+		m.mSpeed = Vector3.X.cpy().mul(-150f);
 		m.durationTime = 20000;
 		m.mPosition = new Vector3(1500,Par.VIEWPORT_MAX_Y,0);
 		m.creationTime=System.currentTimeMillis();
@@ -86,8 +86,8 @@ public class HUD {
 	public void NewMessage(String s, Vector3 position)
 	{
 		Message m = new Message();
-		m.mSpeed = Vector3.Z.mul(-100f);
-		m.mPosition = position;
+		m.mSpeed = Vector3.Z.cpy().mul(-100f);
+		m.mPosition.set(position);
 		m.creationTime=System.currentTimeMillis();
 		m.msg = s;
 		m.durationTime = 1000;
