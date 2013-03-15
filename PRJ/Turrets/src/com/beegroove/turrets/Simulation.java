@@ -23,11 +23,13 @@ public class Simulation {
 		rand = new Random(System.currentTimeMillis());
 
 		mCameraMan = new Cameraman();
-
-		mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,-30,0), 100, false, 0, 0);
-		mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,30,0), 100, false, 0, 0);
-		mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,0,0), 100, false, 0, 0);
-		//mCameraMan.scheduleTask(TASK_TYPE.DESTINATION,Par.CAMERA_INITIAL_POSITION, 0, false, 0, 0);
+		
+//		mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,-30,0), 100, false, 0, 0);
+//		mCameraMan.scheduleTask(TASK_TYPE.DESTINATION,Par.CAMERA_INITIAL_POSITION, 0, false, 0, 0);
+//
+//		mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,-30,0), 100, false, 0, 0);
+//		mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,30,0), 100, false, 0, 0);
+//		mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,0,0), 100, false, 0, 0);
 	}
 
 	public void update(float delta) {
@@ -39,7 +41,7 @@ public class Simulation {
 
 		UpdateEnemyAndCollisionCheck(delta);
 
-		if (enemies.size < 3) {
+		if (enemies.size < 10) {
 			enemies.addAll(WaveFactory.Instance().getMeteoriteWave(
 					starship.mPosition));
 		}
@@ -87,7 +89,7 @@ public class Simulation {
 
 	public void rotateTurret(float angle) {
 		for (Turret turret : starship.turrets) {
-			turret.mYAangle += angle;
+			turret.mHeading += angle;
 		}
 	}
 

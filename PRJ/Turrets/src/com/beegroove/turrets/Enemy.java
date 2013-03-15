@@ -14,7 +14,7 @@ public class Enemy extends PhysicItem {
 	
 	@Override
 	public void Update(float deltaTime) {
-		mYAangle+=mYAngleSpeed;
+		mHeading+=mYAngleSpeed;
 		super.Update(deltaTime);
 	}
 	

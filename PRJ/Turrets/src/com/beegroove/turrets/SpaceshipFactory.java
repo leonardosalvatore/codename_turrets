@@ -36,8 +36,12 @@ public class SpaceshipFactory {
 		ret.type = STYPE.STANDARD;
 
 		ret.turrets.get(0).mPosition.add(Par.SPACESHIP_STANDARD_POSITION_TURRET_LEFT_CORRECTION);
+		ret.turrets.get(0).mHeadingMax=Par.SPACESHIP_STANDARD_POSITION_TURRET_LEFT_HEADING_MAX;
+		ret.turrets.get(0).mHeadingMin=Par.SPACESHIP_STANDARD_POSITION_TURRET_LEFT_HEADING_MIN;
 		ret.turrets.get(1).mPosition.add(Par.SPACESHIP_STANDARD_POSITION_TURRET_RIGHT_CORRECTION);
-
+		ret.turrets.get(1).mHeadingMax=Par.SPACESHIP_STANDARD_POSITION_TURRET_RIGHT_HEADING_MAX;
+		ret.turrets.get(1).mHeadingMin=Par.SPACESHIP_STANDARD_POSITION_TURRET_RIGHT_HEADING_MIN;		
+		
 		return ret;	
 	}
 	
@@ -51,7 +55,11 @@ public class SpaceshipFactory {
 		ret.type = STYPE.STANDARD_DOUBLE;
 		
 		ret.turrets.get(0).mPosition.add(Par.SPACESHIP_STANDARD_POSITION_TURRET_LEFT_CORRECTION);
+		ret.turrets.get(0).mHeadingMax=Par.SPACESHIP_STANDARD_POSITION_TURRET_LEFT_HEADING_MAX;
+		ret.turrets.get(0).mHeadingMin=Par.SPACESHIP_STANDARD_POSITION_TURRET_LEFT_HEADING_MIN;
 		ret.turrets.get(1).mPosition.add(Par.SPACESHIP_STANDARD_POSITION_TURRET_RIGHT_CORRECTION);
+		ret.turrets.get(1).mHeadingMax=Par.SPACESHIP_STANDARD_POSITION_TURRET_RIGHT_HEADING_MAX;
+		ret.turrets.get(1).mHeadingMin=Par.SPACESHIP_STANDARD_POSITION_TURRET_RIGHT_HEADING_MIN;		
 		return ret;	
 	}
 	
@@ -67,8 +75,44 @@ public class SpaceshipFactory {
 		ret.type = STYPE.ADVANCED;
 		
 		ret.turrets.get(0).mPosition.add(Par.SPACESHIP_ADVANCED_POSITION_TURRET_LEFT_CORRECTION);
+		ret.turrets.get(0).mHeadingMax=Par.SPACESHIP_ADVANCED_POSITION_TURRET_LEFT_HEADING_MAX;
+		ret.turrets.get(0).mHeadingMin=Par.SPACESHIP_ADVANCED_POSITION_TURRET_LEFT_HEADING_MIN;
 		ret.turrets.get(1).mPosition.add(Par.SPACESHIP_ADVANCED_POSITION_TURRET_RIGHT_CORRECTION);
+		ret.turrets.get(1).mHeadingMax=Par.SPACESHIP_STANDARD_POSITION_TURRET_RIGHT_HEADING_MAX;
+		ret.turrets.get(1).mHeadingMin=Par.SPACESHIP_ADVANCED_POSITION_TURRET_RIGHT_HEADING_MIN;
 		ret.turrets.get(2).mPosition.add(Par.SPACESHIP_ADVANCED_POSITION_TURRET_CENTER_CORRECTION);
+		ret.turrets.get(2).mHeadingMax=Par.SPACESHIP_ADVANCED_POSITION_TURRET_CENTER_HEADING_MAX;
+		ret.turrets.get(2).mHeadingMin=Par.SPACESHIP_ADVANCED_POSITION_TURRET_CENTER_HEADING_MIN;
+		return ret;	
+	}
+	
+	static StarShip NewDoubleGunShipSpaceship()
+	{
+		StarShip ret = new StarShip();
+		ret.mSize = 3;
+		ret.mPosition.set(Par.SPACESHIP_STANDARD_POSITION);
+		ret.turrets.add(NewDoubleSmallTurret());
+		ret.turrets.add(NewDoubleSmallTurret());
+		ret.turrets.add(NewDoubleSmallTurret());
+		ret.turrets.add(NewDoubleSmallTurret());
+		ret.turrets.add(NewDoubleSmallTurret());
+		ret.type = STYPE.GUNSIHP_DOUBLE;
+		
+		ret.turrets.get(0).mPosition.add(Par.SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_CORRECTION);
+		ret.turrets.get(0).mHeadingMax=  Par.SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_HEADING_MAX;
+		ret.turrets.get(0).mHeadingMin=  Par.SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_HEADING_MIN;
+		ret.turrets.get(1).mPosition.add(Par.SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_CORRECTION);
+		ret.turrets.get(1).mHeadingMax=  Par.SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_HEADING_MAX;
+		ret.turrets.get(1).mHeadingMin=  Par.SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_HEADING_MIN;
+		ret.turrets.get(2).mPosition.add(Par.SPACESHIP_GUNSHIP_POSITION_TURRET_CENTER_CORRECTION);
+		ret.turrets.get(2).mHeadingMax=  Par.SPACESHIP_GUNSHIP_POSITION_TURRET_CENTER_HEADING_MAX;
+		ret.turrets.get(2).mHeadingMin=  Par.SPACESHIP_GUNSHIP_POSITION_TURRET_CENTER_HEADING_MIN;
+		ret.turrets.get(3).mPosition.add(Par.SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_BACK_CORRECTION);
+		ret.turrets.get(3).mHeadingMax=  Par.SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_BACK_HEADING_MAX;
+		ret.turrets.get(3).mHeadingMin=  Par.SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_BACK_HEADING_MIN;
+		ret.turrets.get(4).mPosition.add(Par.SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_BACK_CORRECTION);
+		ret.turrets.get(4).mHeadingMax=  Par.SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_BACK_HEADING_MAX;
+		ret.turrets.get(4).mHeadingMin=  Par.SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_BACK_HEADING_MIN;
 		return ret;	
 	}
 	

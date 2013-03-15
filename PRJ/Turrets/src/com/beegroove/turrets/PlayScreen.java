@@ -20,7 +20,8 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 		simulation = new Simulation();
 		simulation.listener = this;
 		//simulation.starship = SpaceshipFactory.NewSingleBasicSpaceship();
-		simulation.starship = SpaceshipFactory.NewDoubleAdvancedSpaceship();
+		//simulation.starship = SpaceshipFactory.NewDoubleAdvancedSpaceship();
+		simulation.starship = SpaceshipFactory.NewDoubleGunShipSpaceship();
 		renderer = new SceneManager();
 		gamePlane = new Plane(Vector3.Y, 0);
 
@@ -71,13 +72,13 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 				Gdx.app.log("PlayScreen",
 						String.format("LEFT Int[%d]:%s", pointer, pointOnPlane));
 				lastLeftPointOnPlane.set(pointOnPlane);
-				return Par.LEFT_FINGER;
+				return Par.DRIVE_FINGER;
 			} else {
 				Gdx.app.log("PlayScreen", String.format("RIGHT Int[%d]:%s",
 						pointer, pointOnPlane));
 				simulation.Fire(true,mSuperFire);
 				lastRightPointOnPlane.set(pointOnPlane);
-				return Par.RIGHT_FINGER;
+				return Par.TARGET_FINGER;
 			}
 		}
 		return Par.NO_FINGER;
@@ -87,15 +88,15 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 		int pointer0result = ApplyInput(0);
 		int pointer1result = ApplyInput(1);
 
-		if (pointer0result != Par.LEFT_FINGER
-				&& pointer1result != Par.LEFT_FINGER) {
+		if (pointer0result != Par.DRIVE_FINGER
+				&& pointer1result != Par.DRIVE_FINGER) {
 			simulation.StopShip();
 		} else {
 			simulation.SetStarshipDestination(lastLeftPointOnPlane);
 		}
 
-		if (pointer0result != Par.RIGHT_FINGER
-				&& pointer1result != Par.RIGHT_FINGER) {
+		if (pointer0result != Par.TARGET_FINGER
+				&& pointer1result != Par.TARGET_FINGER) {
 			simulation.Fire(false,mSuperFire);
 		} else {
 			simulation.SetTurretTarget(lastRightPointOnPlane);

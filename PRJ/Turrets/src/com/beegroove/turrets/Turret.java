@@ -14,7 +14,7 @@ public class Turret extends PhysicItem {
 
 	public TTYPE type;
 
-	private long lastfire, firerate = 100;
+	private long lastfire, firerate = 200;
 	
 	@Override
 	public void Update(float deltaTime) {
@@ -26,7 +26,7 @@ public class Turret extends PhysicItem {
 		}
 		else
 		{
-			firerate = 100;
+			firerate = 200;
 		}
 		
 		if (mFire) {

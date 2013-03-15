@@ -9,8 +9,8 @@ public class WeaponFactory {
 		s.mPosition.set(turret.mPosition);
 		s.mPosition.z -= Par.SHOOT_SINGLE_TURRET_Z_CORRECTION;
 		s.mSpeed.set(Par.SHOOT_BASIC_SPEED);
-		s.mSpeed.rotate(Vector3.Y, turret.mYAangle);
-		s.mYAangle = turret.mYAangle;
+		s.mSpeed.rotate(Vector3.Y, turret.mHeading);
+		s.mHeading = turret.mHeading;
 		return s;
 	}
 
@@ -20,8 +20,8 @@ public class WeaponFactory {
 		s.mPosition.set(turret.mPosition);
 		s.mPosition.z -= Par.SHOOT_DOUBLE_TURRET_LEFT_TURRET_Z_CORRECTION;
 		s.mSpeed.set(Par.SHOOT_BASIC_SPEED);
-		s.mSpeed.rotate(Vector3.Y, turret.mYAangle);
-		s.mYAangle = turret.mYAangle;
+		s.mSpeed.rotate(Vector3.Y, turret.mHeading);
+		s.mHeading = turret.mHeading;
 		return s;
 	}
 
@@ -30,8 +30,8 @@ public class WeaponFactory {
 		s.mPosition.set(turret.mPosition);
 		s.mPosition.z -= Par.SHOOT_DOUBLE_TURRET_RIGHT_TURRET_Z_CORRECTION;
 		s.mSpeed.set(Par.SHOOT_BASIC_SPEED);
-		s.mSpeed.rotate(Vector3.Y, turret.mYAangle);
-		s.mYAangle = turret.mYAangle;
+		s.mSpeed.rotate(Vector3.Y, turret.mHeading);
+		s.mHeading = turret.mHeading;
 		return s;
 	}
 }

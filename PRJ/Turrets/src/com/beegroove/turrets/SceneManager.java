@@ -30,6 +30,7 @@ public class SceneManager {
 	private StillModel spaceshipBasicMesh;
 	private StillModel spaceshipStandardMesh;
 	private StillModel spaceshipAdvancedMesh;
+	private StillModel spaceshipGunshipMesh;
 	private StillModel shootMesh;
 	private StillModel singleSmallTurretMesh;
 	private StillModel doubleSmallTurretMesh;
@@ -39,6 +40,8 @@ public class SceneManager {
 	private Texture shipTexture;
 	private Texture turretTexture;
 	private Texture backgroundTexture;
+	private Texture explosionTexture;
+	private Texture plasmaTexture;
 	private BitmapFont fontStandard;
 	private Random mRandom = new Random(System.currentTimeMillis());
 
@@ -101,6 +104,8 @@ public class SceneManager {
 					.loadStillModel(Gdx.files.internal("data/SpaceShip1.obj"));
 			spaceshipAdvancedMesh = ModelLoaderRegistry
 					.loadStillModel(Gdx.files.internal("data/SpaceShip2.obj"));
+			spaceshipGunshipMesh = ModelLoaderRegistry
+					.loadStillModel(Gdx.files.internal("data/SpaceShip3.obj"));
 			singleSmallTurretMesh = ModelLoaderRegistry
 					.loadStillModel(Gdx.files.internal("data/Turret0.obj"));
 			doubleSmallTurretMesh = ModelLoaderRegistry
@@ -119,7 +124,9 @@ public class SceneManager {
 			turretTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
 			backgroundTexture = new Texture(
 					Gdx.files.internal("data/background.png"));
-
+			
+			explosionTexture = new Texture(Gdx.files.internal("data/explosion.png"));
+			plasmaTexture = new Texture(Gdx.files.internal("data/plasma.png"));
 			meteroriteMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Meteorite.obj"));
 			sputnikMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
@@ -162,18 +169,11 @@ public class SceneManager {
 		gl.glEnable(GL20.GL_DEPTH_TEST);
 		gl.glEnable(GL20.GL_CULL_FACE);
 		gl.glEnable(GL20.GL_TEXTURE_2D);
-
+		
 		setProjectionAndCamera(simulation.mCameraMan);
 
 		/* Shader selection */
 		currentShader = lightTexShader;
-
-		for (Turret turret : simulation.starship.turrets) {
-			renderTurret(turret);
-			for (Shoot shoot : turret.shoots) {
-				renderShoot(shoot);
-			}
-		}
 
 		renderShip(simulation.starship);
 
@@ -181,9 +181,17 @@ public class SceneManager {
 			renderEnemy(k);
 		}
 
+		for (Turret turret : simulation.starship.turrets) {
+			renderTurret(turret);
+			for (Shoot shoot : turret.shoots) {
+				shoot.mScreenPosition.set(shoot.mPosition);
+				mCamera.project(shoot.mScreenPosition);
+			}
+		}
+		
 		gl.glDisable(GL20.GL_CULL_FACE);
 		gl.glDisable(GL20.GL_DEPTH_TEST);
-
+		
 		renderHUD(HUD.Instance(), simulation);
 
 	}
@@ -215,6 +223,10 @@ public class SceneManager {
 		case ADVANCED_DOUBLE:
 			spaceshipAdvancedMesh.render(currentShader);
 			break;
+		case GUNSHIP:
+		case GUNSIHP_DOUBLE:
+			spaceshipGunshipMesh.render(currentShader);
+			break;
 		default:
 			break;
 
@@ -229,7 +241,7 @@ public class SceneManager {
 		transform.set(mCamera.combined);
 		transform.translate(turret.mPosition.x, turret.mPosition.y,
 				turret.mPosition.z - Par.TURRET_SINGLE_HALF_DIAMETER);
-		transform.rotate(0, 1, 0, turret.mYAangle);
+		transform.rotate(0, 1, 0, turret.mHeading);
 		transform.translate(0, 0, +Par.TURRET_SINGLE_HALF_DIAMETER);
 		currentShader.setUniformMatrix("u_projView", transform);
 		normal.idt();
@@ -267,7 +279,7 @@ public class SceneManager {
 		transform.set(mCamera.combined);
 		transform.translate(shoot.mPosition.x, shoot.mPosition.y,
 				shoot.mPosition.z);
-		transform.rotate(0, 1, 0, shoot.mYAangle);
+		transform.rotate(0, 1, 0, shoot.mHeading);
 		currentShader.setUniformMatrix("u_projView", transform);
 		normal.idt();
 		normal.rotate(0, 1, 0, 180);
@@ -288,10 +300,10 @@ public class SceneManager {
 
 		switch (enemy.mType) {
 		case METEORITE:
-			transform.rotate(0, 1, 0, enemy.mYAangle);
+			transform.rotate(0, 1, 0, enemy.mHeading);
 			break;
 		case SPUTNIK:
-			transform.rotate(1, 0, 0, enemy.mYAangle);
+			transform.rotate(1, 0, 0, enemy.mHeading);
 			break;
 		default:
 			break;
@@ -345,7 +357,16 @@ public class SceneManager {
 	private void renderHUD(HUD hud, Simulation simulation) {
 		spriteBatch.setProjectionMatrix(viewMatrix);
 		spriteBatch.begin();
+		
 		spriteBatch.enableBlending();
+		spriteBatch.setColor(Color.WHITE);
+		
+		for (Turret turret : simulation.starship.turrets) {
+			for (Shoot shoot : turret.shoots) {
+				spriteBatch.draw(plasmaTexture, shoot.mScreenPosition.x,shoot.mScreenPosition.y,50,50);
+			}
+		}
+		
 		for (Message m : hud.GetMessage()) {
 			fontStandard.setColor(Color.BLACK);
 			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x - 1,
@@ -376,7 +397,7 @@ public class SceneManager {
 					.drawMultiLine(
 							spriteBatch,
 							String.format(
-									"Cam.Pos:%2.2f %2.2f %2.2f\nCam.Dir:%2.2f %2.2f %2.2f\nCam.Angle:%2.2f\nCam.FOV:%s\nWave size:%d\nShipPos:%2.2f %2.2f %2.2f\nShipDes:%2.2f %2.2f %2.2f\nShipSpeed:%2.2f %2.2f %2.2f\n",
+									"Cam.Pos:%2.2f %2.2f %2.2f\nCam.Dir:%2.2f %2.2f %2.2f\nCam.Angle:%2.2f\nCam.FOV:%s\nWave size:%d\nShipPos:%2.2f %2.2f %2.2f\nShipDes:%2.2f %2.2f %2.2f\nShipSpeed:%2.2f %2.2f %2.2f\nTur.Hdg:%s\nTur.En:%s",
 									simulation.mCameraMan.mPosition.x,
 									simulation.mCameraMan.mPosition.y,
 									simulation.mCameraMan.mPosition.z,
@@ -394,18 +415,25 @@ public class SceneManager {
 									simulation.starship.mDestination.z,
 									simulation.starship.mSpeed.x,
 									simulation.starship.mSpeed.y,
-									simulation.starship.mSpeed.z), 750, 250);
+									simulation.starship.mSpeed.z,
+									simulation.starship.turrets.get(0).mHeading,
+									simulation.starship.turrets.get(0).mEnergy), 750, 250);
 		}
-
+		
 		spriteBatch.end();
 	}
 
 	public void dispose() {
 		spriteBatch.dispose();
 		shipTexture.dispose();
+		backgroundTexture.dispose();
+		explosionTexture.dispose();
+		plasmaTexture.dispose();
+		turretTexture.dispose();
 		spaceshipBasicMesh.dispose();
 		spaceshipStandardMesh.dispose();
 		spaceshipAdvancedMesh.dispose();
+		spaceshipGunshipMesh.dispose();
 		shootMesh.dispose();
 		// TODO others...
 	}

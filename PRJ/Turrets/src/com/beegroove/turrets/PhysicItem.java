@@ -14,7 +14,10 @@ public class PhysicItem {
 	public Vector3 mDestination;
 	public Vector3 mLastStep;
 	public Vector3 mDirection;
-	public float mYAangle;
+	public Vector3 mScreenPosition;
+	public float mHeading;
+	public float mHeadingMin=Par.TURRET_HEADING_MIN;
+	public float mHeadingMax=Par.TURRET_HEADING_MAX;
 	public float mSize;
 	public int mEnergy;
 	public float mLastDestDist;
@@ -31,6 +34,8 @@ public class PhysicItem {
 		mLastStep.set(Vector3.Zero);
 		mDirection = new Vector3();
 		mDirection.set(Vector3.Zero);
+		mScreenPosition = new Vector3();
+		mScreenPosition.set(Vector3.Zero);
 	}
 
 	public void Update(float deltaTime) {
@@ -62,11 +67,17 @@ public class PhysicItem {
 	}
 
 	public void SetTarget(Vector3 target) {
-		mYAangle = (float) -MathUtils.radiansToDegrees
+		mHeading = (float) -MathUtils.radiansToDegrees
 				* MathUtils.atan2(target.z - mPosition.z, target.x
 						- mPosition.x);
+		if(mHeading>mHeadingMax)
+		mHeading = mHeadingMax;
+		
+		if(mHeading<mHeadingMin)
+			mHeading = mHeadingMin;
+			
 		Gdx.app.log("PhysicItem", String.format(
-				"Target:%s Position:%s Angle:%f", target, mPosition, mYAangle));
+				"Target:%s Position:%s Angle:%f", target, mPosition, mHeading));
 	}
 
 	public void Stop() {
@@ -77,7 +88,7 @@ public class PhysicItem {
 	public String toString() {
 		String ret = String.format(
 				"Speed:%s\nLastStep:%s\nPosition: %s\nY_Angle:%f", mSpeed,
-				mLastStep, mPosition, mYAangle);
+				mLastStep, mPosition, mHeading);
 		return ret;
 
 	}
@@ -120,14 +131,7 @@ public class PhysicItem {
 	public void applyCurrentTask(float deltaTime) {
 		deltaTime *= 10;
 
-		/*
-		 * STOP ON DESTINANTION! float currentDistant =
-		 * mDestination.dst(mPosition);
-		 * 
-		 * if(mLastDestDist != 0 && mLastDestDist - currentDistant < 0) { mSpeed
-		 * = Vector3.Zero; } mLastDestDist = currentDistant;
-		 */
-		if (mCurrent != null) {
+		if (mCurrent != null) {	
 			mCurrent.mDuration -= deltaTime;
 			if (mCurrent.mDuration <= 0) {
 				mTasks.removeIndex(0);
@@ -136,6 +140,7 @@ public class PhysicItem {
 				return;
 			}
 		}
+		
 
 		if (mTasks.size > 0) {
 			mCurrent = mTasks.first();
@@ -158,7 +163,20 @@ public class PhysicItem {
 				break;
 			
 			}
-			
+		
+
+			if(mCurrent.mType == TASK_TYPE.DESTINATION)
+			{
+			 // STOP ON DESTINANTION! 
+				float currentDistant =
+			  mDestination.dst(mPosition);
+			  
+			  if(mLastDestDist != 0 && mLastDestDist - currentDistant < 0) { 				
+				  mSpeed.set(Vector3.Zero); 
+				  } 
+			  mLastDestDist = currentDistant;
+			 
+			}
 		}
 	}
 
