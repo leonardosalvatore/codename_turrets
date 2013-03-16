@@ -10,6 +10,7 @@ public class PhysicItem {
 
 	public Hashtable<String, Float> mTag;
 	public Vector3 mPosition;
+	public boolean mToRemove;
 	public Vector3 mSpeed;
 	public Vector3 mDestination;
 	public Vector3 mLastStep;
@@ -36,6 +37,15 @@ public class PhysicItem {
 		mDirection.set(Vector3.Zero);
 		mScreenPosition = new Vector3();
 		mScreenPosition.set(Vector3.Zero);
+	}
+
+	public PhysicItem(PhysicItem s) {
+		mPosition = s.mPosition;
+		mSpeed = s.mSpeed;
+		mDestination = s.mDestination;
+		mLastStep = s.mLastStep;
+		mDirection = s.mDirection;
+		mScreenPosition = s.mScreenPosition;
 	}
 
 	public void Update(float deltaTime) {
@@ -75,9 +85,6 @@ public class PhysicItem {
 		
 		if(mHeading<mHeadingMin)
 			mHeading = mHeadingMin;
-			
-		Gdx.app.log("PhysicItem", String.format(
-				"Target:%s Position:%s Angle:%f", target, mPosition, mHeading));
 	}
 
 	public void Stop() {
@@ -110,7 +117,11 @@ public class PhysicItem {
 		DIRECTION,
 		DESTINATION,
 		SPEED,
-		ACTION_DELETE
+		ACTION_DELETE,
+		SIZE_UP,
+		SIZE_DOWN,
+		DELETE,
+		SLEEP
 	}
 	
 	private Array<Task> mTasks = new Array<Task>();
@@ -137,7 +148,9 @@ public class PhysicItem {
 				mTasks.removeIndex(0);
 				mCurrent = null;
 			} else {
-				return;
+//TODO: THIS WAS TO APPLY THE TASK JUST ONE TIME 
+//maybe is another boolean settings for the task class, mJustOneTime
+//				return;
 			}
 		}
 		
@@ -148,6 +161,15 @@ public class PhysicItem {
 			
 			switch(mCurrent.mType)
 			{
+			case DELETE:
+				mToRemove = true;
+				break;
+			case SIZE_UP:
+				mSize+=mCurrent.mValue.x;
+				break;
+			case SIZE_DOWN:
+				mSize-=mCurrent.mValue.x;
+				break;
 			case ACTION_DELETE:
 				break;
 			case DESTINATION:
@@ -155,6 +177,8 @@ public class PhysicItem {
 				break;
 			case DIRECTION:
 				setDirection(mCurrent.mValue);
+				break;
+			case SLEEP:
 				break;
 			case SPEED:
 				mSpeed.set(mCurrent.mValue);

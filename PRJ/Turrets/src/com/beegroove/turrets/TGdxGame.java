@@ -26,6 +26,8 @@ public class TGdxGame extends Game {
 		return (GenericScreen)super.getScreen();
 	}
 	
+	
+	int mLevel=0;
 	@Override 
 	public void render()
 	{
@@ -33,14 +35,11 @@ public class TGdxGame extends Game {
 		
 		switch (StateMachine.GetCurrentState()) {
 		case INTRO:
-			
-			if(StateMachine.GetTimeInCurrentState() > Par.STATE_INTRO_DURATION)
-			{
-				StateMachine.SetNextState(STATE.PLAY);
-				setScreen(new PlayScreen());
-			}
+			StateMachine.SetNextState(STATE.PLAY);
+			setScreen(new PlayScreen(5));
 			break;
 		case PLAY:
+			
 			break;
 		case PAUSE:
 			

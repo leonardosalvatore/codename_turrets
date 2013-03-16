@@ -5,6 +5,7 @@ import java.util.Iterator;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.beegroove.turrets.HUD.Message;
 
 public class HUD {
 	
@@ -12,7 +13,7 @@ public class HUD {
 
 	protected HUD() {
 		statusBar = new Message();
-		statusBar.mPosition = new Vector3(Par.VIEWPORT_MAX_X/3,20,0);
+		statusBar.mPosition = new Vector3(Par.VIEWPORT_MAX_X/4,20,0);
 	}
 
 	public static HUD Instance() {
@@ -64,9 +65,9 @@ public class HUD {
 	}
 
 	private Message statusBar;
-	public Message GetStatusBar(int score,int missed,int energy )
+	public Message GetStatusBar(int wave,int score,int missed,int energy )
 	{
-		statusBar.msg = "SCORE:" + score + "  MISSED:" +missed + " ENERGY:" + energy;
+		statusBar.msg = String.format("WAVE:%d SCORE:%d MISSED:%d ENERGY:%d ", wave,score,missed,energy);
 		return statusBar;
 	}
 	
@@ -104,5 +105,7 @@ public class HUD {
 	{
 		return messagesRoller;
 	}
+
+	
 
 }

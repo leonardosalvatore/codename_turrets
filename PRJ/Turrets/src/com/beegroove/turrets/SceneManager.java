@@ -363,8 +363,20 @@ public class SceneManager {
 		
 		for (Turret turret : simulation.starship.turrets) {
 			for (Shoot shoot : turret.shoots) {
-				spriteBatch.draw(plasmaTexture, shoot.mScreenPosition.x,shoot.mScreenPosition.y,50,50);
+				spriteBatch.draw(plasmaTexture,
+						shoot.mScreenPosition.x,
+						shoot.mScreenPosition.y-32,
+						0,0,128,64,1f,1f,shoot.mHeading,0,0,256,128,false,false);
 			}
+		}
+		
+		for (PhysicItem exp: simulation.explosions)
+		{
+			spriteBatch.draw(explosionTexture,
+					exp.mScreenPosition.x-50*exp.mSize,
+					exp.mScreenPosition.y-50*exp.mSize, 
+					100*exp.mSize, 
+					100*exp.mSize);
 		}
 		
 		for (Message m : hud.GetMessage()) {
@@ -382,7 +394,7 @@ public class SceneManager {
 			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x, m.mPosition.y);
 		}
 
-		Message statusmsg = hud.GetStatusBar(simulation.Score,
+		Message statusmsg = hud.GetStatusBar(WaveFactory.mWaveNumber,simulation.Score,
 				simulation.Missed, simulation.starship.mEnergy);
 		fontStandard.setColor(Color.BLACK);
 		fontStandard.draw(spriteBatch, statusmsg.msg,
@@ -435,6 +447,7 @@ public class SceneManager {
 		spaceshipAdvancedMesh.dispose();
 		spaceshipGunshipMesh.dispose();
 		shootMesh.dispose();
+		
 		// TODO others...
 	}
 

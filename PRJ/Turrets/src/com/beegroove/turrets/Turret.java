@@ -29,9 +29,9 @@ public class Turret extends PhysicItem {
 			firerate = 200;
 		}
 		
-		if (mFire) {
+		if (mFire && 
+				(mHeading<mHeadingMax && mHeading>mHeadingMin)) {
 			if (lastfire < System.currentTimeMillis() - firerate) {
-
 				switch (type) {
 				case DOUBLE_CANNON:
 					break;

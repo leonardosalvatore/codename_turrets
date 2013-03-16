@@ -16,12 +16,31 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 
 	public Plane gamePlane;
 
-	public PlayScreen() {
+	public PlayScreen(int level) {
 		simulation = new Simulation();
 		simulation.listener = this;
-		//simulation.starship = SpaceshipFactory.NewSingleBasicSpaceship();
-		//simulation.starship = SpaceshipFactory.NewDoubleAdvancedSpaceship();
-		simulation.starship = SpaceshipFactory.NewDoubleGunShipSpaceship();
+		
+		switch (level)
+		{
+		case 1:
+			simulation.starship = SpaceshipFactory.NewSingleBasicSpaceship();
+			break;
+		case 2:
+			simulation.starship = SpaceshipFactory.NewDoubleBasicSpaceship();
+				break;
+		case 3:
+			simulation.starship = SpaceshipFactory.NewSingleStandardSpaceship();
+			break;
+		case 4:
+			simulation.starship = SpaceshipFactory.NewDoubleStandardSpaceship();
+			break;
+		case 5:
+			simulation.starship = SpaceshipFactory.NewDoubleAdvancedSpaceship();
+			break;
+		case 6:
+			simulation.starship = SpaceshipFactory.NewDoubleGunShipSpaceship();
+				break;
+		}
 		renderer = new SceneManager();
 		gamePlane = new Plane(Vector3.Y, 0);
 
@@ -45,8 +64,8 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 
 	private Ray rayFromCamera;
 	private Vector3 pointOnPlane = new Vector3();
-	private Vector3 lastLeftPointOnPlane = new Vector3();
-	private Vector3 lastRightPointOnPlane = new Vector3();
+	private Vector3 lastDrivePointOnPlane = new Vector3();
+	private Vector3 lastTargetPointOnPlane = new Vector3();
 
 	@Override
 	public void update(float delta) {
@@ -69,15 +88,11 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 					pointOnPlane);
 
 			if (pointOnPlane.x < 0) {
-				Gdx.app.log("PlayScreen",
-						String.format("LEFT Int[%d]:%s", pointer, pointOnPlane));
-				lastLeftPointOnPlane.set(pointOnPlane);
+				lastDrivePointOnPlane.set(pointOnPlane);
 				return Par.DRIVE_FINGER;
 			} else {
-				Gdx.app.log("PlayScreen", String.format("RIGHT Int[%d]:%s",
-						pointer, pointOnPlane));
 				simulation.Fire(true,mSuperFire);
-				lastRightPointOnPlane.set(pointOnPlane);
+				lastTargetPointOnPlane.set(pointOnPlane);
 				return Par.TARGET_FINGER;
 			}
 		}
@@ -92,14 +107,14 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 				&& pointer1result != Par.DRIVE_FINGER) {
 			simulation.StopShip();
 		} else {
-			simulation.SetStarshipDestination(lastLeftPointOnPlane);
+			simulation.SetStarshipDestination(lastDrivePointOnPlane);
 		}
 
 		if (pointer0result != Par.TARGET_FINGER
 				&& pointer1result != Par.TARGET_FINGER) {
 			simulation.Fire(false,mSuperFire);
 		} else {
-			simulation.SetTurretTarget(lastRightPointOnPlane);
+			simulation.SetTurretTarget(lastTargetPointOnPlane);
 		}
 
 		

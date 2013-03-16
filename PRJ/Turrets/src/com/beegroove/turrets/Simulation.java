@@ -9,13 +9,14 @@ import com.badlogic.gdx.utils.Array;
 import com.beegroove.turrets.Enemy.ETYPE;
 import com.beegroove.turrets.Par.DIRECTION;
 import com.beegroove.turrets.PhysicItem.TASK_TYPE;
+import com.beegroove.turrets.StateMachine.STATE;
 
 public class Simulation {
 	public transient SimulationListener listener;
 	public StarShip starship;
 	public Cameraman mCameraMan;
 	public Array<Enemy> enemies = new Array<Enemy>();
-	public int WaveNumber = 0;
+	public Array<PhysicItem> explosions = new Array<PhysicItem>();
 	private Random rand;
 	public int Score = 0, Missed = 0;
 
@@ -41,10 +42,10 @@ public class Simulation {
 
 		UpdateEnemyAndCollisionCheck(delta);
 
-		if (enemies.size < 10) {
+		if (enemies.size < Par.INITIAL_WAVE_NUMBER/2) {
 			enemies.addAll(WaveFactory.Instance().getMeteoriteWave(
 					starship.mPosition));
-		}
+		}		
 	}
 
 	private void UpdateEnemyAndCollisionCheck(float delta) {
@@ -60,25 +61,51 @@ public class Simulation {
 				} else if (k.mType == ETYPE.SPUTNIK) {
 					iteratorEnemy.remove();
 				}
-			} else if (k.mPosition.x < -30) {
-				iteratorEnemy.remove();
-				Missed++;
-			} else {
+			}  else {
 				for (Turret t : starship.turrets) {
 					for (Iterator<Shoot> iteratorShoot = t.shoots.iterator(); iteratorShoot
 							.hasNext();) {
-						Shoot s = (Shoot) iteratorShoot.next();
-						if (s.mPosition.dst(k.mPosition) < k.mSize) {
-							iteratorShoot.remove();
+						Shoot shoot = (Shoot) iteratorShoot.next();
+						if (shoot.mPosition.dst(k.mPosition) < k.mSize) {
 							k.mEnergy--;
-							if (k.mEnergy <= 0) {
-								iteratorEnemy.remove();
-								Score++;
+							
+							PhysicItem tmp = new PhysicItem((PhysicItem)shoot);
+							if(k.mEnergy>0)
+							{
+								tmp.mSize=0.1f;
 							}
-							break;
+							else
+							{
+								tmp.mSize= k.mSize;
+							}
+							
+							tmp.scheduleTask(TASK_TYPE.SIZE_UP, new Vector3(0.1f, 0, 0), 20, false, 0, 0);
+							tmp.scheduleTask(TASK_TYPE.SIZE_DOWN, new Vector3(0.1f, 0, 0), 20, false, 0, 0);
+							tmp.scheduleTask(TASK_TYPE.DELETE, new Vector3(0.1f, 0, 0), 0, false, 0, 0);
+							explosions.add(tmp);
+							iteratorShoot.remove();
+							
 						}
 					}
 				}
+			}
+			
+			if (k.mPosition.x < -30) {
+				iteratorEnemy.remove();
+				Missed++;
+			}
+			else if (k.mEnergy <= 0) {
+				iteratorEnemy.remove();
+				Score++;								
+			}
+		}
+		for (Iterator<PhysicItem> iteratorExplosion = explosions.iterator(); iteratorExplosion.hasNext();)
+		{
+			PhysicItem item = (PhysicItem) iteratorExplosion.next();
+			item.Update(delta);
+			if(item.mToRemove)
+			{
+				iteratorExplosion.remove();
 			}
 		}
 	}
