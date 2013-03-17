@@ -116,6 +116,41 @@ public class SpaceshipFactory {
 		return ret;	
 	}
 	
+	static StarShip NewDoubleBattleCrusierSpaceship()
+	{
+		StarShip ret = new StarShip();
+		ret.mSize = 3;
+		ret.mPosition.set(Par.SPACESHIP_STANDARD_POSITION);
+		ret.turrets.add(NewDoubleSmallTurret());
+		ret.turrets.add(NewDoubleSmallTurret());
+		ret.turrets.add(NewDoubleSmallTurret());
+		ret.turrets.add(NewDoubleSmallTurret());
+		ret.turrets.add(NewDoubleSmallTurret());
+		ret.turrets.add(NewDoubleSmallTurret());
+		ret.type = STYPE.BATTLECRUISER;
+		
+		ret.turrets.get(0).mPosition.add(Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_LEFT_CORRECTION);
+		ret.turrets.get(0).mHeadingMax=  Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_LEFT_HEADING_MAX;
+		ret.turrets.get(0).mHeadingMin=  Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_LEFT_HEADING_MIN;
+		ret.turrets.get(1).mPosition.add(Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_RIGHT_CORRECTION);
+		ret.turrets.get(1).mHeadingMax=  Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_RIGHT_HEADING_MAX;
+		ret.turrets.get(1).mHeadingMin=  Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_RIGHT_HEADING_MIN;
+		ret.turrets.get(2).mPosition.add(Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_2_LEFT_CORRECTION);
+		ret.turrets.get(2).mHeadingMax=  Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_2_LEFT_HEADING_MAX;
+		ret.turrets.get(2).mHeadingMin=  Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_2_LEFT_HEADING_MIN;
+		ret.turrets.get(3).mPosition.add(Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_2_RIGHT_CORRECTION);
+		ret.turrets.get(3).mHeadingMax=  Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_2_RIGHT_HEADING_MAX;
+		ret.turrets.get(3).mHeadingMin=  Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_2_RIGHT_HEADING_MIN;
+		ret.turrets.get(4).mPosition.add(Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_3_LEFT_CORRECTION);
+		ret.turrets.get(4).mHeadingMax=  Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_3_LEFT_HEADING_MAX;
+		ret.turrets.get(4).mHeadingMin=  Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_3_LEFT_HEADING_MIN;
+		ret.turrets.get(5).mPosition.add(Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_3_RIGHT_CORRECTION);
+		ret.turrets.get(5).mHeadingMax=  Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_3_RIGHT_HEADING_MAX;
+		ret.turrets.get(5).mHeadingMin=  Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_3_RIGHT_HEADING_MIN;
+		
+		return ret;	
+	}
+	
 	private static Turret NewSingleSmallTurret()
 	{
 		Turret t = new Turret();

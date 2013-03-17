@@ -39,10 +39,10 @@ public class WaveFactory {
 			temp.mHeading = (float) rand.nextInt(360);
 			temp.mYAngleSpeed = (float) rand.nextInt(10) - 5;
 			temp.mSize = rand.nextInt((int) (2 + mWaveNumber * .4));
-			temp.mEnergy = (int) (temp.mSize * 3);
+			temp.mEnergy = (int) (temp.mSize * 4);
 			temp.mType = ETYPE.METEORITE;
 			temp.scheduleTask(TASK_TYPE.SPEED,
-					new Vector3(-(rand.nextInt(2 + mWaveNumber) + 3), 0, -2
+					new Vector3(-(rand.nextInt(2 ) + 3), 0, -2
 							+ rand.nextInt(4)), 50 + 10 * rand.nextInt(10),
 					true, 0, 0);
 

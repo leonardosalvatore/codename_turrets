@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Par {
 	public static final boolean HUD_DEBUG = false;
-	public static final float HUD_SPLITPOINT = -15;
+	public static final float HUD_SPLITPOINT = -10;
 	public static final Vector3 SINGLE_TURRET_POSITION 	= new Vector3(-25f, 0, -10.15f);
 	public static final Vector3 DOUBLE_TURRET_POSITION 	= new Vector3(-25f, 0, -10.15f);
 	public static final Vector3 SHOOT_BASIC_SPEED 		= new Vector3(40, 0, 0);
@@ -32,20 +32,40 @@ public class Par {
 	public static final float SPACESHIP_ADVANCED_POSITION_TURRET_RIGHT_HEADING_MAX = 30;
 	
 	public static final Vector3 SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_CORRECTION = new Vector3(0.45f,0.1f,0.1f);
-	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_HEADING_MIN = -70;
+	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_HEADING_MIN = -85;
 	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_HEADING_MAX =50;
 	public static final Vector3 SPACESHIP_GUNSHIP_POSITION_TURRET_CENTER_CORRECTION = new Vector3(-1.8f,1.0f,1.5f);
-	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_CENTER_HEADING_MIN = -70;
-	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_CENTER_HEADING_MAX = 70;
+	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_CENTER_HEADING_MIN = -85;
+	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_CENTER_HEADING_MAX = 85;
 	public static final Vector3 SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_CORRECTION = new Vector3(0.45f,0.1f,3.3f);
-	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_HEADING_MIN = -70;
+	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_HEADING_MIN = -85;
 	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_HEADING_MAX = 50;
 	public static final Vector3 SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_BACK_CORRECTION = new Vector3(-3.4f,0.1f,-1.3f);
 	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_BACK_HEADING_MIN = -20;
-	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_BACK_HEADING_MAX =70;
+	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_BACK_HEADING_MAX =85;
 	public static final Vector3 SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_BACK_CORRECTION = new Vector3(-3.4f,0.1f,4.7f);
-	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_BACK_HEADING_MIN = -70;
+	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_BACK_HEADING_MIN = -85;
 	public static final float SPACESHIP_GUNSHIP_POSITION_TURRET_RIGHT_BACK_HEADING_MAX = 20;
+	
+	public static final Vector3 SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_LEFT_CORRECTION = new Vector3(0f,0.0f,0.6f);
+	public static final float  SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_LEFT_HEADING_MAX = 90;
+	public static final float  SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_LEFT_HEADING_MIN = -20;
+	public static final Vector3 SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_RIGHT_CORRECTION = new Vector3(0f,0.0f,2.8f);
+	public static final float  SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_RIGHT_HEADING_MAX = 20;
+	public static final float  SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_RIGHT_HEADING_MIN = -90;
+	public static final Vector3 SPACESHIP_BATTLECRUISER_POSITION_TURRET_2_LEFT_CORRECTION = new Vector3(-3f,0.6f,0.3f);
+	public static final float  SPACESHIP_BATTLECRUISER_POSITION_TURRET_2_LEFT_HEADING_MAX = 90;
+	public static final float  SPACESHIP_BATTLECRUISER_POSITION_TURRET_2_LEFT_HEADING_MIN = -90;
+	public static final Vector3 SPACESHIP_BATTLECRUISER_POSITION_TURRET_2_RIGHT_CORRECTION = new Vector3(-3f,0.6f,3.0f);
+	public static final float  SPACESHIP_BATTLECRUISER_POSITION_TURRET_2_RIGHT_HEADING_MAX = 90;
+	public static final float  SPACESHIP_BATTLECRUISER_POSITION_TURRET_2_RIGHT_HEADING_MIN = -90;
+	public static final Vector3 SPACESHIP_BATTLECRUISER_POSITION_TURRET_3_LEFT_CORRECTION = new Vector3(-6f,1f,0.1f);
+	public static final float  SPACESHIP_BATTLECRUISER_POSITION_TURRET_3_LEFT_HEADING_MAX = 90;
+	public static final float  SPACESHIP_BATTLECRUISER_POSITION_TURRET_3_LEFT_HEADING_MIN = -90;
+	public static final Vector3 SPACESHIP_BATTLECRUISER_POSITION_TURRET_3_RIGHT_CORRECTION = new Vector3(-6f,1f,3.3f);
+	public static final float  SPACESHIP_BATTLECRUISER_POSITION_TURRET_3_RIGHT_HEADING_MAX = 90;
+	public static final float  SPACESHIP_BATTLECRUISER_POSITION_TURRET_3_RIGHT_HEADING_MIN = -90;
+	
 	
 	public static final float SHOOT_SINGLE_TURRET_Z_CORRECTION = 1.4f;
 	public static final float SHOOT_DOUBLE_TURRET_LEFT_TURRET_Z_CORRECTION = 1.1f;
@@ -62,10 +82,10 @@ public class Par {
 	public static final float SHIP_MAX_SPEED = 2.5f;
 	public static final float SHIP_MAX_SPEED_KEYBOARD = 30f;
 	
-	public static final float VIEWPORT_MAX_X = 1280;
+	public static float VIEWPORT_MAX_X = 1280;
 	public static final float VIEWPORT_MIN_X = 0;
 	public static final float VIEWPORT_MIN_Y = 0;
-	public static final float VIEWPORT_MAX_Y = 800;
+	public static float VIEWPORT_MAX_Y = 800;
 	public static final float TOUCH_Y_SCALE = 8;
 	public static final float KEY_Y_SCALE = 60;
 	public static final float KEY_ANGLE_STEP = 3f;

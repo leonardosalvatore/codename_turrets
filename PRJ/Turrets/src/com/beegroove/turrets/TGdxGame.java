@@ -36,7 +36,7 @@ public class TGdxGame extends Game {
 		switch (StateMachine.GetCurrentState()) {
 		case INTRO:
 			StateMachine.SetNextState(STATE.PLAY);
-			setScreen(new PlayScreen(1));
+			setScreen(new PlayScreen(7));
 			break;
 		case PLAY:
 			

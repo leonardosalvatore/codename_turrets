@@ -3,13 +3,11 @@ package com.beegroove.turrets;
 import java.util.Iterator;
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.beegroove.turrets.Enemy.ETYPE;
 import com.beegroove.turrets.Par.DIRECTION;
 import com.beegroove.turrets.PhysicItem.TASK_TYPE;
-import com.beegroove.turrets.StateMachine.STATE;
 
 public class Simulation {
 	public transient SimulationListener listener;
@@ -30,8 +28,8 @@ public class Simulation {
 //		mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,-30,0), 100, false, 0, 0);
 //		mCameraMan.scheduleTask(TASK_TYPE.DESTINATION,Par.CAMERA_INITIAL_POSITION, 0, false, 0, 0);
 //
-//		mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,-30,0), 100, false, 0, 0);
-//		mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,30,0), 100, false, 0, 0);
+//		mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,6,0), 100, false, 0, 0);
+//		mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,-6,0), 100, false, 0, 0);
 //		mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,0,0), 100, false, 0, 0);
 	}
 
@@ -52,6 +50,7 @@ public class Simulation {
 
 	private void UpdateEnemyAndCollisionCheck(float delta) {
 		enemiesToAdd.clear();
+		
 		for (Iterator<Enemy> iteratorEnemy = enemies.iterator(); iteratorEnemy
 				.hasNext();) {
 			Enemy currentEnemy = (Enemy) iteratorEnemy.next();
@@ -60,8 +59,6 @@ public class Simulation {
 			if (starship.mPosition.dst(currentEnemy.mPosition) < (currentEnemy.mSize + starship.mSize)) {
 				if (currentEnemy.mType == ETYPE.METEORITE) {
 					starship.mEnergy--;
-				} else if (currentEnemy.mType == ETYPE.SPUTNIK) {
-					iteratorEnemy.remove();
 				}
 			}  else {
 				for (Turret t : starship.turrets) {
@@ -85,15 +82,15 @@ public class Simulation {
 							else
 							{
 								//DESTROYED
-								for(int ka=1;ka<=currentEnemy.mSize+1;ka++)
+								for(int ka=1;ka<currentEnemy.mSize;ka++)
 								{
 									PhysicItem tmp = new PhysicItem((PhysicItem)shoot);
 									tmp.mScreenPosition.y -= currentEnemy.mSize*10;
 									tmp.mScreenPosition.x += (rand.nextFloat()-.5f)*currentEnemy.mSize*50;
 									tmp.mScreenPosition.y += (rand.nextFloat()-.5f)*currentEnemy.mSize*50;
 									tmp.mSize=0.1f;
-									tmp.scheduleTask(TASK_TYPE.SIZE_UP, new Vector3(0.1f, 0, 0), 20+(int) ((rand.nextFloat()-.5f)*currentEnemy.mSize*50), false, 0, 0);
-									tmp.scheduleTask(TASK_TYPE.SIZE_DOWN, new Vector3(0.05f, 0, 0), 20+(int) ((rand.nextFloat()-.5f)*currentEnemy.mSize*70), false, 0, 0);
+									tmp.scheduleTask(TASK_TYPE.SIZE_UP, new Vector3(0.1f, 0, 0), 25+(int) ((rand.nextFloat()-.4f)*currentEnemy.mSize*50), false, 0, 0);
+									tmp.scheduleTask(TASK_TYPE.SIZE_DOWN, new Vector3(0.05f, 0, 0), 25+(int) ((rand.nextFloat()-.4f)*currentEnemy.mSize*70), false, 0, 0);
 									tmp.scheduleTask(TASK_TYPE.DELETE, new Vector3(0.1f, 0, 0), 0, false, 0, 0);
 									explosions.add(tmp);			
 									
@@ -102,20 +99,18 @@ public class Simulation {
 									{
 									Enemy tmpE = new Enemy(currentEnemy);
 									tmpE.mSize = currentEnemy.mSize/2;
-									tmpE.mEnergy = 3;
+									tmpE.mEnergy = (int) (3*tmpE.mSize);
 									tmpE.mHeading = (float) rand.nextInt(360);
 									tmpE.mYAngleSpeed = (float) rand.nextInt(10) - 5;
 									tmpE.scheduleTask(TASK_TYPE.SPEED, new Vector3(
-																				currentEnemy.mSpeed.x/(rand.nextInt(2)+1f), 
+																				currentEnemy.mSpeed.x+(rand.nextInt(4)-4), 
 																				currentEnemy.mSpeed.y,
-																				currentEnemy.mSpeed.z+rand.nextInt(10)-5
+																				currentEnemy.mSpeed.z+rand.nextInt(8)-4
 																				), 20, false, 0, 0);
 									enemiesToAdd.add(tmpE);
 									
 									}
 								}
-								
-								
 							}
 							iteratorShoot.remove();
 						}
@@ -123,7 +118,9 @@ public class Simulation {
 				}
 			}
 			
-			if (currentEnemy.mPosition.x < -30) {
+			if (currentEnemy.mPosition.x < -30 || 
+					currentEnemy.mPosition.z < -30 ||
+					currentEnemy.mPosition.z > 30) {
 				iteratorEnemy.remove();
 				Missed++;
 			}

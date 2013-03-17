@@ -17,7 +17,10 @@ public class StarShip extends PhysicItem {
 		PRO, 
 		BASIC_DOUBLE, 
 		STANDARD_DOUBLE,
-		ADVANCED_DOUBLE, GUNSHIP, GUNSIHP_DOUBLE
+		ADVANCED_DOUBLE, 
+		GUNSHIP, 
+		GUNSIHP_DOUBLE, 
+		BATTLECRUISER
 	}
 	
 	ArrayList<Turret> turrets = new ArrayList<Turret>();

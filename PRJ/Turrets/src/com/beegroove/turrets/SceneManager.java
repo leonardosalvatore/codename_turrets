@@ -20,7 +20,6 @@ import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.beegroove.turrets.HUD.Message;
@@ -31,11 +30,11 @@ public class SceneManager {
 	private StillModel spaceshipStandardMesh;
 	private StillModel spaceshipAdvancedMesh;
 	private StillModel spaceshipGunshipMesh;
+	private StillModel spaceshipBattleCruisedMesh;
 	private StillModel shootMesh;
 	private StillModel singleSmallTurretMesh;
 	private StillModel doubleSmallTurretMesh;
 	private StillModel meteroriteMesh;
-	private StillModel sputnikMesh;
 	private StillModel cubeMesh;
 	private Texture shipTexture;
 	private Texture turretTexture;
@@ -67,6 +66,10 @@ public class SceneManager {
 
 	public SceneManager() {
 		try {
+
+			Par.VIEWPORT_MAX_X=Gdx.graphics.getWidth();
+			Par.VIEWPORT_MAX_Y=Gdx.graphics.getHeight();
+			
 			spriteBatch = new SpriteBatch();
 
 			FileHandle fh_vs = Gdx.files.internal("data/shaders/tex-vs.glsl");
@@ -107,6 +110,8 @@ public class SceneManager {
 					.loadStillModel(Gdx.files.internal("data/SpaceShip2.obj"));
 			spaceshipGunshipMesh = ModelLoaderRegistry
 					.loadStillModel(Gdx.files.internal("data/SpaceShip3.obj"));
+			spaceshipBattleCruisedMesh = ModelLoaderRegistry
+			.loadStillModel(Gdx.files.internal("data/SpaceShip4.obj"));
 			singleSmallTurretMesh = ModelLoaderRegistry
 					.loadStillModel(Gdx.files.internal("data/Turret0.obj"));
 			doubleSmallTurretMesh = ModelLoaderRegistry
@@ -131,8 +136,6 @@ public class SceneManager {
 			plasmaTexture = new Texture(Gdx.files.internal("data/plasma.png"));
 			meteroriteMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Meteorite.obj"));
-			sputnikMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
-					.internal("data/Sputnik.obj"));
 			cubeMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Cube.obj"));
 
@@ -187,6 +190,7 @@ public class SceneManager {
 			renderTurret(turret);
 			for (Shoot shoot : turret.shoots) {
 				shoot.mScreenPosition.set(shoot.mPosition);
+				shoot.mScreenPosition.y+=0.5;
 				mCamera.project(shoot.mScreenPosition);
 			}
 		}
@@ -229,6 +233,9 @@ public class SceneManager {
 		case GUNSIHP_DOUBLE:
 			spaceshipGunshipMesh.render(currentShader);
 			break;
+		case BATTLECRUISER:
+			spaceshipBattleCruisedMesh.render(currentShader);
+		break;
 		default:
 			break;
 
@@ -304,9 +311,6 @@ public class SceneManager {
 		case METEORITE:
 			transform.rotate(0, 1, 0, enemy.mHeading);
 			break;
-		case SPUTNIK:
-			transform.rotate(1, 0, 0, enemy.mHeading);
-			break;
 		default:
 			break;
 		}
@@ -320,9 +324,6 @@ public class SceneManager {
 		switch (enemy.mType) {
 		case METEORITE:
 			meteroriteMesh.render(currentShader);
-			break;
-		case SPUTNIK:
-			sputnikMesh.render(currentShader);
 			break;
 		case BONUS:
 			break;
@@ -340,23 +341,24 @@ public class SceneManager {
 
 		backgroundscroolingX += speed / Par.BACKGROUND_BASIC_SPEED_SHIP_FACTOR
 				+ Par.BACKGROUND_BASIC_SPEED;
-		if (backgroundscroolingX >= 1280)
+		if (backgroundscroolingX >= Par.VIEWPORT_MAX_X)
 			backgroundscroolingX = 0;
 
-		viewMatrix.setToOrtho2D(0, 0, 1280, 800);
+		viewMatrix.setToOrtho2D(0, 0, Par.VIEWPORT_MAX_X, Par.VIEWPORT_MAX_Y);
 		spriteBatch.setProjectionMatrix(viewMatrix);
 		spriteBatch.begin();
 		spriteBatch.disableBlending();
 
 		spriteBatch.setColor(backgroundColor);
 
-		spriteBatch.draw(backgroundTexture, 1280 - backgroundscroolingX, 0);
+		spriteBatch.draw(backgroundTexture, Par.VIEWPORT_MAX_X - backgroundscroolingX, 0);
 		spriteBatch.draw(backgroundTexture, -backgroundscroolingX, 0);
 
 		spriteBatch.end();
 	}
 
 	private void renderSprite(HUD hud, Simulation simulation) {
+		viewMatrix.setToOrtho2D(0, 0, Par.VIEWPORT_MAX_X, Par.VIEWPORT_MAX_Y);
 		spriteBatch.setProjectionMatrix(viewMatrix);
 		spriteBatch.begin();
 		
@@ -449,6 +451,7 @@ public class SceneManager {
 		spaceshipStandardMesh.dispose();
 		spaceshipAdvancedMesh.dispose();
 		spaceshipGunshipMesh.dispose();
+		spaceshipBattleCruisedMesh.dispose();
 		shootMesh.dispose();
 		
 		// TODO others...

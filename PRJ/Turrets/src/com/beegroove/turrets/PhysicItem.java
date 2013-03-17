@@ -83,6 +83,7 @@ public class PhysicItem {
 	}
 
 	public void SetTarget(Vector3 target) {
+		
 		mHeading = (float) -MathUtils.radiansToDegrees
 				* MathUtils.atan2(target.z - mPosition.z, target.x
 						- mPosition.x);
