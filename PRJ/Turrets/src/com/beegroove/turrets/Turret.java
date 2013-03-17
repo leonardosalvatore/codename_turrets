@@ -13,21 +13,12 @@ public class Turret extends PhysicItem {
 	}
 
 	public TTYPE type;
-
+	private boolean mIsLeft= true;
 	private long lastfire, firerate = 200;
-	
 	@Override
 	public void Update(float deltaTime) {
 		super.Update(deltaTime);
 		
-		if(mSuperFire)
-		{
-			firerate = 300;
-		}
-		else
-		{
-			firerate = 200;
-		}
 		
 		if (mFire && 
 				(mHeading<mHeadingMax && mHeading>mHeadingMin)) {
@@ -38,8 +29,16 @@ public class Turret extends PhysicItem {
 				case DOUBLE_LARGE:
 					break;
 				case DOUBLE_SMALL:
-					shoots.add(WeaponFactory.NewBasicLeftShoot(this));
-					shoots.add(WeaponFactory.NewBasicRightShoot(this));
+					firerate=100;
+					mIsLeft=!mIsLeft;
+					if(mIsLeft)
+					{
+						shoots.add(WeaponFactory.NewBasicLeftShoot(this));
+					}
+					else
+					{
+						shoots.add(WeaponFactory.NewBasicRightShoot(this));
+					}
 					break;
 				case SINGLE_LARGE:
 					break;

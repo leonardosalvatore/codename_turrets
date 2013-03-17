@@ -41,6 +41,7 @@ public class SceneManager {
 	private Texture turretTexture;
 	private Texture backgroundTexture;
 	private Texture explosionTexture;
+	private Texture hitTexture;
 	private Texture plasmaTexture;
 	private BitmapFont fontStandard;
 	private Random mRandom = new Random(System.currentTimeMillis());
@@ -126,6 +127,7 @@ public class SceneManager {
 					Gdx.files.internal("data/background.png"));
 			
 			explosionTexture = new Texture(Gdx.files.internal("data/explosion.png"));
+			hitTexture = new Texture(Gdx.files.internal("data/hit.png"));
 			plasmaTexture = new Texture(Gdx.files.internal("data/plasma.png"));
 			meteroriteMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Meteorite.obj"));
@@ -192,7 +194,7 @@ public class SceneManager {
 		gl.glDisable(GL20.GL_CULL_FACE);
 		gl.glDisable(GL20.GL_DEPTH_TEST);
 		
-		renderHUD(HUD.Instance(), simulation);
+		renderSprite(HUD.Instance(), simulation);
 
 	}
 
@@ -354,7 +356,7 @@ public class SceneManager {
 		spriteBatch.end();
 	}
 
-	private void renderHUD(HUD hud, Simulation simulation) {
+	private void renderSprite(HUD hud, Simulation simulation) {
 		spriteBatch.setProjectionMatrix(viewMatrix);
 		spriteBatch.begin();
 		
@@ -365,8 +367,8 @@ public class SceneManager {
 			for (Shoot shoot : turret.shoots) {
 				spriteBatch.draw(plasmaTexture,
 						shoot.mScreenPosition.x,
-						shoot.mScreenPosition.y-32,
-						0,0,128,64,1f,1f,shoot.mHeading,0,0,256,128,false,false);
+						shoot.mScreenPosition.y-shoot.mEnergy/2,
+						0,0,60,shoot.mEnergy,1f,1f,shoot.mHeading,0,0,60,shoot.mEnergy,false,false);
 			}
 		}
 		
@@ -440,6 +442,7 @@ public class SceneManager {
 		shipTexture.dispose();
 		backgroundTexture.dispose();
 		explosionTexture.dispose();
+		hitTexture.dispose();
 		plasmaTexture.dispose();
 		turretTexture.dispose();
 		spaceshipBasicMesh.dispose();

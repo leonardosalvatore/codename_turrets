@@ -12,6 +12,7 @@ public class WeaponFactory {
 		s.mSpeed.set(Par.SHOOT_BASIC_SPEED);
 		s.mSpeed.rotate(Vector3.Y, turret.mHeading);
 		s.mHeading = turret.mHeading;
+		s.mEnergy = Par.SHOOT_BASIC_ENERGY;
 		return s;
 	}
 
@@ -24,6 +25,7 @@ public class WeaponFactory {
 		s.mSpeed.set(Par.SHOOT_BASIC_SPEED);
 		s.mSpeed.rotate(Vector3.Y, turret.mHeading);
 		s.mHeading = turret.mHeading;
+		s.mEnergy = Par.SHOOT_BASIC_ENERGY;
 		return s;
 	}
 
@@ -35,6 +37,7 @@ public class WeaponFactory {
 		s.mSpeed.set(Par.SHOOT_BASIC_SPEED);
 		s.mSpeed.rotate(Vector3.Y, turret.mHeading);
 		s.mHeading = turret.mHeading;
+		s.mEnergy = Par.SHOOT_BASIC_ENERGY;
 		return s;
 	}
 }

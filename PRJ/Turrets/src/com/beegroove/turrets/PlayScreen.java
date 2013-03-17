@@ -23,21 +23,27 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 		switch (level)
 		{
 		case 1:
+			WaveFactory.mWaveNumber=1;
 			simulation.starship = SpaceshipFactory.NewSingleBasicSpaceship();
 			break;
 		case 2:
+			WaveFactory.mWaveNumber=5;
 			simulation.starship = SpaceshipFactory.NewDoubleBasicSpaceship();
 				break;
 		case 3:
+			WaveFactory.mWaveNumber=5;
 			simulation.starship = SpaceshipFactory.NewSingleStandardSpaceship();
 			break;
 		case 4:
+			WaveFactory.mWaveNumber=5;
 			simulation.starship = SpaceshipFactory.NewDoubleStandardSpaceship();
 			break;
 		case 5:
+			WaveFactory.mWaveNumber=10;
 			simulation.starship = SpaceshipFactory.NewDoubleAdvancedSpaceship();
 			break;
 		case 6:
+			WaveFactory.mWaveNumber=10;
 			simulation.starship = SpaceshipFactory.NewDoubleGunShipSpaceship();
 				break;
 		}
@@ -87,7 +93,7 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 			Intersector.intersectRayPlane(rayFromCamera, gamePlane,
 					pointOnPlane);
 
-			if (pointOnPlane.x < 0) {
+			if (pointOnPlane.x < Par.HUD_SPLITPOINT) {
 				lastDrivePointOnPlane.set(pointOnPlane);
 				return Par.DRIVE_FINGER;
 			} else {

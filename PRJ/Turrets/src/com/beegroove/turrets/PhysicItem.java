@@ -40,12 +40,18 @@ public class PhysicItem {
 	}
 
 	public PhysicItem(PhysicItem s) {
-		mPosition = s.mPosition;
-		mSpeed = s.mSpeed;
-		mDestination = s.mDestination;
-		mLastStep = s.mLastStep;
-		mDirection = s.mDirection;
-		mScreenPosition = s.mScreenPosition;
+		mPosition=new Vector3();
+		mPosition.set(s.mPosition);
+		mSpeed=new Vector3();
+		mSpeed.set(s.mSpeed);
+		mDestination=new Vector3();
+		mDestination.set(s.mDestination);
+		mLastStep=new Vector3();
+		mLastStep.set(s.mLastStep);
+		mDirection=new Vector3();
+		mDirection.set(s.mDirection);
+		mScreenPosition=new Vector3();
+		mScreenPosition.set(s.mScreenPosition);
 	}
 
 	public void Update(float deltaTime) {
@@ -169,6 +175,8 @@ public class PhysicItem {
 				break;
 			case SIZE_DOWN:
 				mSize-=mCurrent.mValue.x;
+				if(mSize<0)
+					mSize=0;
 				break;
 			case ACTION_DELETE:
 				break;

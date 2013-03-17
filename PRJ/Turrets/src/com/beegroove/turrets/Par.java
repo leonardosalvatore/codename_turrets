@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Par {
 	public static final boolean HUD_DEBUG = false;
+	public static final float HUD_SPLITPOINT = -15;
 	public static final Vector3 SINGLE_TURRET_POSITION 	= new Vector3(-25f, 0, -10.15f);
 	public static final Vector3 DOUBLE_TURRET_POSITION 	= new Vector3(-25f, 0, -10.15f);
 	public static final Vector3 SHOOT_BASIC_SPEED 		= new Vector3(40, 0, 0);
@@ -49,7 +50,8 @@ public class Par {
 	public static final float SHOOT_SINGLE_TURRET_Z_CORRECTION = 1.4f;
 	public static final float SHOOT_DOUBLE_TURRET_LEFT_TURRET_Z_CORRECTION = 1.1f;
 	public static final float SHOOT_DOUBLE_TURRET_RIGHT_TURRET_Z_CORRECTION = 1.7f;
-
+	public static final int SHOOT_BASIC_ENERGY = 3;
+	
 	public static final float CAMERA_FOV = 60;
 	public static final float CAMERA_FOV_STEP = 1;
 	public static final float CAMERA_STEP = 0.1f;
@@ -83,6 +85,7 @@ public class Par {
 	public static final float BACKGROUND_BASIC_SPEED_SHIP_FACTOR = 12;
 	public static final long SHIP_ALIGNMENT_TIME = 2000;
 	public static final long STATE_INTRO_DURATION = 1000;
+
 	
 	enum DIRECTION {
 		UP, DOWN, LEFT, RIGHT
