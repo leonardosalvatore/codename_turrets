@@ -13,13 +13,12 @@ public class HUD {
 
 	protected HUD() {
 		statusBar = new Message();
-		statusBar.mPosition = new Vector3(Par.VIEWPORT_MAX_X/4,20,0);
+		statusBar.mPosition = new Vector3(10,Par.VIEWPORT_MAX_Y-5,0);
 	}
 
 	public static HUD Instance() {
 		if (instance == null) {
 			instance = new HUD();
-			
 		}
 		return instance;
 	}
@@ -67,7 +66,7 @@ public class HUD {
 	private Message statusBar;
 	public Message GetStatusBar(int wave,int score,int missed,int energy )
 	{
-		statusBar.msg = String.format("WAVE:%d SCORE:%d MISSED:%d ENERGY:%d ", wave,score,missed,energy);
+		statusBar.msg = String.format("SCORE:%d ENERGY:%d WAVE:%d ", score,energy,wave);
 		return statusBar;
 	}
 	
@@ -77,7 +76,7 @@ public class HUD {
 		
 		m.mSpeed = Vector3.X.cpy().mul(-150f);
 		m.durationTime = 20000;
-		m.mPosition = new Vector3(1500,Par.VIEWPORT_MAX_Y,0);
+		m.mPosition = new Vector3(1500,20,0);
 		m.creationTime=System.currentTimeMillis();
 		m.msg = s;
 		

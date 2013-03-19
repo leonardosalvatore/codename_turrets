@@ -42,7 +42,9 @@ public class SceneManager {
 	private Texture explosionTexture;
 	private Texture hitTexture;
 	private Texture plasmaTexture;
+	private Texture asteroidDOFTexture;
 	private BitmapFont fontStandard;
+	private BitmapFont fontLarge;
 	private Random mRandom = new Random(System.currentTimeMillis());
 
 	private SpriteBatch spriteBatch;
@@ -134,21 +136,30 @@ public class SceneManager {
 			explosionTexture = new Texture(Gdx.files.internal("data/explosion.png"));
 			hitTexture = new Texture(Gdx.files.internal("data/hit.png"));
 			plasmaTexture = new Texture(Gdx.files.internal("data/plasma.png"));
+			asteroidDOFTexture = new Texture(Gdx.files.internal("data/AsteroidBlur1.png"));
+			
 			meteroriteMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Meteorite.obj"));
 			cubeMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Cube.obj"));
 
+/*FONT*/			
 			FileHandle fontFile = Gdx.files.internal("data/font.ttf");
 			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
 					fontFile);
 			FreeTypeBitmapFontData fontData = generator.generateData(
 					Par.STANDARD_FONT_SIZE,
 					FreeTypeFontGenerator.DEFAULT_CHARS, false);
-			generator.dispose();
 			fontStandard = new BitmapFont(fontData,
 					fontData.getTextureRegion(), false);
-
+			fontData = generator.generateData(
+					Par.LARGE_FONT_SIZE,
+					FreeTypeFontGenerator.DEFAULT_CHARS, false);
+			fontLarge = new BitmapFont(fontData,
+					fontData.getTextureRegion(), false);			
+			generator.dispose();
+/*FONT*/
+			
 			mCamera = new PerspectiveCamera(Par.CAMERA_FOV,
 					Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -170,7 +181,9 @@ public class SceneManager {
 	public void render(Simulation simulation, float delta) {
 		GLCommon gl = Gdx.gl;
 		gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		
 		renderBackground(simulation.starship.mSpeed.x);
+		
 		gl.glEnable(GL20.GL_DEPTH_TEST);
 		gl.glEnable(GL20.GL_CULL_FACE);
 		gl.glEnable(GL20.GL_TEXTURE_2D);
@@ -219,17 +232,13 @@ public class SceneManager {
 		case BASIC_DOUBLE:
 			spaceshipBasicMesh.render(currentShader);
 			break;
-		case PRO:
-			break;
 		case STANDARD:
 		case STANDARD_DOUBLE:
 			spaceshipStandardMesh.render(currentShader);
 			break;
-		case ADVANCED:
 		case ADVANCED_DOUBLE:
 			spaceshipAdvancedMesh.render(currentShader);
 			break;
-		case GUNSHIP:
 		case GUNSIHP_DOUBLE:
 			spaceshipGunshipMesh.render(currentShader);
 			break;
@@ -259,7 +268,7 @@ public class SceneManager {
 		currentShader.setUniformMatrix("u_normal", normal3);
 
 		switch (turret.type) {
-		case DOUBLE_CANNON:
+		case DOUBLE_AUTOCANNON:
 			break;
 		case DOUBLE_LARGE:
 			break;
@@ -335,8 +344,8 @@ public class SceneManager {
 
 	private int backgroundscroolingX = 0;
 	// TODO Move to an external class and generate scenery
-	private Color backgroundColor = new Color(1.0f, 1.0f, 1.0f, 0);
-
+	private Color backgroundColor = Color.WHITE;
+	
 	private void renderBackground(float speed) {
 
 		backgroundscroolingX += speed / Par.BACKGROUND_BASIC_SPEED_SHIP_FACTOR
@@ -347,13 +356,11 @@ public class SceneManager {
 		viewMatrix.setToOrtho2D(0, 0, Par.VIEWPORT_MAX_X, Par.VIEWPORT_MAX_Y);
 		spriteBatch.setProjectionMatrix(viewMatrix);
 		spriteBatch.begin();
-		spriteBatch.disableBlending();
-
 		spriteBatch.setColor(backgroundColor);
 
 		spriteBatch.draw(backgroundTexture, Par.VIEWPORT_MAX_X - backgroundscroolingX, 0);
 		spriteBatch.draw(backgroundTexture, -backgroundscroolingX, 0);
-
+		
 		spriteBatch.end();
 	}
 
@@ -384,27 +391,35 @@ public class SceneManager {
 		}
 		
 		for (Message m : hud.GetMessage()) {
-			fontStandard.setColor(Color.BLACK);
-			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x - 1,
-					m.mPosition.y - 1);
-			fontStandard.setColor(Color.RED);
+			fontStandard.setColor(Color.YELLOW);
 			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x, m.mPosition.y);
 		}
+		
 		for (Message m : hud.GetMessageRoller()) {
-			fontStandard.setColor(Color.BLACK);
-			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x - 1,
-					m.mPosition.y - 1);
 			fontStandard.setColor(Color.WHITE);
 			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x, m.mPosition.y);
 		}
 
 		Message statusmsg = hud.GetStatusBar(WaveFactory.mWaveNumber,simulation.Score,
 				simulation.Missed, simulation.starship.mEnergy);
-		fontStandard.setColor(Color.BLACK);
-		fontStandard.draw(spriteBatch, statusmsg.msg,
-				statusmsg.mPosition.x - 1, statusmsg.mPosition.y - 1);
-		fontStandard.setColor(Color.WHITE);
-		fontStandard.draw(spriteBatch, statusmsg.msg, statusmsg.mPosition.x,
+		fontLarge.setColor(Color.DARK_GRAY);
+		fontLarge.draw(spriteBatch, statusmsg.msg,
+				statusmsg.mPosition.x - 3, statusmsg.mPosition.y - 3);
+		
+		if(simulation.starship.mEnergy>simulation.starship.mEnergy_Initial/2)
+		{
+			fontLarge.setColor(Color.GRAY);
+		}
+		else if(simulation.starship.mEnergy>simulation.starship.mEnergy_Initial/3)
+		{
+			fontLarge.setColor(Color.ORANGE);
+		}
+		else 
+		{
+			fontLarge.setColor(Color.RED);
+		}
+		
+		fontLarge.draw(spriteBatch, statusmsg.msg, statusmsg.mPosition.x,
 				statusmsg.mPosition.y);
 
 		if (Par.HUD_DEBUG) {
@@ -440,6 +455,8 @@ public class SceneManager {
 	}
 
 	public void dispose() {
+		fontLarge.dispose();
+		fontStandard.dispose();
 		spriteBatch.dispose();
 		shipTexture.dispose();
 		backgroundTexture.dispose();
@@ -453,6 +470,7 @@ public class SceneManager {
 		spaceshipGunshipMesh.dispose();
 		spaceshipBattleCruisedMesh.dispose();
 		shootMesh.dispose();
+		asteroidDOFTexture.dispose();
 		
 		// TODO others...
 	}

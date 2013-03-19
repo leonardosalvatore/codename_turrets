@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.beegroove.turrets.Par.DIRECTION;
+import com.beegroove.turrets.StarShip.STYPE;
 
 public class PlayScreen extends GenericScreen implements SimulationListener {
 	/** the simulation **/
@@ -22,32 +23,33 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 		
 		switch (level)
 		{
-		case 1:
-			WaveFactory.mWaveNumber=1;
+		case Par.Level_1:
+			WaveFactory.mWaveNumber=0;
 			simulation.starship = SpaceshipFactory.NewSingleBasicSpaceship();
 			break;
-		case 2:
+		case Par.Level_2:
 			WaveFactory.mWaveNumber=1;
 			simulation.starship = SpaceshipFactory.NewDoubleBasicSpaceship();
-				break;
-		case 3:
+			break;
+		case Par.Level_3:
 			WaveFactory.mWaveNumber=5;
 			simulation.starship = SpaceshipFactory.NewSingleStandardSpaceship();
 			break;
-		case 4:
+		case Par.Level_4:
 			WaveFactory.mWaveNumber=5;
 			simulation.starship = SpaceshipFactory.NewDoubleStandardSpaceship();
 			break;
-		case 5:
+		case Par.Level_5:
 			WaveFactory.mWaveNumber=5;
 			simulation.starship = SpaceshipFactory.NewDoubleAdvancedSpaceship();
 			break;
-		case 6:
-			WaveFactory.mWaveNumber=5;
+		case Par.Level_6:
+			WaveFactory.mWaveNumber=10;
 			simulation.starship = SpaceshipFactory.NewDoubleGunShipSpaceship();
 			break;
-		case 7:
+		case Par.Level_7:
 			WaveFactory.mWaveNumber=10;
+			simulation.starship = SpaceshipFactory.NewDoubleBattleCrusierSpaceship();
 			simulation.starship = SpaceshipFactory.NewDoubleBattleCrusierSpaceship();
 			break;
 		}
@@ -82,7 +84,31 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 
 		ProcessImput(delta);
 		simulation.update(delta);
-
+		
+		if(simulation.Score>=Par.Level_1 && simulation.starship.type == STYPE.BASIC )
+		{
+			simulation.starship = SpaceshipFactory.NewDoubleBasicSpaceship(simulation.starship);
+		}
+		else if(simulation.Score>=Par.Level_2 && simulation.starship.type == STYPE.BASIC_DOUBLE )
+		{
+			simulation.starship = SpaceshipFactory.NewSingleStandardSpaceship(simulation.starship);
+		}
+		else if(simulation.Score>=Par.Level_3 && simulation.starship.type == STYPE.STANDARD)
+		{
+			simulation.starship = SpaceshipFactory.NewDoubleStandardSpaceship(simulation.starship);
+		}
+		else if(simulation.Score>=Par.Level_4 && simulation.starship.type == STYPE.STANDARD_DOUBLE)
+		{
+			simulation.starship = SpaceshipFactory.NewDoubleAdvancedSpaceship(simulation.starship);
+		}
+		else if(simulation.Score>=Par.Level_5 && simulation.starship.type == STYPE.ADVANCED_DOUBLE)
+		{
+			simulation.starship = SpaceshipFactory.NewDoubleGunShipSpaceship(simulation.starship);
+		}
+		else if(simulation.Score>=Par.Level_6 && simulation.starship.type == STYPE.GUNSIHP_DOUBLE  )
+		{
+			simulation.starship = SpaceshipFactory.NewDoubleBattleCrusierSpaceship(simulation.starship);
+		}
 	}
 
 	long alignmentStart = 0;

@@ -12,13 +12,10 @@ public class StarShip extends PhysicItem {
 	enum STYPE
  	{
 		BASIC,
-		STANDARD,
-		ADVANCED,
-		PRO, 
 		BASIC_DOUBLE, 
+		STANDARD,
 		STANDARD_DOUBLE,
-		ADVANCED_DOUBLE, 
-		GUNSHIP, 
+		ADVANCED_DOUBLE,
 		GUNSIHP_DOUBLE, 
 		BATTLECRUISER
 	}
@@ -27,6 +24,7 @@ public class StarShip extends PhysicItem {
 	private boolean mFiring = false;
 	public STYPE type;
 	private boolean mSuperFire = false;
+	public int mEnergy_Initial;
 
 
 	@Override
@@ -39,7 +37,7 @@ public class StarShip extends PhysicItem {
 			turret.mPosition.add(mLastStep);
 			turret.Update(deltaTime);
 		}
-
+		
 	}
 
 	public void Fire(boolean b, boolean sFire)

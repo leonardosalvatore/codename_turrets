@@ -46,6 +46,7 @@ public class Simulation {
 			enemies.addAll(WaveFactory.Instance().getMeteoriteWave(
 					starship.mPosition));
 		}		
+		
 	}
 
 	private void UpdateEnemyAndCollisionCheck(float delta) {
@@ -59,6 +60,8 @@ public class Simulation {
 			if (starship.mPosition.dst(currentEnemy.mPosition) < (currentEnemy.mSize + starship.mSize)) {
 				if (currentEnemy.mType == ETYPE.METEORITE) {
 					starship.mEnergy--;
+					currentEnemy.mSpeed.add((currentEnemy.mPosition.cpy().sub(starship.mPosition)).div(currentEnemy.mSize*4));
+					
 				}
 			}  else {
 				for (Turret t : starship.turrets) {
@@ -72,6 +75,7 @@ public class Simulation {
 							{
 								//DAMAGED
 								PhysicItem tmp = new PhysicItem((PhysicItem)shoot);
+								tmp.mPosition.x-=tmp.mSize;
 								tmp.mSize=0.1f;
 								tmp.scheduleTask(TASK_TYPE.SIZE_UP, new Vector3(0.03f, 0, 0), 25, false, 0, 0);
 								tmp.scheduleTask(TASK_TYPE.SIZE_DOWN, new Vector3(0.03f, 0, 0), 25, false, 0, 0);
@@ -82,19 +86,23 @@ public class Simulation {
 							else
 							{
 								//DESTROYED
-								for(int ka=1;ka<currentEnemy.mSize;ka++)
+								Score+=currentEnemy.mSize+1;
+								
+								for(int ka=1;ka<currentEnemy.mSize+2;ka++)
 								{
 									PhysicItem tmp = new PhysicItem((PhysicItem)shoot);
 									tmp.mScreenPosition.y -= currentEnemy.mSize*10;
-									tmp.mScreenPosition.x += (rand.nextFloat()-.5f)*currentEnemy.mSize*50;
-									tmp.mScreenPosition.y += (rand.nextFloat()-.5f)*currentEnemy.mSize*50;
+									tmp.mScreenPosition.x += (rand.nextFloat()-.5f)*currentEnemy.mSize*40;
+									tmp.mScreenPosition.y += (rand.nextFloat()-.5f)*currentEnemy.mSize*40;
 									tmp.mSize=0.1f;
-									tmp.scheduleTask(TASK_TYPE.SIZE_UP, new Vector3(0.1f, 0, 0), 25+(int) ((rand.nextFloat()-.4f)*currentEnemy.mSize*50), false, 0, 0);
-									tmp.scheduleTask(TASK_TYPE.SIZE_DOWN, new Vector3(0.05f, 0, 0), 25+(int) ((rand.nextFloat()-.4f)*currentEnemy.mSize*70), false, 0, 0);
+									tmp.scheduleTask(TASK_TYPE.SIZE_UP, new Vector3(0.1f, 0, 0), 
+											25+(int) ((rand.nextFloat()-.4f)*currentEnemy.mSize*40), false, 0, 0);
+									tmp.scheduleTask(TASK_TYPE.SIZE_DOWN, new Vector3(0.05f, 0, 0), 
+											25+(int) ((rand.nextFloat()-.4f)*currentEnemy.mSize*70), false, 0, 0);
 									tmp.scheduleTask(TASK_TYPE.DELETE, new Vector3(0.1f, 0, 0), 0, false, 0, 0);
 									explosions.add(tmp);			
 									
-									
+			
 									if(currentEnemy.mSize>1f)
 									{
 									Enemy tmpE = new Enemy(currentEnemy);
@@ -102,13 +110,26 @@ public class Simulation {
 									tmpE.mEnergy = (int) (3*tmpE.mSize);
 									tmpE.mHeading = (float) rand.nextInt(360);
 									tmpE.mYAngleSpeed = (float) rand.nextInt(10) - 5;
-									tmpE.scheduleTask(TASK_TYPE.SPEED, new Vector3(
-																				currentEnemy.mSpeed.x+(rand.nextInt(4)-4), 
-																				currentEnemy.mSpeed.y,
-																				currentEnemy.mSpeed.z+rand.nextInt(8)-4
-																				), 20, false, 0, 0);
-									enemiesToAdd.add(tmpE);
 									
+//									if(ka==1)
+//									{
+//									tmpE.scheduleTask(TASK_TYPE.SPEED, new Vector3(
+//											currentEnemy.mSpeed.x, 
+//											currentEnemy.mSpeed.y+30,
+//											currentEnemy.mSpeed.z+rand.nextInt(10)-5
+//											)
+//											, 200, false, 0, 0);
+//									}
+//									else
+//									{
+									tmpE.scheduleTask(TASK_TYPE.SPEED, new Vector3(
+											currentEnemy.mSpeed.x+(rand.nextInt(8)-4), 
+											currentEnemy.mSpeed.y,
+											currentEnemy.mSpeed.z+rand.nextInt(10)-5
+											), 20, false, 0, 0);
+
+									//}
+									enemiesToAdd.add(tmpE);
 									}
 								}
 							}
@@ -120,13 +141,13 @@ public class Simulation {
 			
 			if (currentEnemy.mPosition.x < -30 || 
 					currentEnemy.mPosition.z < -30 ||
-					currentEnemy.mPosition.z > 30) {
+					currentEnemy.mPosition.z > 30 ||
+					currentEnemy.mPosition.y > 60) {
 				iteratorEnemy.remove();
 				Missed++;
 			}
 			else if (currentEnemy.mEnergy <= 0) {
-				iteratorEnemy.remove();
-				Score++;								
+				iteratorEnemy.remove();								
 			}
 		}
 		
