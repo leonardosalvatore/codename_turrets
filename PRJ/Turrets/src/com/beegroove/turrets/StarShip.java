@@ -25,6 +25,8 @@ public class StarShip extends PhysicItem {
 	public STYPE type;
 	private boolean mSuperFire = false;
 	public int mEnergy_Initial;
+	public int mNextTo;
+	public boolean IsTheLast = false;
 
 
 	@Override

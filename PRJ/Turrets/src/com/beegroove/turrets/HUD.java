@@ -10,10 +10,21 @@ import com.beegroove.turrets.HUD.Message;
 public class HUD {
 	
 	private static HUD instance = null;
-
+	private Message titleMsg;
+	private Message introMsg;
+	
 	protected HUD() {
-		statusBar = new Message();
-		statusBar.mPosition = new Vector3(10,Par.VIEWPORT_MAX_Y-5,0);
+		statusBarMsg = new Message();
+		statusBarMsg.mPosition = new Vector3(10,Par.LARGE_FONT_SIZE,0);
+		countDownMsg = new Message();
+		countDownMsg.mPosition = new Vector3(10,Par.VIEWPORT_MAX_Y-Par.LARGE_FONT_SIZE,0);
+		energyMsg = new Message();
+		energyMsg.mPosition = new Vector3(Par.VIEWPORT_MAX_X/2,Par.VIEWPORT_MAX_Y-Par.LARGE_FONT_SIZE,0);
+		titleMsg = new Message();
+		titleMsg.mPosition = new Vector3(Par.MAIN_TITLE_FONT_SIZE,Par.VIEWPORT_MAX_Y-Par.MAIN_TITLE_FONT_SIZE,0);
+		introMsg = new Message();
+		introMsg.mPosition = new Vector3(Par.MAIN_TITLE_FONT_SIZE,Par.VIEWPORT_MAX_Y-3*Par.MAIN_TITLE_FONT_SIZE,0);
+			
 	}
 
 	public static HUD Instance() {
@@ -63,20 +74,35 @@ public class HUD {
 		}
 	}
 
-	private Message statusBar;
-	public Message GetStatusBar(int wave,int score,int missed,int energy )
+	private Message statusBarMsg;
+	public Message GetStatusBar(int wave,int score,int nextat)
 	{
-		statusBar.msg = String.format("SCORE:%d ENERGY:%d WAVE:%d ", score,energy,wave);
-		return statusBar;
+		statusBarMsg.msg = String.format("         SCORE:%d/%d  WAVE:%d  ",score,nextat,wave);
+		return statusBarMsg;
+	}
+
+	private Message countDownMsg;
+	public Message GetCountDown(int countDown )
+	{
+		int sec = countDown/60;
+		countDownMsg.msg = String.format("COUNTDOWN:%d.%d", sec,countDown%60);
+		return countDownMsg;
 	}
 	
+	private Message energyMsg;	
+	public Message GetEnergy(int mEnergy) {
+		energyMsg.msg = String.format("ENERGY:%d", mEnergy);
+		return energyMsg;
+	}
+
+
 	public void NewMessageRoller(String s)
 	{
 		Message m = new Message();
 		
 		m.mSpeed = Vector3.X.cpy().mul(-150f);
 		m.durationTime = 20000;
-		m.mPosition = new Vector3(1500,20,0);
+		m.mPosition = new Vector3(1600,Par.LARGE_FONT_SIZE+Par.STANDARD_FONT_SIZE,0);
 		m.creationTime=System.currentTimeMillis();
 		m.msg = s;
 		
@@ -94,6 +120,16 @@ public class HUD {
 		messages.add(m);
 	}
 
+	public Message GetMainTitleMessage()
+	{
+		titleMsg.msg = Par.TITLE_MSG;
+		return titleMsg;
+	}
+	public Message GetIntroMessage()
+	{
+		introMsg.msg = Par.INTRO_MSG;
+		return introMsg;
+	}
 	
 	public Array<Message> GetMessage()
 	{

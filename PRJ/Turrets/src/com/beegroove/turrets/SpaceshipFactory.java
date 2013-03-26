@@ -11,9 +11,10 @@ public class SpaceshipFactory {
 	}
 	static StarShip NewSingleBasicSpaceship(StarShip ret)
 	{
-		ret.mEnergy_Initial = 100;
+		ret.mEnergy_Initial = Par.BASIC_SHIP_ENERGY;
 		ret.mEnergy = ret.mEnergy_Initial;
-		
+		ret.mNextTo = Par.Level_1;
+		ret.mMaxSpeed=Par.BASIC_SHIP_SPEED;
 		ret.turrets.clear();
 		ret.mSize = 2;
 		ret.mPosition.set(Par.SPACESHIP_BASIC_POSITION);
@@ -30,8 +31,10 @@ public class SpaceshipFactory {
 	}
 	static StarShip NewDoubleBasicSpaceship(StarShip ret)
 	{
-		ret.mEnergy_Initial = 100;
+		ret.mEnergy_Initial = Par.BASIC_SHIP_ENERGY;
 		ret.mEnergy = ret.mEnergy_Initial;
+		ret.mNextTo = Par.Level_2;
+		ret.mMaxSpeed=Par.BASIC_SHIP_SPEED;
 		ret.turrets.clear();
 		ret.mSize = 2;
 		ret.mPosition.set(Par.SPACESHIP_BASIC_POSITION);
@@ -47,15 +50,17 @@ public class SpaceshipFactory {
 	}
 	static StarShip NewSingleStandardSpaceship(StarShip ret)
 	{
-		ret.mEnergy_Initial = 150;
+		ret.mEnergy_Initial = Par.STANDARD_SHIP_ENERGY;
 		ret.mEnergy = ret.mEnergy_Initial;
+		ret.mNextTo = Par.Level_3;
 		ret.turrets.clear();
 		ret.mSize = 3;
 		ret.mPosition.set(Par.SPACESHIP_STANDARD_POSITION);
 		ret.turrets.add(NewSingleSmallTurret());
 		ret.turrets.add(NewSingleSmallTurret());
 		ret.type = STYPE.STANDARD;
-
+		ret.mMaxSpeed=Par.STANDARD_SHIP_SPEED;
+		
 		ret.turrets.get(0).mPosition.add(Par.SPACESHIP_STANDARD_POSITION_TURRET_LEFT_CORRECTION);
 		ret.turrets.get(0).mHeadingMax=Par.SPACESHIP_STANDARD_POSITION_TURRET_LEFT_HEADING_MAX;
 		ret.turrets.get(0).mHeadingMin=Par.SPACESHIP_STANDARD_POSITION_TURRET_LEFT_HEADING_MIN;
@@ -72,14 +77,16 @@ public class SpaceshipFactory {
 	}
 	static StarShip NewDoubleStandardSpaceship(StarShip ret)
 	{
-		ret.mEnergy_Initial = 150;
+		ret.mEnergy_Initial = Par.STANDARD_SHIP_ENERGY;
 		ret.mEnergy = ret.mEnergy_Initial;
+		ret.mNextTo = Par.Level_4;
 		ret.turrets.clear();
 		ret.mSize = 3;
 		ret.mPosition.set(Par.SPACESHIP_STANDARD_POSITION);
 		ret.turrets.add(NewDoubleSmallTurret());
 		ret.turrets.add(NewDoubleSmallTurret());
 		ret.type = STYPE.STANDARD_DOUBLE;
+		ret.mMaxSpeed=Par.STANDARD_SHIP_SPEED;
 		
 		ret.turrets.get(0).mPosition.add(Par.SPACESHIP_STANDARD_POSITION_TURRET_LEFT_CORRECTION);
 		ret.turrets.get(0).mHeadingMax=Par.SPACESHIP_STANDARD_POSITION_TURRET_LEFT_HEADING_MAX;
@@ -97,8 +104,9 @@ public class SpaceshipFactory {
 	}
 	static StarShip NewDoubleAdvancedSpaceship(StarShip ret)
 	{
-		ret.mEnergy_Initial = 300;
+		ret.mEnergy_Initial = Par.ADVANCED_SHIP_ENERGY;
 		ret.mEnergy = ret.mEnergy_Initial;
+		ret.mNextTo = Par.Level_5;
 		ret.turrets.clear();
 		ret.mSize = 3;
 		ret.mPosition.set(Par.SPACESHIP_STANDARD_POSITION);
@@ -106,6 +114,7 @@ public class SpaceshipFactory {
 		ret.turrets.add(NewDoubleSmallTurret());
 		ret.turrets.add(NewDoubleSmallTurret());
 		ret.type = STYPE.ADVANCED_DOUBLE;
+		ret.mMaxSpeed=Par.ADVANCED_SHIP_SPEED;
 		
 		ret.turrets.get(0).mPosition.add(Par.SPACESHIP_ADVANCED_POSITION_TURRET_LEFT_CORRECTION);
 		ret.turrets.get(0).mHeadingMax=Par.SPACESHIP_ADVANCED_POSITION_TURRET_LEFT_HEADING_MAX;
@@ -125,8 +134,9 @@ public class SpaceshipFactory {
 	}
 	static StarShip NewDoubleGunShipSpaceship(StarShip ret)
 	{
-		ret.mEnergy_Initial = 500;
+		ret.mEnergy_Initial = Par.GUNSHIP_SHIP_ENERGY;
 		ret.mEnergy = ret.mEnergy_Initial;
+		ret.mNextTo = Par.Level_6;
 		ret.turrets.clear();
 		ret.mSize = 3;
 		ret.mPosition.set(Par.SPACESHIP_STANDARD_POSITION);
@@ -136,6 +146,7 @@ public class SpaceshipFactory {
 		ret.turrets.add(NewDoubleSmallTurret());
 		ret.turrets.add(NewDoubleSmallTurret());
 		ret.type = STYPE.GUNSIHP_DOUBLE;
+		ret.mMaxSpeed=Par.GUNSHIP_SHIP_SPEED;
 		
 		ret.turrets.get(0).mPosition.add(Par.SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_CORRECTION);
 		ret.turrets.get(0).mHeadingMax=  Par.SPACESHIP_GUNSHIP_POSITION_TURRET_LEFT_HEADING_MAX;
@@ -161,8 +172,10 @@ public class SpaceshipFactory {
 	}
 	static StarShip NewDoubleBattleCrusierSpaceship(StarShip ret)
 	{
-		ret.mEnergy_Initial = 1000;
+		ret.IsTheLast = true;
+		ret.mEnergy_Initial = Par.BATTLECRIUSER_SHIP_ENERGY;
 		ret.mEnergy = ret.mEnergy_Initial;
+		ret.mNextTo = Par.Level_7;
 		ret.turrets.clear();
 		ret.mSize = 3;
 		ret.mPosition.set(Par.SPACESHIP_STANDARD_POSITION);
@@ -173,6 +186,7 @@ public class SpaceshipFactory {
 		ret.turrets.add(NewDoubleSmallTurret());
 		ret.turrets.add(NewDoubleSmallTurret());
 		ret.type = STYPE.BATTLECRUISER;
+		ret.mMaxSpeed=Par.BATTLECRIUSER_SHIP_SPEED;
 		
 		ret.turrets.get(0).mPosition.add(Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_LEFT_CORRECTION);
 		ret.turrets.get(0).mHeadingMax=  Par.SPACESHIP_BATTLECRUISER_POSITION_TURRET_1_LEFT_HEADING_MAX;

@@ -28,13 +28,12 @@ public class WaveFactory {
 	public Array<Enemy> getMeteoriteWave(Vector3 mShipPosition) {
 		mWaveNumber++;
 		Array<Enemy> ret = new Array<Enemy>();
-		HUD.Instance().NewMessageRoller(Par.MSG_NEW_ENEMY_WAVE);
 		int number = Par.INITIAL_WAVE_NUMBER;
 
-		for (int i = 0; i < number + mWaveNumber/5; i++) {
+		for (int i = 0; i < number + mWaveNumber/4; i++) {
 			Enemy temp = new Enemy();
-			temp.mSize = rand.nextFloat()*2.5f + 0.5f;
-			temp.mEnergy = (int) (temp.mSize * 4);
+			temp.mSize = rand.nextInt(2)+1;
+			temp.mEnergy = (int) (temp.mSize*temp.mSize);
 			temp.mPosition = new Vector3(40 + (rand.nextInt(100)), // WAVE
 					// LENGTH
 					0, //
@@ -44,16 +43,16 @@ public class WaveFactory {
 			temp.mYAngleSpeed = (float) (rand.nextInt(10) - 5);
 			temp.mType = ETYPE.METEORITE;
 			temp.scheduleTask(TASK_TYPE.SPEED, new Vector3(
-					-(rand.nextInt(15)+mWaveNumber/3), 0, -2 + rand.nextInt(4)),
+					-(rand.nextInt(17)+mWaveNumber/3), 0, -2 + rand.nextInt(4)),
 					50 + 10 * rand.nextInt(10)+10, true, 0, 0);
-			Gdx.app.log("T", "SMet:" + i + " Size:" + temp.mSize);
+//			Gdx.app.log("T", "SMet:" + i + " Size:" + temp.mSize);
 			ret.add(temp);
 		}
 		
-		for (int i = 0; i < number/10; i++) {
+		for (int i = 0; i < number/10 ; i++) {
 			Enemy temp = new Enemy();
-			temp.mSize = Math.min(rand.nextFloat() * mWaveNumber/2 ,8);
-			temp.mEnergy = (int) (temp.mSize * 4);
+			temp.mSize = Math.min(rand.nextInt(mWaveNumber)  ,9);
+			temp.mEnergy = (int) (temp.mSize*temp.mSize);
 			temp.mPosition = new Vector3(40 + (rand.nextInt(100)), // WAVE
 					// LENGTH
 					0, //
@@ -63,10 +62,10 @@ public class WaveFactory {
 			temp.mYAngleSpeed = (float) rand.nextInt(3) - 3.1f;
 			temp.mType = ETYPE.METEORITE;
 			temp.scheduleTask(TASK_TYPE.SPEED, new Vector3(
-					-(rand.nextInt(3) +1), 0, -2 + rand.nextInt(4)),
+					-(rand.nextInt(3) +1.5f), 0, -2 + rand.nextInt(4)),
 					50 + 10 * rand.nextInt(10), true, 0, 0);
 			
-			Gdx.app.log("T", "BMet:" + i + " Size:" + temp.mSize);
+//			Gdx.app.log("T", "BMet:" + i + " Size:" + temp.mSize);
 			ret.add(temp);
 		}
 

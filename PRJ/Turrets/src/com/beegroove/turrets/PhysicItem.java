@@ -22,6 +22,7 @@ public class PhysicItem {
 	public float mSize;
 	public int mEnergy;
 	public float mLastDestDist;
+	public float mMaxSpeed = Par.PHY_MAX_SPEED;
 	
 	public PhysicItem()
 	{
@@ -75,7 +76,7 @@ public class PhysicItem {
 	public void setDestination(Vector3 destination) {
 		mDestination.set(destination);
 		destination.x += Par.THUMB_CORRECTION;
-		mSpeed.set(destination.tmp().sub(mPosition).mul(Par.SHIP_MAX_SPEED));
+		mSpeed.set(destination.tmp().sub(mPosition).mul(mMaxSpeed ));
 	}
 	
 	private void setDirection(Vector3 mValue) {

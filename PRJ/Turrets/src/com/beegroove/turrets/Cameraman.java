@@ -10,6 +10,5 @@ public class Cameraman extends PhysicItem {
 		mPosition.set(Par.CAMERA_INITIAL_POSITION);
 		mDirection.set(Par.CAMERA_INITIAL_DIRECTION);
 		FOV = Par.CAMERA_FOV;
-		
 	}	
 }

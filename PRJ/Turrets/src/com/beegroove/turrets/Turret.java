@@ -68,7 +68,7 @@ public class Turret extends PhysicItem {
 					shoots.add(WeaponFactory.NewBasicShoot(this));
 					break;
 				case SINGLE_SMALL:
-					firerate=200;
+					firerate=180;
 					shoots.add(WeaponFactory.NewBasicShoot(this));
 				case TRIPLE_LARGE:
 					break;
@@ -83,7 +83,7 @@ public class Turret extends PhysicItem {
 		for (Iterator<Shoot> iterator = shoots.iterator(); iterator.hasNext();) {
 			Shoot s = (Shoot) iterator.next();
 			s.Update(deltaTime);
-			if (s.mPosition.x > 27) {
+			if (s.mPosition.x > 28) {
 				iterator.remove();
 			}
 		}

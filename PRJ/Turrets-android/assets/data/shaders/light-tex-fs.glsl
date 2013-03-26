@@ -10,13 +10,26 @@ precision lowp float;
 #endif
 
 
-uniform sampler2D u_diffuse;
-
+uniform vec3 u_lightColor;
 varying LOWP float intensity;
-varying MEDP vec2 texCoords;
 
 void main() {
-	gl_FragColor = intensity * texture2D(u_diffuse, texCoords);
-}
+	vec4 color = vec4(1.0,0,0,1.0);
+	vec4 baseColor = vec4(u_lightColor.r,u_lightColor.g,u_lightColor.b,1.0);
+	
+	if (intensity > 0.95)
+		color = vec4(0.9,0.9,0.9,1.0);
+	else if (intensity > 0.7)
+		color = vec4(0.75,0.75,0.75,1.0);
+	else if (intensity > 0.5)
+		color = vec4(0.5,0.5,0.5,1.0);
+	else if (intensity > 0.25)
+		color = vec4(0.3,0.3,0.3,1.0);
+	else
+		color = vec4(0.1,0.1,0.1,1.0);
+	
+	
+	gl_FragColor = baseColor*color*intensity;
+	}
 
 
