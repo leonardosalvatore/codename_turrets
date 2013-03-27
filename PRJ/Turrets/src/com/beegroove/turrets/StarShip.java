@@ -27,7 +27,7 @@ public class StarShip extends PhysicItem {
 	public int mEnergy_Initial;
 	public int mNextTo;
 	public boolean IsTheLast = false;
-
+	private int m_LastEnergy;
 
 	@Override
 	public void Update(float deltaTime) {
@@ -57,5 +57,16 @@ public class StarShip extends PhysicItem {
 		}
 	}
 
+	public boolean IsSpaceShipHit()
+	{
+	if (m_LastEnergy == mEnergy) {
+		m_LastEnergy = mEnergy;
+		return false;
+	} else {
+		m_LastEnergy = mEnergy;
+		return true;
+	}
+
+	}
 	
 	}

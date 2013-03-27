@@ -33,7 +33,7 @@ public class WaveFactory {
 		for (int i = 0; i < number + mWaveNumber/4; i++) {
 			Enemy temp = new Enemy();
 			temp.mSize = rand.nextInt(2)+1;
-			temp.mEnergy = (int) (temp.mSize*temp.mSize);
+			temp.mEnergy = (int) (temp.mSize*temp.mSize*temp.mSize);
 			temp.mPosition = new Vector3(40 + (rand.nextInt(100)), // WAVE
 					// LENGTH
 					0, //

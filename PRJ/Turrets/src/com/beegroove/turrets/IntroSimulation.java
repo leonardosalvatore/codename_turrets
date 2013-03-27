@@ -2,9 +2,11 @@ package com.beegroove.turrets;
 
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.beegroove.turrets.PhysicItem.TASK_TYPE;
+import com.beegroove.turrets.StateMachine.STATE;
 
 public class IntroSimulation extends Simulation {
 	public PhysicItem moon;
@@ -12,6 +14,8 @@ public class IntroSimulation extends Simulation {
 
 	public IntroSimulation() {
 		super();
+
+		HighscoreAndStats.Clear();
 		
 		moon = new PhysicItem();
 
@@ -34,6 +38,15 @@ public class IntroSimulation extends Simulation {
 	}
 
 	public void update(float delta) {
+
+		if(StateMachine.GetTimeInCurrentState()>Par.INTRO_MIN_DURATION)
+		{
+			if(Gdx.input.isTouched())
+			{
+				StateMachine.SetNextState(STATE.PLAY,new PlayScreen(Par.Level_1));
+			}
+		}
+		
 		HUD.Instance().Update(delta);
 		mCameraMan.Update(delta);
 		moon.Update(delta);

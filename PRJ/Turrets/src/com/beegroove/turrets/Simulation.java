@@ -14,6 +14,9 @@ public class Simulation {
 		
 	}
 	
-	
+	enum GAME
+	{
+		OVER_COUNTDOWN,OVER_ENERGY,PLAY
+	}
 
 }

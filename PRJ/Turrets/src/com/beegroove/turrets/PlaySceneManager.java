@@ -25,7 +25,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.beegroove.turrets.HUD.Message;
 
-public class PlaySceneManager extends OpenGLSceneManager{
+public class PlaySceneManager extends OpenGLSceneManager {
 
 	private StillModel spaceshipBasicMesh;
 	private StillModel spaceshipStandardMesh;
@@ -43,20 +43,22 @@ public class PlaySceneManager extends OpenGLSceneManager{
 	private Texture plasmaTexture;
 	private Texture asteroidDOFTexture;
 
+	private int backgroundscroolingX = 0;
+	private Color backgroundColor = Color.WHITE;
+
 	public PlaySceneManager() {
 		try {
-			
-			
+
 			spaceshipBasicMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Starship0.obj"));
 			spaceshipStandardMesh = ModelLoaderRegistry
 					.loadStillModel(Gdx.files.internal("data/SpaceShip1.obj"));
 			spaceshipAdvancedMesh = ModelLoaderRegistry
 					.loadStillModel(Gdx.files.internal("data/SpaceShip2.obj"));
-			spaceshipGunshipMesh = ModelLoaderRegistry
-					.loadStillModel(Gdx.files.internal("data/SpaceShip3.obj"));
+			spaceshipGunshipMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
+					.internal("data/SpaceShip3.obj"));
 			spaceshipBattleCruisedMesh = ModelLoaderRegistry
-			.loadStillModel(Gdx.files.internal("data/SpaceShip4.obj"));
+					.loadStillModel(Gdx.files.internal("data/SpaceShip4.obj"));
 			singleSmallTurretMesh = ModelLoaderRegistry
 					.loadStillModel(Gdx.files.internal("data/Turret0.obj"));
 			doubleSmallTurretMesh = ModelLoaderRegistry
@@ -68,12 +70,14 @@ public class PlaySceneManager extends OpenGLSceneManager{
 
 			backgroundTexture = new Texture(
 					Gdx.files.internal("data/background.png"));
-			
-			explosionTexture = new Texture(Gdx.files.internal("data/explosion.png"));
+
+			explosionTexture = new Texture(
+					Gdx.files.internal("data/explosion.png"));
 			hitTexture = new Texture(Gdx.files.internal("data/hit.png"));
 			plasmaTexture = new Texture(Gdx.files.internal("data/plasma.png"));
-			asteroidDOFTexture = new Texture(Gdx.files.internal("data/AsteroidBlur1.png"));
-			
+			asteroidDOFTexture = new Texture(
+					Gdx.files.internal("data/AsteroidBlur1.png"));
+
 			meteroriteMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
 					.internal("data/Meteorite.obj"));
 			cubeMesh = ModelLoaderRegistry.loadStillModel(Gdx.files
@@ -85,18 +89,17 @@ public class PlaySceneManager extends OpenGLSceneManager{
 		}
 	}
 
-		public void render(PlaySimulation simulation, float delta) {
+	public void render(PlaySimulation simulation, float delta) {
 		GLCommon gl = Gdx.gl;
 		gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		
+
 		renderBackground(simulation.starship.mSpeed.x);
-		
+
 		gl.glEnable(GL20.GL_DEPTH_TEST);
 		gl.glEnable(GL20.GL_CULL_FACE);
-		
+
 		setProjectionAndCamera(simulation.mCameraMan);
 
-		/* Shader selection */
 		currentShader = lightTexShader;
 
 		renderShip(simulation.starship);
@@ -109,27 +112,36 @@ public class PlaySceneManager extends OpenGLSceneManager{
 			renderTurret(turret);
 			for (Shoot shoot : turret.shoots) {
 				shoot.mScreenPosition.set(shoot.mPosition);
-				shoot.mScreenPosition.y+=0.5;
+				shoot.mScreenPosition.y += 0.5;
 				mCamera.project(shoot.mScreenPosition);
 			}
 		}
-		
+
 		gl.glDisable(GL20.GL_CULL_FACE);
 		gl.glDisable(GL20.GL_DEPTH_TEST);
-		
-		renderSprite(HUD.Instance(), simulation);
 
+		renderSprite(HUD.Instance(), simulation);
 	}
 
-	
 	private void renderShip(StarShip ship) {
 		currentShader.begin();
-		
+
+		ship.mScreenPosition.set(ship.mPosition);
+		mCamera.project(ship.mScreenPosition);
+
 		transform.set(mCamera.combined);
 		transform.translate(ship.mPosition.x, ship.mPosition.y,
 				ship.mPosition.z);
-		
-		shaderSetup(transform,mCamera.up,0.5f,0.5f,1.0f);
+
+		if(ship.IsSpaceShipHit())
+		{
+			Gdx.input.vibrate(Par.VIBRATION_SPACESHIP_HIT_DURATION);
+			shaderSetup(transform, mCamera.up, 1f, 0.5f, 0.5f);
+		}
+		else
+		{
+			shaderSetup(transform, mCamera.up, 0.5f, 0.5f, 1.0f);	
+		}
 		
 		switch (ship.type) {
 		case BASIC:
@@ -148,7 +160,7 @@ public class PlaySceneManager extends OpenGLSceneManager{
 			break;
 		case BATTLECRUISER:
 			spaceshipBattleCruisedMesh.render(currentShader);
-		break;
+			break;
 		default:
 			break;
 
@@ -165,8 +177,11 @@ public class PlaySceneManager extends OpenGLSceneManager{
 		transform.rotate(0, 1, 0, turret.mHeading);
 		transform.translate(0, 0, +Par.TURRET_SINGLE_HALF_DIAMETER);
 		
-		shaderSetup(transform,mCamera.up,1.0f,1.0f,1.0f);				
-		
+		shaderSetup(transform, mCamera.up, 
+				1.0f, 
+				turret.mEnergy/Par.TURRET_ENERGY, 
+				turret.mEnergy/Par.TURRET_ENERGY);
+
 		switch (turret.type) {
 		case DOUBLE_AUTOCANNON:
 			break;
@@ -198,7 +213,7 @@ public class PlaySceneManager extends OpenGLSceneManager{
 		transform.translate(shoot.mPosition.x, shoot.mPosition.y,
 				shoot.mPosition.z);
 		transform.rotate(0, 1, 0, shoot.mHeading);
-		shaderSetup(transform,mCamera.up,1f,1f,1f);
+		shaderSetup(transform, mCamera.up, 1f, 1f, 1f);
 		currentShader.setUniformMatrix("u_normal", normal3);
 		shootMesh.render(currentShader);
 		currentShader.end();
@@ -219,9 +234,9 @@ public class PlaySceneManager extends OpenGLSceneManager{
 		default:
 			break;
 		}
-		
-		shaderSetup(transform,mCamera.up,1f,1f,1f);		
-		
+
+		shaderSetup(transform, mCamera.up, 1f, 1f, 1f);
+
 		switch (enemy.mType) {
 		case METEORITE:
 			meteroriteMesh.render(currentShader);
@@ -234,13 +249,10 @@ public class PlaySceneManager extends OpenGLSceneManager{
 		currentShader.end();
 	}
 
-	private int backgroundscroolingX = 0;
-	private Color backgroundColor = Color.WHITE;
-	
 	private void renderBackground(float speed) {
 
 		backgroundscroolingX += speed / Par.BACKGROUND_BASIC_SPEED_SHIP_FACTOR
-				+  WaveFactory.mWaveNumber;
+				+ WaveFactory.mWaveNumber;
 		if (backgroundscroolingX >= Par.VIEWPORT_MAX_X)
 			backgroundscroolingX = 0;
 
@@ -249,9 +261,10 @@ public class PlaySceneManager extends OpenGLSceneManager{
 		spriteBatch.begin();
 		spriteBatch.setColor(backgroundColor);
 
-		spriteBatch.draw(backgroundTexture, Par.VIEWPORT_MAX_X - backgroundscroolingX, 0);
+		spriteBatch.draw(backgroundTexture, Par.VIEWPORT_MAX_X
+				- backgroundscroolingX, 0);
 		spriteBatch.draw(backgroundTexture, -backgroundscroolingX, 0);
-		
+
 		spriteBatch.end();
 	}
 
@@ -259,46 +272,45 @@ public class PlaySceneManager extends OpenGLSceneManager{
 		viewMatrix.setToOrtho2D(0, 0, Par.VIEWPORT_MAX_X, Par.VIEWPORT_MAX_Y);
 		spriteBatch.setProjectionMatrix(viewMatrix);
 		spriteBatch.begin();
-		
+
 		spriteBatch.enableBlending();
 		spriteBatch.setColor(Color.WHITE);
-		
+
 		for (Turret turret : simulation.starship.turrets) {
 			for (Shoot shoot : turret.shoots) {
-				spriteBatch.draw(plasmaTexture,
-						shoot.mScreenPosition.x,
-						shoot.mScreenPosition.y-shoot.mEnergy/2,
-						0,0,60,shoot.mEnergy,1f,1f,shoot.mHeading,0,0,60,shoot.mEnergy,false,false);
+				spriteBatch.draw(plasmaTexture, shoot.mScreenPosition.x,
+						shoot.mScreenPosition.y - shoot.mEnergy / 2, 0, 0, 60,
+						shoot.mEnergy, 1f, 1f, shoot.mHeading, 0, 0, 60,
+						shoot.mEnergy, false, false);
 			}
 		}
-		
-		for (PhysicItem exp: simulation.explosions)
-		{
-			spriteBatch.draw(explosionTexture,
-					exp.mScreenPosition.x-50*exp.mSize,
-					exp.mScreenPosition.y-50*exp.mSize, 
-					100*exp.mSize, 
-					100*exp.mSize);
+
+		for (PhysicItem exp : simulation.explosions) {
+			spriteBatch.draw(explosionTexture, exp.mScreenPosition.x - 50
+					* exp.mSize, exp.mScreenPosition.y - 50 * exp.mSize,
+					100 * exp.mSize, 100 * exp.mSize);
 		}
-		
+
 		for (Message m : hud.GetMessage()) {
 			fontStandard.setColor(Color.WHITE);
 			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x, m.mPosition.y);
 		}
-		
+
 		for (Message m : hud.GetMessageRoller()) {
-			fontStandard.setColor(Color.GRAY);
-			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x, m.mPosition.y);
+			fontLarge.setColor(Color.GRAY);
+			fontLarge.draw(spriteBatch, m.msg, m.mPosition.x, m.mPosition.y);
 		}
 
-		RenderStatusMessage(simulation,hud.GetStatusBar(WaveFactory.mWaveNumber,simulation.Score,
-				 simulation.starship.mNextTo));
+		RenderStatusMessage(simulation, hud.GetStatusBar(
+				WaveFactory.mWaveNumber, simulation.Score,
+				simulation.starship.mNextTo));
 
-		RenderCountDownMessage(simulation,hud.GetCountDown(simulation.mCountDown));
+		RenderCountDownMessage(simulation,
+				hud.GetCountDown(simulation.mCountDown));
 
-		RenderEnergyMessage(simulation,hud.GetEnergy(simulation.starship.mEnergy));
+		RenderEnergyMessage(simulation,
+				hud.GetEnergy(simulation.starship.mEnergy));
 
-		
 		if (Par.HUD_DEBUG) {
 			fontStandard.setColor(Color.WHITE);
 			fontStandard
@@ -325,75 +337,58 @@ public class PlaySceneManager extends OpenGLSceneManager{
 									simulation.starship.mSpeed.y,
 									simulation.starship.mSpeed.z,
 									simulation.starship.turrets.get(0).mHeading,
-									simulation.starship.turrets.get(0).mEnergy), 750, 250);
+									simulation.starship.turrets.get(0).mEnergy),
+							750, 250);
 		}
-		
 		spriteBatch.end();
 	}
 
 	private void RenderStatusMessage(PlaySimulation simulation, Message msg) {
-		
+
 		fontLarge.setColor(Color.DARK_GRAY);
-		fontLarge.draw(spriteBatch, msg.msg,
-				msg.mPosition.x - 3, msg.mPosition.y - 3);
+		fontLarge.draw(spriteBatch, msg.msg, msg.mPosition.x - 3,
+				msg.mPosition.y - 3);
 		fontLarge.setColor(Color.GRAY);
-		
-		fontLarge.draw(spriteBatch, msg.msg, msg.mPosition.x,
-				msg.mPosition.y);
+
+		fontLarge.draw(spriteBatch, msg.msg, msg.mPosition.x, msg.mPosition.y);
 	}
-	
+
 	private void RenderCountDownMessage(PlaySimulation simulation, Message msg) {
-		
+
 		fontLarge.setColor(Color.DARK_GRAY);
-		fontLarge.draw(spriteBatch, msg.msg,
-				msg.mPosition.x - 3, msg.mPosition.y - 3);
-		
-		if(simulation.mCountDown > Par.INITIAL_COUNTDOWN/2)
-		{
+		fontLarge.draw(spriteBatch, msg.msg, msg.mPosition.x - 3,
+				msg.mPosition.y - 3);
+
+		if (simulation.mCountDown > Par.INITIAL_COUNTDOWN / 2) {
 			fontLarge.setColor(Color.GRAY);
-		}
-		else if(simulation.mCountDown > Par.INITIAL_COUNTDOWN/4)
-		{
+		} else if (simulation.mCountDown > Par.INITIAL_COUNTDOWN / 4) {
 			fontLarge.setColor(Color.ORANGE);
-		}
-		else 
-		{
+		} else {
 			fontLarge.setColor(Color.RED);
 		}
-		
-		fontLarge.draw(spriteBatch, msg.msg, msg.mPosition.x,
-				msg.mPosition.y);
+
+		fontLarge.draw(spriteBatch, msg.msg, msg.mPosition.x, msg.mPosition.y);
 	}
-	
 
 	private void RenderEnergyMessage(PlaySimulation simulation, Message msg) {
 		fontLarge.setColor(Color.DARK_GRAY);
-		fontLarge.draw(spriteBatch, msg.msg,
-				msg.mPosition.x - 3, msg.mPosition.y - 3);
-		
-		if(simulation.starship.mEnergy > simulation.starship.mEnergy_Initial/2)
-		{
+		fontLarge.draw(spriteBatch, msg.msg, msg.mPosition.x - 3,
+				msg.mPosition.y - 3);
+
+		if (simulation.starship.mEnergy > simulation.starship.mEnergy_Initial / 2) {
 			fontLarge.setColor(Color.GRAY);
-		}
-		else if(simulation.starship.mEnergy > simulation.starship.mEnergy_Initial/4)
-		{
+		} else if (simulation.starship.mEnergy > simulation.starship.mEnergy_Initial / 4) {
 			fontLarge.setColor(Color.ORANGE);
-		}
-		else 
-		{
+		} else {
 			fontLarge.setColor(Color.RED);
 		}
-		
-		fontLarge.draw(spriteBatch, msg.msg, msg.mPosition.x,
-				msg.mPosition.y);
+
+		fontLarge.draw(spriteBatch, msg.msg, msg.mPosition.x, msg.mPosition.y);
 	}
-
-
-	
 	
 	public void dispose() {
 		super.dispose();
-		
+
 		spriteBatch.dispose();
 		backgroundTexture.dispose();
 		explosionTexture.dispose();
@@ -408,5 +403,4 @@ public class PlaySceneManager extends OpenGLSceneManager{
 		asteroidDOFTexture.dispose();
 	}
 
-	
 }

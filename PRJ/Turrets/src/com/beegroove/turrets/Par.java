@@ -1,5 +1,7 @@
 package com.beegroove.turrets;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Vector3;
 
 public class Par {
@@ -13,24 +15,24 @@ public class Par {
 	public static final float HUD_SPLITPOINT = -10;
 	public static final int Level_1 = 10;
 	public static final int Level_2 = 50;
-	public static final int Level_3 = 150;
-	public static final int Level_4 = 350;
-	public static final int Level_5 = 1000;
-	public static final int Level_6 = 2000;
+	public static final int Level_3 = 100;
+	public static final int Level_4 = 200;
+	public static final int Level_5 = 400;
+	public static final int Level_6 = 800;
 	public static final int Level_7 = 5000;
 	public static final int Level_8 = 10000;
 
 	public static final Vector3 MOON_POSITION 	= new Vector3(0f, 0, -0.5f);
 	public static final float MOON_ROTATION_SPEED = 0.1f;
 	public static final float MOON_SCALE = 10;
-	public static final float MOON_DURATION = 5500;
-	public static final float MOON_EXPLOSION = 7000;
+	public static final float MOON_DURATION = 5000;
+	public static final float MOON_EXPLOSION = 3000;
 	public static final float MOON_METEORITES_SCALE = 2;
 	public static final int   MOON_METEORITES_NUMBER = 30;
 	public static final float MOON_METEORITES_SPEED = 10f;
 	public static final int   MOON_METEORITES_SLEEP = 280;
 	public static final String TITLE_MSG = "APOCALYPSE MOON";
-	public static final String INTRO_MSG = "An obscure force blew our moon.\nYou have 3 MINUTES to destroy \nthe meteorites ...\n\n\nFree game preview:\nReview and rate the game\nfeedbacks needed to complete\nthe official game. ";
+	public static final String INTRO_MSG = "The asteroid 2012 DA14 miss the Earth\nBut it blew our moon!!!\nYou have 3 MINUTES to destroy \nthe meteorites ...\n\n\nFree game preview:\nReview and rate the game\nfeedbacks needed to complete\nthe official game. ";
 	
 	public static final Vector3 SINGLE_TURRET_POSITION 	= new Vector3(-25f, 0, -10.15f);
 	public static final Vector3 DOUBLE_TURRET_POSITION 	= new Vector3(-25f, 0, -10.15f);
@@ -39,14 +41,7 @@ public class Par {
 	public static final Vector3 SHOOT_BASIC_SPEED 		= new Vector3(40, 0, 0);
 	public static final float TURRET_HEADING_MIN = -45;
 	public static final float TURRET_HEADING_MAX = 45;
-
-	public static final int BASIC_SHIP_ENERGY = 100;
-	public static final int STANDARD_SHIP_ENERGY = 150;
-	public static final int ADVANCED_SHIP_ENERGY = 300;
-	public static final int GUNSHIP_SHIP_ENERGY = 700;
-	public static final int BATTLECRIUSER_SHIP_ENERGY = 1000;
-	public static final int ADV_BATTLECRIUSER_SHIP_ENERGY = 1000;
-
+	public static final int   TURRET_ENERGY = 150;
 	public static final float BASIC_SHIP_SPEED = 2.2f;
 	public static final float STANDARD_SHIP_SPEED = 3.2f;
 	public static final float ADVANCED_SHIP_SPEED = 3f;
@@ -166,10 +161,50 @@ public class Par {
 	public static final float BACKGROUND_BASIC_SPEED_SHIP_FACTOR = 20;
 	public static final long SHIP_ALIGNMENT_TIME = 2000;
 	public static final long STATE_INTRO_DURATION = 1000;
-	
+	public static final String GAMEOVER_MSG = "GAME OVER";
+
 	
 	enum DIRECTION {
 		UP, DOWN, LEFT, RIGHT
 	}
 
+	public static final int VIBRATION_SPACESHIP_HIT_DURATION = 200;
+	public static final String GAMEOVER_MESSAGE = "Score:%d\nWave:%d\nTotal hits:%d\nTotal shoot:%d\nAsteroids destroyed:%d\nAsteroids lost:%d";
+	public static final long GAMEOVER_MIN_DURATION = 500;
+	public static final long INTRO_MIN_DURATION = 2000;
+	public static boolean SETTINGS_VIBRA;
+	public static String SETTINGS_VIBRA_NAME = "SETTINGS_VIBRA_NAME";
+	public static boolean SETTINGS_AUDIO;	
+	public static String SETTINGS_AUDIO_NAME = "SETTINGS_AUDIO_NAME";	
+	static private Preferences preferences;
+	
+	static {
+		preferences = Gdx.app.getPreferences("SETTINGS");
+	}
+	
+	public static void LoadDefaultSettings() {
+			if (!preferences.contains(Par.SETTINGS_AUDIO_NAME)) {
+				preferences.putBoolean(Par.SETTINGS_AUDIO_NAME, true);
+				SETTINGS_AUDIO = true;
+			} else {
+				SETTINGS_AUDIO = preferences.getBoolean(Par.SETTINGS_AUDIO_NAME);
+			}
+
+			if (!preferences.contains(Par.SETTINGS_VIBRA_NAME)) {
+				preferences.putBoolean(Par.SETTINGS_VIBRA_NAME, true);
+				SETTINGS_VIBRA = true;
+			} else {
+				SETTINGS_VIBRA = preferences.getBoolean(Par.SETTINGS_VIBRA_NAME);
+			}
+
+			preferences.flush();
+	}
+
+	public static void SaveSettings() {
+		preferences.putBoolean(Par.SETTINGS_AUDIO_NAME, SETTINGS_AUDIO);
+		preferences.putBoolean(Par.SETTINGS_VIBRA_NAME, SETTINGS_VIBRA);
+		
+	}
+	
+	
 }

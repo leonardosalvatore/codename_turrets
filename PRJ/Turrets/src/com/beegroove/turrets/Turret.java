@@ -22,6 +22,9 @@ public class Turret extends PhysicItem {
 		if (mFire && 
 				(mHeading<mHeadingMax && mHeading>mHeadingMin)) {
 			if (lastfire < System.currentTimeMillis() - firerate) {
+				
+				HighscoreAndStats.sNumberOfShoot++;
+				
 				switch (type) {
 				case DOUBLE_AUTOCANNON:
 					firerate=100;

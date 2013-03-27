@@ -7,12 +7,12 @@ import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.beegroove.turrets.Par.DIRECTION;
+import com.beegroove.turrets.Simulation.GAME;
 import com.beegroove.turrets.StarShip.STYPE;
+import com.beegroove.turrets.StateMachine.STATE;
 
 public class PlayScreen extends GenericScreen implements SimulationListener {
-	/** the simulation **/
 	private final PlaySimulation simulation;
-	/** the renderer **/
 	private final PlaySceneManager renderer;
 
 	public Plane gamePlane;
@@ -83,12 +83,22 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 	@Override
 	public void update(float delta) {
 
-		if (!simulation.isGameOver()) {
-			ProcessImput(delta);
+		if (GAME.PLAY == simulation.isGameOver()) {
+			ProcessImput(delta);	
 		}
-		else
+		else if(GAME.OVER_ENERGY == simulation.isGameOver())
 		{
-			simulation.launchGameOverAnimation();
+			HighscoreAndStats.sScore = simulation.Score;
+			HighscoreAndStats.sWave  = WaveFactory.mWaveNumber;
+			StateMachine.SetNextState(STATE.GAMEOVER, new GameOverScreen());
+			return;
+		}
+		else if(GAME.OVER_COUNTDOWN == simulation.isGameOver())
+		{
+			HighscoreAndStats.sScore = simulation.Score;
+			HighscoreAndStats.sWave  = WaveFactory.mWaveNumber;
+			StateMachine.SetNextState(STATE.GAMEOVER, new GameOverScreen());
+			return;
 		}
 
 		simulation.update(delta);

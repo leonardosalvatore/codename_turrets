@@ -12,6 +12,7 @@ public class HUD {
 	private static HUD instance = null;
 	private Message titleMsg;
 	private Message introMsg;
+	private Message gameoverMsg;
 	
 	protected HUD() {
 		statusBarMsg = new Message();
@@ -24,6 +25,8 @@ public class HUD {
 		titleMsg.mPosition = new Vector3(Par.MAIN_TITLE_FONT_SIZE,Par.VIEWPORT_MAX_Y-Par.MAIN_TITLE_FONT_SIZE,0);
 		introMsg = new Message();
 		introMsg.mPosition = new Vector3(Par.MAIN_TITLE_FONT_SIZE,Par.VIEWPORT_MAX_Y-3*Par.MAIN_TITLE_FONT_SIZE,0);
+		gameoverMsg = new Message();
+		gameoverMsg.mPosition = new Vector3(Par.MAIN_TITLE_FONT_SIZE,Par.VIEWPORT_MAX_Y-3*Par.MAIN_TITLE_FONT_SIZE,0);
 			
 	}
 
@@ -102,7 +105,7 @@ public class HUD {
 		
 		m.mSpeed = Vector3.X.cpy().mul(-150f);
 		m.durationTime = 20000;
-		m.mPosition = new Vector3(1600,Par.LARGE_FONT_SIZE+Par.STANDARD_FONT_SIZE,0);
+		m.mPosition = new Vector3(1500,Par.LARGE_FONT_SIZE*2,0);
 		m.creationTime=System.currentTimeMillis();
 		m.msg = s;
 		
@@ -139,6 +142,11 @@ public class HUD {
 	public Array<Message> GetMessageRoller()
 	{
 		return messagesRoller;
+	}
+
+	public Message GetMainGameOverMessage() {
+		gameoverMsg.msg = Par.GAMEOVER_MSG;
+		return gameoverMsg;
 	}
 
 	

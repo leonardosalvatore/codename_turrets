@@ -1,7 +1,18 @@
 package com.beegroove.turrets;
 
 public class GameOverScreen extends GenericScreen implements SimulationListener {
+	private final GameOverSimulation simulation;
+	private final GameOverSceneManager renderer;
 
+	public GameOverScreen()
+	{
+		simulation = new GameOverSimulation();
+		simulation.listener = this;
+		
+		renderer = new GameOverSceneManager();
+
+	}
+	
 	@Override
 	public void explosion() {
 		// TODO Auto-generated method stub
@@ -16,14 +27,12 @@ public class GameOverScreen extends GenericScreen implements SimulationListener 
 
 	@Override
 	public void update(float delta) {
-		// TODO Auto-generated method stub
-
+		simulation.update(delta);
 	}
 
 	@Override
 	public void draw(float delta) {
-		// TODO Auto-generated method stub
-
+		renderer.render(simulation, delta);
 	}
 
 	@Override

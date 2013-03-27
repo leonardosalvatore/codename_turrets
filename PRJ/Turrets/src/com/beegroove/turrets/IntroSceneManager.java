@@ -150,22 +150,17 @@ public class IntroSceneManager extends OpenGLSceneManager{
 		spriteBatch.begin();
 
 		spriteBatch.enableBlending();
-		spriteBatch.setColor(Color.WHITE);
+		
+		fontMainTitle.setColor(Color.DARK_GRAY);
+		fontLarge.setColor(Color.DARK_GRAY);
+		fontMainTitle.draw(spriteBatch, title.msg, title.mPosition.x+1, title.mPosition.y+1);
+		fontLarge.drawMultiLine(spriteBatch, intro.msg, intro.mPosition.x+1, intro.mPosition.y+1);
 
-
+		fontMainTitle.setColor(Color.WHITE);
+		fontLarge.setColor(Color.WHITE);
 		fontMainTitle.draw(spriteBatch, title.msg, title.mPosition.x, title.mPosition.y);
 		fontLarge.drawMultiLine(spriteBatch, intro.msg, intro.mPosition.x, intro.mPosition.y);
 		
-		for (Message m : hud.GetMessage()) {
-			fontStandard.setColor(Color.YELLOW);
-			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x, m.mPosition.y);
-		}
-
-		for (Message m : hud.GetMessageRoller()) {
-			fontStandard.setColor(Color.GRAY);
-			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x, m.mPosition.y);
-		}
-
 		if (Par.HUD_DEBUG) {
 			fontStandard.setColor(Color.WHITE);
 			fontStandard

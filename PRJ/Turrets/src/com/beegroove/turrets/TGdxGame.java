@@ -11,14 +11,13 @@ import com.beegroove.turrets.StateMachine.STATE;
 
 public class TGdxGame extends Game {
 	
-	
 	public TGdxGame() {
-		StateMachine.SetNextState(STATE.INTRO);
 	}
 	
 	@Override
 	public void create() {
-		setScreen(new IntroScreen());
+		StateMachine.SetGame(this);
+		StateMachine.SetNextState(STATE.INTRO, new IntroScreen());
 	}
 	
 	@Override
@@ -35,11 +34,6 @@ public class TGdxGame extends Game {
 		
 		switch (StateMachine.GetCurrentState()) {
 		case INTRO:
-			if(StateMachine.GetTimeInCurrentState()>Par.MOON_DURATION+Par.MOON_EXPLOSION)
-			{
-				StateMachine.SetNextState(STATE.PLAY);
-				setScreen(new PlayScreen(Par.Level_1));
-			}
 			break;
 		case PLAY:
 			
@@ -48,7 +42,6 @@ public class TGdxGame extends Game {
 			
 			break;
 		case GAMEOVER:
-			
 			break;
 		}
 
