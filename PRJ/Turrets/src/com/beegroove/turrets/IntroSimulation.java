@@ -14,8 +14,6 @@ public class IntroSimulation extends Simulation {
 
 	public IntroSimulation() {
 		super();
-
-		HighscoreAndStats.Clear();
 		
 		moon = new PhysicItem();
 
@@ -36,13 +34,39 @@ public class IntroSimulation extends Simulation {
 			meteorites.add(tmp);
 		}
 	}
-
 	public void update(float delta) {
 
-		if(StateMachine.GetTimeInCurrentState()>Par.INTRO_MIN_DURATION)
+		if(Gdx.input.isTouched())
 		{
-			if(Gdx.input.isTouched())
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			int x = Gdx.input.getX();
+			int y = Gdx.input.getY();
+			
+			Gdx.app.log("T", "X:"+x+" Y:"+y);
+			
+			if((x >= Par.SETTINGS_AUDIO_X && x < (Par.SETTINGS_AUDIO_X+Par.SETTINGS_SIZE_X))&&
+					(y >= Par.VIEWPORT_MAX_Y-Par.SETTINGS_AUDIO_Y && y < ((Par.VIEWPORT_MAX_Y-Par.SETTINGS_AUDIO_Y) +Par.SETTINGS_SIZE_Y)))
 			{
+				Par.SETTINGS_AUDIO = !Par.SETTINGS_AUDIO;
+			}
+			else if((x >= Par.SETTINGS_VIBRA_X && x < (Par.SETTINGS_VIBRA_X+Par.SETTINGS_SIZE_X))&&
+					(y >= Par.VIEWPORT_MAX_Y-Par.SETTINGS_VIBRA_Y && y < ((Par.VIEWPORT_MAX_Y-Par.SETTINGS_VIBRA_Y) +Par.SETTINGS_SIZE_Y)))
+			{
+				Par.SETTINGS_VIBRA = !Par.SETTINGS_VIBRA;
+			}
+			else if((x >= Par.SETTINGS_FX_X && x < (Par.SETTINGS_FX_X+Par.SETTINGS_SIZE_X))&&
+					(y >= Par.VIEWPORT_MAX_Y-Par.SETTINGS_FX_Y && y < ((Par.VIEWPORT_MAX_Y-Par.SETTINGS_FX_Y) +Par.SETTINGS_SIZE_Y)))
+			{
+				Par.SETTINGS_FX = !Par.SETTINGS_FX;
+			}
+			else if ((x >= Par.START_X && x < (Par.START_X+Par.SETTINGS_SIZE_X))&& 
+				(y >= Par.VIEWPORT_MAX_Y-Par.START_Y && y < ((Par.VIEWPORT_MAX_Y-Par.START_Y) +Par.SETTINGS_SIZE_Y)))
+			{
+				Par.SaveSettings();
 				StateMachine.SetNextState(STATE.PLAY,new PlayScreen(Par.Level_1));
 			}
 		}
@@ -52,10 +76,11 @@ public class IntroSimulation extends Simulation {
 		moon.Update(delta);
 		moon.mHeading += Par.MOON_ROTATION_SPEED;
 
-
 		for (Enemy en : meteorites) {
 			en.Update(delta);
 		}
 
 	}
+	
+	
 }

@@ -123,6 +123,17 @@ public class HUD {
 		messages.add(m);
 	}
 
+	public void NewMessage(String s, Vector3 position, int duration)
+	{
+		Message m = new Message();
+		m.mSpeed = Vector3.Z.cpy().mul(-100f);
+		m.mPosition.set(position);
+		m.creationTime=System.currentTimeMillis();
+		m.msg = s;
+		m.durationTime = duration;
+		messages.add(m);
+	}
+	
 	public Message GetMainTitleMessage()
 	{
 		titleMsg.msg = Par.TITLE_MSG;

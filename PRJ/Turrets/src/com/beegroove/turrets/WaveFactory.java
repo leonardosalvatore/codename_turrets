@@ -32,8 +32,8 @@ public class WaveFactory {
 
 		for (int i = 0; i < number + mWaveNumber/4; i++) {
 			Enemy temp = new Enemy();
-			temp.mSize = rand.nextInt(2)+1;
-			temp.mEnergy = (int) (temp.mSize*temp.mSize*temp.mSize);
+			temp.mSize = rand.nextInt(3)+1;
+			temp.mEnergy = (int) (temp.mSize*temp.mSize);
 			temp.mPosition = new Vector3(40 + (rand.nextInt(100)), // WAVE
 					// LENGTH
 					0, //
@@ -49,10 +49,10 @@ public class WaveFactory {
 			ret.add(temp);
 		}
 		
-		for (int i = 0; i < number/10 ; i++) {
+		for (int i = 0; i < mWaveNumber ; i++) {
 			Enemy temp = new Enemy();
-			temp.mSize = Math.min(rand.nextInt(mWaveNumber)  ,9);
-			temp.mEnergy = (int) (temp.mSize*temp.mSize);
+			temp.mSize = Math.min(rand.nextInt(mWaveNumber) ,9);
+			temp.mEnergy = (int) (temp.mSize*temp.mSize*3);
 			temp.mPosition = new Vector3(40 + (rand.nextInt(100)), // WAVE
 					// LENGTH
 					0, //
@@ -62,7 +62,7 @@ public class WaveFactory {
 			temp.mYAngleSpeed = (float) rand.nextInt(3) - 3.1f;
 			temp.mType = ETYPE.METEORITE;
 			temp.scheduleTask(TASK_TYPE.SPEED, new Vector3(
-					-(rand.nextInt(3) +1.5f), 0, -2 + rand.nextInt(4)),
+					-(rand.nextInt(3) +1.7f), 0, -2 + rand.nextInt(4)),
 					50 + 10 * rand.nextInt(10), true, 0, 0);
 			
 //			Gdx.app.log("T", "BMet:" + i + " Size:" + temp.mSize);

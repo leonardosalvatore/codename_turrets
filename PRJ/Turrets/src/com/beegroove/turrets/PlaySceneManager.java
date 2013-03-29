@@ -135,7 +135,10 @@ public class PlaySceneManager extends OpenGLSceneManager {
 
 		if(ship.IsSpaceShipHit())
 		{
-			Gdx.input.vibrate(Par.VIBRATION_SPACESHIP_HIT_DURATION);
+			if(Par.SETTINGS_VIBRA)
+			{
+				Gdx.input.vibrate(Par.VIBRATION_SPACESHIP_HIT_DURATION);
+			}
 			shaderSetup(transform, mCamera.up, 1f, 0.5f, 0.5f);
 		}
 		else
@@ -285,12 +288,14 @@ public class PlaySceneManager extends OpenGLSceneManager {
 			}
 		}
 
+		if(Par.SETTINGS_FX)
+		{
 		for (PhysicItem exp : simulation.explosions) {
 			spriteBatch.draw(explosionTexture, exp.mScreenPosition.x - 50
 					* exp.mSize, exp.mScreenPosition.y - 50 * exp.mSize,
 					100 * exp.mSize, 100 * exp.mSize);
 		}
-
+		
 		for (Message m : hud.GetMessage()) {
 			fontStandard.setColor(Color.WHITE);
 			fontStandard.draw(spriteBatch, m.msg, m.mPosition.x, m.mPosition.y);
@@ -300,7 +305,8 @@ public class PlaySceneManager extends OpenGLSceneManager {
 			fontLarge.setColor(Color.GRAY);
 			fontLarge.draw(spriteBatch, m.msg, m.mPosition.x, m.mPosition.y);
 		}
-
+		}
+		
 		RenderStatusMessage(simulation, hud.GetStatusBar(
 				WaveFactory.mWaveNumber, simulation.Score,
 				simulation.starship.mNextTo));

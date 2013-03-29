@@ -18,6 +18,7 @@ public class TGdxGame extends Game {
 	public void create() {
 		StateMachine.SetGame(this);
 		StateMachine.SetNextState(STATE.INTRO, new IntroScreen());
+		
 	}
 	
 	@Override
@@ -36,7 +37,6 @@ public class TGdxGame extends Game {
 		case INTRO:
 			break;
 		case PLAY:
-			
 			break;
 		case PAUSE:
 			

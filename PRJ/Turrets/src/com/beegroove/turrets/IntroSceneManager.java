@@ -44,7 +44,6 @@ public class IntroSceneManager extends OpenGLSceneManager{
 			backgroundTexture = new Texture(
 					Gdx.files.internal("data/introbackground.png"));
 
-			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			Gdx.app.exit();
@@ -119,14 +118,14 @@ public class IntroSceneManager extends OpenGLSceneManager{
 		currentShader.end();
 
 	}
+	
+	
 
 	// TODO Move to an external class and generate scenery
 	private int backgroundscroolingX = 0;
 	private Color backgroundColor = Color.WHITE;
-
 	private void renderBackground() {
 
-		// backgroundscroolingX += 1;
 		if (backgroundscroolingX >= Par.VIEWPORT_MAX_X)
 			backgroundscroolingX = 0;
 
@@ -151,15 +150,16 @@ public class IntroSceneManager extends OpenGLSceneManager{
 
 		spriteBatch.enableBlending();
 		
-		fontMainTitle.setColor(Color.DARK_GRAY);
-		fontLarge.setColor(Color.DARK_GRAY);
-		fontMainTitle.draw(spriteBatch, title.msg, title.mPosition.x+1, title.mPosition.y+1);
-		fontLarge.drawMultiLine(spriteBatch, intro.msg, intro.mPosition.x+1, intro.mPosition.y+1);
-
+		
 		fontMainTitle.setColor(Color.WHITE);
 		fontLarge.setColor(Color.WHITE);
 		fontMainTitle.draw(spriteBatch, title.msg, title.mPosition.x, title.mPosition.y);
 		fontLarge.drawMultiLine(spriteBatch, intro.msg, intro.mPosition.x, intro.mPosition.y);
+		fontLarge.draw(spriteBatch,Par.SETTINGS_AUDIO_NAME+ (Par.SETTINGS_AUDIO?": ON":": OFF"),Par.SETTINGS_AUDIO_X,Par.SETTINGS_AUDIO_Y);
+		fontLarge.draw(spriteBatch,Par.SETTINGS_VIBRA_NAME+ (Par.SETTINGS_VIBRA?": ON":": OFF"),Par.SETTINGS_VIBRA_X,Par.SETTINGS_VIBRA_Y);
+		fontLarge.draw(spriteBatch,Par.SETTINGS_FX_NAME+ (Par.SETTINGS_FX?": ON":": OFF"),Par.SETTINGS_FX_X,Par.SETTINGS_FX_Y);
+		fontMainTitle.draw(spriteBatch, "START", Par.START_X, Par.START_Y);
+		
 		
 		if (Par.HUD_DEBUG) {
 			fontStandard.setColor(Color.WHITE);

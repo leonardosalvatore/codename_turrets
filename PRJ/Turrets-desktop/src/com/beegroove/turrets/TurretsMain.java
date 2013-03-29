@@ -11,6 +11,10 @@ public class TurretsMain {
 		cfg.vSyncEnabled = true;
 		cfg.width = 1280;
 		cfg.height = 800;
+		//cfg.width = 800;
+		//cfg.height = 480;
+		//cfg.width = 480;
+		//cfg.height = 200;
 		
 		new LwjglApplication(new TGdxGame(), cfg);
 	}

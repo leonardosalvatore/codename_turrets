@@ -2,6 +2,7 @@ package com.beegroove.turrets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
@@ -14,13 +15,19 @@ import com.beegroove.turrets.StateMachine.STATE;
 public class PlayScreen extends GenericScreen implements SimulationListener {
 	private final PlaySimulation simulation;
 	private final PlaySceneManager renderer;
-
+	
 	public Plane gamePlane;
 
 	public PlayScreen(int level) {
+		HUD.Instance().NewMessage(Par.MSG_TOUCH_TO_MOVE,
+				new Vector3(100, Par.VIEWPORT_MAX_Y / 2, 0), 6000);
+		HUD.Instance().NewMessage(Par.MSG_TOUCH_TO_SHOT,
+				new Vector3(Par.VIEWPORT_MAX_X / 2, Par.VIEWPORT_MAX_Y / 2, 0),
+				6000);
 		simulation = new PlaySimulation();
 		simulation.listener = this;
 
+		
 		switch (level) {
 		case Par.Level_1:
 			WaveFactory.mWaveNumber = 0;
@@ -84,26 +91,23 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 	public void update(float delta) {
 
 		if (GAME.PLAY == simulation.isGameOver()) {
-			ProcessImput(delta);	
-		}
-		else if(GAME.OVER_ENERGY == simulation.isGameOver())
-		{
+			ProcessImput(delta);
+		} else if (GAME.OVER_ENERGY == simulation.isGameOver()) {
 			HighscoreAndStats.sScore = simulation.Score;
-			HighscoreAndStats.sWave  = WaveFactory.mWaveNumber;
+			HighscoreAndStats.sWave = WaveFactory.mWaveNumber;
 			StateMachine.SetNextState(STATE.GAMEOVER, new GameOverScreen());
 			return;
-		}
-		else if(GAME.OVER_COUNTDOWN == simulation.isGameOver())
-		{
+		} else if (GAME.OVER_COUNTDOWN == simulation.isGameOver()) {
 			HighscoreAndStats.sScore = simulation.Score;
-			HighscoreAndStats.sWave  = WaveFactory.mWaveNumber;
+			HighscoreAndStats.sWave = WaveFactory.mWaveNumber;
 			StateMachine.SetNextState(STATE.GAMEOVER, new GameOverScreen());
 			return;
 		}
 
 		simulation.update(delta);
 
-		if (simulation.Score >= simulation.starship.mNextTo && !simulation.starship.IsTheLast) {
+		if (simulation.Score >= simulation.starship.mNextTo
+				&& !simulation.starship.IsTheLast) {
 			if (simulation.starship.type == STYPE.BASIC) {
 				simulation.starship = SpaceshipFactory
 						.NewDoubleBasicSpaceship(simulation.starship);
@@ -123,8 +127,9 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 				simulation.starship = SpaceshipFactory
 						.NewDoubleBattleCrusierSpaceship(simulation.starship);
 			}
-		simulation.starship.setDestination(new Vector3(30,0,0));
-		HUD.Instance().NewMessageRoller(Par.MSG_NEW_SPACESHIP + simulation.starship.mNextTo);
+			simulation.starship.setDestination(new Vector3(30, 0, 0));
+			HUD.Instance().NewMessageRoller(
+					Par.MSG_NEW_SPACESHIP + simulation.starship.mNextTo);
 		}
 	}
 
@@ -170,8 +175,9 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 			simulation.SetTurretTarget(lastTargetPointOnPlane);
 		}
 
-		if (Gdx.input.isKeyPressed(Keys.SPACE))
+		if (Gdx.input.isKeyPressed(Keys.SPACE)) {
 			simulation.Fire(true, mSuperFire);
+		}
 
 		if (Gdx.input.isKeyPressed(Keys.W))
 			simulation.SetStarshipDirection(DIRECTION.UP);

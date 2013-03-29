@@ -2,7 +2,10 @@ package com.beegroove.turrets;
 
 import java.util.Random;
 
+import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.AudioDevice;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -36,12 +39,26 @@ public class OpenGLSceneManager {
 	protected ShaderProgram lightTexShader;
 	protected ShaderProgram currentShader;
 
+	
 	public OpenGLSceneManager()
 	{
 		try {
 		Par.VIEWPORT_MAX_X = Gdx.graphics.getWidth();
 		Par.VIEWPORT_MAX_Y = Gdx.graphics.getHeight();
 
+		if(Par.VIEWPORT_MAX_X < 1000 && Par.VIEWPORT_MAX_X > 500)
+		{
+			Par.MAIN_TITLE_FONT_SIZE = 28;
+			Par.LARGE_FONT_SIZE = 20;
+			Par.STANDARD_FONT_SIZE = 15;
+		}
+		else if(Par.VIEWPORT_MAX_X < 500)
+		{
+			Par.MAIN_TITLE_FONT_SIZE = 10;
+			Par.LARGE_FONT_SIZE = 10;
+			Par.STANDARD_FONT_SIZE = 10;
+		}
+		
 		spriteBatch = new SpriteBatch();
 		
 
@@ -53,6 +70,8 @@ public class OpenGLSceneManager {
 		if (!lightTexShader.isCompiled())
 			throw new GdxRuntimeException(
 					"Couldn't compile light/tex shader");
+
+		
 		
 		FileHandle fontFile = Gdx.files.internal("data/font.ttf");
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(

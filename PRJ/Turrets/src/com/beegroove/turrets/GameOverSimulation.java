@@ -13,6 +13,8 @@ public class GameOverSimulation extends Simulation {
 		{
 			if(Gdx.input.isTouched())
 			{
+				HighscoreAndStats.SaveIfIs();
+				HighscoreAndStats.Clear();
 				StateMachine.SetNextState(STATE.PLAY,new PlayScreen(Par.Level_1));
 			}
 		}

@@ -5,6 +5,8 @@ import java.util.Random;
 
 import sun.awt.X11.MWMConstants;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.beegroove.turrets.Enemy.ETYPE;
@@ -21,10 +23,15 @@ public class PlaySimulation extends Simulation {
 	public Array<PhysicItem> explosions = new Array<PhysicItem>();
 	public int Score = 0;
 	public int mCountDown = Par.INITIAL_COUNTDOWN;
+	protected Sound explosionSound;
+	private Sound laserSound;
 
 	public PlaySimulation() {
 		super();
 
+		explosionSound =  Gdx.audio.newSound(Gdx.files.internal("data/explosion.wav"));
+		laserSound = Gdx.audio.newSound(Gdx.files.internal("data/laser.wav"));
+		
 		// mCameraMan.scheduleTask(TASK_TYPE.SPEED,new Vector3(0f,-30,0), 100,
 		// false, 0, 0);
 		// mCameraMan.scheduleTask(TASK_TYPE.DESTINATION,Par.CAMERA_INITIAL_POSITION,
@@ -104,6 +111,10 @@ public class PlaySimulation extends Simulation {
 								explosions.add(tmp);
 							} else {
 								// DESTROYED
+								if(Par.SETTINGS_AUDIO)
+								{
+									explosionSound.play();							
+								}
 								HUD.Instance().NewMessage(
 										"+" + (int) currentEnemy.mSize,
 										shoot.mScreenPosition);
@@ -271,14 +282,34 @@ public class PlaySimulation extends Simulation {
 		}
 	}
 
+
+	private boolean isLaserSoundPlay = false;
+
+	private void laserSoundPlay(boolean play) {
+		if (Par.SETTINGS_AUDIO) {
+			if (play) {
+				if (!isLaserSoundPlay) {
+					laserSound.loop(0.3f);
+				}
+			} else {
+				laserSound.stop();
+			}
+		}
+		isLaserSoundPlay = play;
+	}
+
 	public void Fire(boolean b, boolean superFire) {
+		
 		starship.Fire(b, superFire);
+		laserSoundPlay(b);
 	}
 
 	public GAME isGameOver() {
 		if (starship.mEnergy <= 0) {
+			laserSoundPlay(false);
 			return GAME.OVER_ENERGY;
 		} else if (mCountDown <= 0) {
+			laserSoundPlay(false);
 			return GAME.OVER_COUNTDOWN;
 		} else {
 			return GAME.PLAY;

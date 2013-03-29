@@ -8,9 +8,7 @@ public class GameOverScreen extends GenericScreen implements SimulationListener 
 	{
 		simulation = new GameOverSimulation();
 		simulation.listener = this;
-		
 		renderer = new GameOverSceneManager();
-
 	}
 	
 	@Override
