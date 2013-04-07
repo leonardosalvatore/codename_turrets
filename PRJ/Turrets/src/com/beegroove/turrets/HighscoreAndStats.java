@@ -43,15 +43,9 @@ public class HighscoreAndStats {
 	public static void SaveIfIs() {
 		if(isHighScore())
 		{
-			Gdx.app.log("T", String.format("Is a new highscore, %d > %d", LoadHighScore(), sScore));
 			file.putInteger("HS", sScore);			
+			file.flush();
 		}
-		else
-		{
-			Gdx.app.log("T", String.format("Is NOT a new highscore, %d < %d" , LoadHighScore(), sScore));
-		}
-		
-		file.flush();
 	}
 	
 	public static boolean isHighScore()

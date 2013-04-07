@@ -88,10 +88,8 @@ public class IntroSceneManager extends OpenGLSceneManager{
 
 		transform.translate(moon.mPosition.x, moon.mPosition.y,
 				moon.mPosition.z);
-
-		transform.rotate(Vector3.Z, moon.mHeading);
-		transform.rotate(Vector3.X, moon.mHeading);
-
+		
+		transform.rotate(moon.mRotation);
 		shaderSetup(transform, lightDirection, 1f, 1f, 1f);
 
 		moonMesh.render(currentShader);
@@ -107,9 +105,7 @@ public class IntroSceneManager extends OpenGLSceneManager{
 			transform.scale(Par.MOON_METEORITES_SCALE,
 					Par.MOON_METEORITES_SCALE, Par.MOON_METEORITES_SCALE);
 			transform.translate(en.mPosition.x, en.mPosition.y, en.mPosition.z);
-
-			// transform.rotate(Vector3.Z, moon.mHeading);
-			// transform.rotate(Vector3.X, moon.mHeading);
+			transform.rotate(en.mRotation);
 			shaderSetup(transform, lightDirection, 1f, 1f, 1f);
 
 			meteroriteMesh.render(currentShader);

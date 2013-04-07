@@ -1,28 +1,12 @@
 package com.beegroove.turrets;
 
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GLCommon;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
 import com.badlogic.gdx.graphics.g3d.loaders.ModelLoaderRegistry;
 import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Matrix3;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.Ray;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.beegroove.turrets.HUD.Message;
 
 public class PlaySceneManager extends OpenGLSceneManager {
@@ -177,8 +161,8 @@ public class PlaySceneManager extends OpenGLSceneManager {
 		transform.set(mCamera.combined);
 		transform.translate(turret.mPosition.x, turret.mPosition.y,
 				turret.mPosition.z - Par.TURRET_SINGLE_HALF_DIAMETER);
-		transform.rotate(0, 1, 0, turret.mHeading);
-		transform.translate(0, 0, +Par.TURRET_SINGLE_HALF_DIAMETER);
+		transform.rotate(turret.mRotation);
+		transform.translate(0, 0, Par.TURRET_SINGLE_HALF_DIAMETER);
 		
 		shaderSetup(transform, mCamera.up, 
 				1.0f, 
@@ -215,7 +199,7 @@ public class PlaySceneManager extends OpenGLSceneManager {
 		transform.set(mCamera.combined);
 		transform.translate(shoot.mPosition.x, shoot.mPosition.y,
 				shoot.mPosition.z);
-		transform.rotate(0, 1, 0, shoot.mHeading);
+		transform.rotate(shoot.mRotation);
 		shaderSetup(transform, mCamera.up, 1f, 1f, 1f);
 		currentShader.setUniformMatrix("u_normal", normal3);
 		shootMesh.render(currentShader);
@@ -232,7 +216,7 @@ public class PlaySceneManager extends OpenGLSceneManager {
 
 		switch (enemy.mType) {
 		case METEORITE:
-			transform.rotate(0, 1, 0, enemy.mHeading);
+			transform.rotate(enemy.mRotation);
 			break;
 		default:
 			break;
@@ -283,7 +267,7 @@ public class PlaySceneManager extends OpenGLSceneManager {
 			for (Shoot shoot : turret.shoots) {
 				spriteBatch.draw(plasmaTexture, shoot.mScreenPosition.x,
 						shoot.mScreenPosition.y - shoot.mEnergy / 2, 0, 0, 60,
-						shoot.mEnergy, 1f, 1f, shoot.mHeading, 0, 0, 60,
+						shoot.mEnergy, 1f, 1f, shoot.mRotationDegree.y, 0, 0, 60,
 						shoot.mEnergy, false, false);
 			}
 		}
@@ -323,7 +307,7 @@ public class PlaySceneManager extends OpenGLSceneManager {
 					.drawMultiLine(
 							spriteBatch,
 							String.format(
-									"Cam.Pos:%2.2f %2.2f %2.2f\nCam.Dir:%2.2f %2.2f %2.2f\nCam.Angle:%2.2f\nCam.FOV:%s\nWave size:%d\nShipPos:%2.2f %2.2f %2.2f\nShipDes:%2.2f %2.2f %2.2f\nShipSpeed:%2.2f %2.2f %2.2f\nTur.Hdg:%s\nTur.En:%s",
+									"Cam.Pos:%2.2f %2.2f %2.2f\nCam.Dir:%2.2f %2.2f %2.2f\nCam.Angle:%2.2f\nCam.FOV:%s\nWave size:%d\nShipPos:%2.2f %2.2f %2.2f\nShipDes:%2.2f %2.2f %2.2f\nShipSpeed:%2.2f %2.2f %2.2f\nTur.Rot:%s\nTur.RotSpeed:%s\nTur.RotDeg:%s\nTur.En:%s",
 									simulation.mCameraMan.mPosition.x,
 									simulation.mCameraMan.mPosition.y,
 									simulation.mCameraMan.mPosition.z,
@@ -342,9 +326,11 @@ public class PlaySceneManager extends OpenGLSceneManager {
 									simulation.starship.mSpeed.x,
 									simulation.starship.mSpeed.y,
 									simulation.starship.mSpeed.z,
-									simulation.starship.turrets.get(0).mHeading,
+									simulation.starship.turrets.get(0).mRotation,
+									simulation.starship.turrets.get(0).mRotationSpeed,
+									simulation.starship.turrets.get(0).mRotationDegree,
 									simulation.starship.turrets.get(0).mEnergy),
-							750, 250);
+							750, 300);
 		}
 		spriteBatch.end();
 	}

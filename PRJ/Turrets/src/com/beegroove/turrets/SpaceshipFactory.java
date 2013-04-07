@@ -1,5 +1,6 @@
 package com.beegroove.turrets;
 
+import com.badlogic.gdx.math.Vector3;
 import com.beegroove.turrets.StarShip.STYPE;
 import com.beegroove.turrets.Turret.TTYPE;
 
@@ -16,7 +17,7 @@ public class SpaceshipFactory {
 		ret.turrets.clear();
 		ret.mSize = 2;
 		ret.mPosition.set(Par.SPACESHIP_BASIC_POSITION);
-		ret.turrets.add(NewSingleSmallTurret());
+		ret.turrets.add(NewSingleSmallTurret(ret.mPosition));
 		ret.mEnergy_Initial = ret.turrets.size()*Par.TURRET_ENERGY;
 		ret.mEnergy = ret.mEnergy_Initial;
 		ret.type = STYPE.BASIC;
@@ -35,8 +36,8 @@ public class SpaceshipFactory {
 		ret.mMaxSpeed=Par.BASIC_SHIP_SPEED;
 		ret.turrets.clear();
 		ret.mSize = 2;
-		ret.mPosition.set(Par.SPACESHIP_BASIC_POSITION);
-		ret.turrets.add(NewDoubleSmallTurret());
+		ret.mPosition.set(ret.mPosition);
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
 		ret.mEnergy_Initial = ret.turrets.size()*Par.TURRET_ENERGY;
 		ret.mEnergy = ret.mEnergy_Initial;
 		ret.type = STYPE.BASIC_DOUBLE;
@@ -53,9 +54,9 @@ public class SpaceshipFactory {
 		ret.mNextTo = Par.Level_3;
 		ret.turrets.clear();
 		ret.mSize = 3;
-		ret.mPosition.set(Par.SPACESHIP_STANDARD_POSITION);
-		ret.turrets.add(NewSingleSmallTurret());
-		ret.turrets.add(NewSingleSmallTurret());
+		ret.mPosition.set(ret.mPosition);
+		ret.turrets.add(NewSingleSmallTurret(ret.mPosition));
+		ret.turrets.add(NewSingleSmallTurret(ret.mPosition));
 		ret.type = STYPE.STANDARD;
 		ret.mMaxSpeed=Par.STANDARD_SHIP_SPEED;
 		
@@ -71,6 +72,7 @@ public class SpaceshipFactory {
 		return ret;	
 	}
 	
+	
 	static StarShip NewDoubleStandardSpaceship()
 	{
 		return NewDoubleStandardSpaceship(new StarShip());
@@ -80,9 +82,9 @@ public class SpaceshipFactory {
 		ret.mNextTo = Par.Level_4;
 		ret.turrets.clear();
 		ret.mSize = 3;
-		ret.mPosition.set(Par.SPACESHIP_STANDARD_POSITION);
-		ret.turrets.add(NewDoubleSmallTurret());
-		ret.turrets.add(NewDoubleSmallTurret());
+		ret.mPosition.set(ret.mPosition);
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
 		ret.type = STYPE.STANDARD_DOUBLE;
 		ret.mMaxSpeed=Par.STANDARD_SHIP_SPEED;
 		
@@ -107,10 +109,10 @@ public class SpaceshipFactory {
 		ret.mNextTo = Par.Level_5;
 		ret.turrets.clear();
 		ret.mSize = 3;
-		ret.mPosition.set(Par.SPACESHIP_STANDARD_POSITION);
-		ret.turrets.add(NewDoubleSmallTurret());
-		ret.turrets.add(NewDoubleSmallTurret());
-		ret.turrets.add(NewDoubleSmallTurret());
+		ret.mPosition.set(ret.mPosition);
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
 		ret.type = STYPE.ADVANCED_DOUBLE;
 		ret.mMaxSpeed=Par.ADVANCED_SHIP_SPEED;
 		
@@ -136,13 +138,13 @@ public class SpaceshipFactory {
 	{
 		ret.mNextTo = Par.Level_6;
 		ret.turrets.clear();
-		ret.mSize = 3;
-		ret.mPosition.set(Par.SPACESHIP_STANDARD_POSITION);
-		ret.turrets.add(NewDoubleSmallTurret());
-		ret.turrets.add(NewDoubleSmallTurret());
-		ret.turrets.add(NewDoubleSmallTurret());
-		ret.turrets.add(NewDoubleSmallTurret());
-		ret.turrets.add(NewDoubleSmallTurret());
+		ret.mSize = 4;
+		ret.mPosition.set(ret.mPosition);
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
 		ret.type = STYPE.GUNSIHP_DOUBLE;
 		ret.mMaxSpeed=Par.GUNSHIP_SHIP_SPEED;
 		
@@ -177,13 +179,13 @@ public class SpaceshipFactory {
 		ret.mNextTo = Par.Level_7;
 		ret.turrets.clear();
 		ret.mSize = 3;
-		ret.mPosition.set(Par.SPACESHIP_STANDARD_POSITION);
-		ret.turrets.add(NewDoubleSmallTurret());
-		ret.turrets.add(NewDoubleSmallTurret());
-		ret.turrets.add(NewDoubleSmallTurret());
-		ret.turrets.add(NewDoubleSmallTurret());
-		ret.turrets.add(NewDoubleSmallTurret());
-		ret.turrets.add(NewDoubleSmallTurret());
+		ret.mPosition.set(ret.mPosition);
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
+		ret.turrets.add(NewDoubleSmallTurret(ret.mPosition));
 		
 		ret.mEnergy_Initial = ret.turrets.size()*Par.TURRET_ENERGY;
 		ret.mEnergy = ret.mEnergy_Initial;
@@ -215,19 +217,22 @@ public class SpaceshipFactory {
 		return ret;	
 	}
 	
-	private static Turret NewSingleSmallTurret()
+	private static Turret NewSingleSmallTurret(Vector3 position)
 	{
 		Turret t = new Turret();
-		t.mPosition.set(Par.SINGLE_TURRET_POSITION);
+		t.mPosition.set(position);
+		t.mPosition.add(Par.SINGLE_TURRET_POSITION);
 		t.type = TTYPE.SINGLE_SMALL;
 		t.mEnergy = Par.TURRET_ENERGY;
 		return t;
 	}
 	
-	private static Turret NewDoubleSmallTurret()
+	
+	private static Turret NewDoubleSmallTurret(Vector3 position)
 	{
 		Turret t = new Turret();
-		t.mPosition.set(Par.DOUBLE_TURRET_POSITION);
+		t.mPosition.set(position);
+		t.mPosition.add(Par.DOUBLE_TURRET_POSITION);
 		t.type = TTYPE.DOUBLE_SMALL;
 		t.mEnergy = Par.TURRET_ENERGY ;
 		return t;

@@ -18,12 +18,16 @@ public class IntroSimulation extends Simulation {
 		moon = new PhysicItem();
 
 		moon.mPosition.set(Par.MOON_POSITION);
-
+		moon.mRotationSpeed.setEulerAngles(0, 0, Par.MOON_ROTATION_SPEED);
+		//moon.mRotation.setEulerAngles(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+		//moon.mRotationSpeed.setEulerAngles(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+		
 		for (int k = 0; k <= Par.MOON_METEORITES_NUMBER; k++) {
 			Enemy tmp = new Enemy();
 
 			tmp.mPosition.set(Par.MOON_POSITION);
-
+			//tmp.mRotation.setEulerAngles(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+			//tmp.mRotationSpeed.setEulerAngles(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
 			tmp.scheduleTask(TASK_TYPE.SLEEP, Vector3.Zero,
 					(int) Par.MOON_METEORITES_SLEEP, false, 0, 0);
 			tmp.scheduleTask(TASK_TYPE.SPEED,
@@ -74,7 +78,6 @@ public class IntroSimulation extends Simulation {
 		HUD.Instance().Update(delta);
 		mCameraMan.Update(delta);
 		moon.Update(delta);
-		moon.mHeading += Par.MOON_ROTATION_SPEED;
 
 		for (Enemy en : meteorites) {
 			en.Update(delta);

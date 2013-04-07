@@ -39,13 +39,12 @@ public class WaveFactory {
 					0, //
 					rand.nextInt(30) - 20); // WAVE WITDH
 
-			temp.mHeading = (float) rand.nextInt(360);
-			temp.mYAngleSpeed = (float) (rand.nextInt(10) - 5);
+			temp.mRotation.set(Vector3.Y,(float) rand.nextInt(360));
+			temp.mRotationSpeed.set(Vector3.Y,(float) (rand.nextInt(10) - 5));
 			temp.mType = ETYPE.METEORITE;
 			temp.scheduleTask(TASK_TYPE.SPEED, new Vector3(
 					-(rand.nextInt(17)+mWaveNumber/3), 0, -2 + rand.nextInt(4)),
 					50 + 10 * rand.nextInt(10)+10, true, 0, 0);
-//			Gdx.app.log("T", "SMet:" + i + " Size:" + temp.mSize);
 			ret.add(temp);
 		}
 		
@@ -58,14 +57,13 @@ public class WaveFactory {
 					0, //
 					rand.nextInt(30) - 20); // WAVE WITDH
 
-			temp.mHeading = (float) rand.nextInt(360);
-			temp.mYAngleSpeed = (float) rand.nextInt(3) - 3.1f;
+			temp.mRotation.set(Vector3.Y,(float) rand.nextInt(360));
+			temp.mRotationSpeed.set(Vector3.Y,(float) (rand.nextInt(3) - 3.1f));
+			
 			temp.mType = ETYPE.METEORITE;
 			temp.scheduleTask(TASK_TYPE.SPEED, new Vector3(
 					-(rand.nextInt(3) +1.7f), 0, -2 + rand.nextInt(4)),
 					50 + 10 * rand.nextInt(10), true, 0, 0);
-			
-//			Gdx.app.log("T", "BMet:" + i + " Size:" + temp.mSize);
 			ret.add(temp);
 		}
 

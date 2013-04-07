@@ -68,5 +68,5 @@ public class StarShip extends PhysicItem {
 	}
 
 	}
-	
+
 	}

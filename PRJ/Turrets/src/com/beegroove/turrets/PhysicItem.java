@@ -1,13 +1,16 @@
 package com.beegroove.turrets;
 
 import java.util.Hashtable;
-import com.badlogic.gdx.Gdx;
+import java.util.Random;
+
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 public class PhysicItem {
 
+	protected Random rand = new Random(System.currentTimeMillis());
 	public Hashtable<String, Float> mTag;
 	public Vector3 mPosition;
 	public boolean mToRemove;
@@ -16,9 +19,14 @@ public class PhysicItem {
 	public Vector3 mLastStep;
 	public Vector3 mDirection;
 	public Vector3 mScreenPosition;
-	public float mHeading;
+	
 	public float mHeadingMin=Par.TURRET_HEADING_MIN;
 	public float mHeadingMax=Par.TURRET_HEADING_MAX;
+
+	public Quaternion mRotation;
+	public Quaternion mRotationSpeed;
+	public Vector3 mRotationDegree;
+
 	public float mSize;
 	public int mEnergy;
 	public float mLastDestDist;
@@ -26,43 +34,35 @@ public class PhysicItem {
 	
 	public PhysicItem()
 	{
-		mPosition = new Vector3();
-		mPosition.set(Vector3.Zero);
-		mSpeed = new Vector3();
-		mSpeed.set(Vector3.Zero);
-		mDestination = new Vector3();
-		mDestination.set(Vector3.Zero);
-		mLastStep = new Vector3();
-		mLastStep.set(Vector3.Zero);
-		mDirection = new Vector3();
-		mDirection.set(Vector3.Zero);
-		mScreenPosition = new Vector3();
-		mScreenPosition.set(Vector3.Zero);
+		mPosition = new Vector3(Vector3.Zero);
+		mSpeed = new Vector3(Vector3.Zero);
+		mDestination = new Vector3(Vector3.Zero);
+		mLastStep = new Vector3(Vector3.Zero);
+		mDirection = new Vector3(Vector3.Zero);
+		mScreenPosition = new Vector3(Vector3.Zero);
+		mRotationDegree = new Vector3(Vector3.Zero);
+		mRotation = new Quaternion();
+		mRotationSpeed = new Quaternion();
 	}
 
 	public PhysicItem(PhysicItem s) {
-		mPosition=new Vector3();
-		mPosition.set(s.mPosition);
-		mSpeed=new Vector3();
-		mSpeed.set(s.mSpeed);
-		mDestination=new Vector3();
-		mDestination.set(s.mDestination);
-		mLastStep=new Vector3();
-		mLastStep.set(s.mLastStep);
-		mDirection=new Vector3();
-		mDirection.set(s.mDirection);
-		mScreenPosition=new Vector3();
-		mScreenPosition.set(s.mScreenPosition);
+		mPosition=new Vector3(s.mPosition);
+		mSpeed=new Vector3(s.mSpeed);
+		mDestination=new Vector3(s.mDestination);
+		mLastStep=new Vector3(s.mLastStep);
+		mDirection=new Vector3(s.mDirection);
+		mScreenPosition=new Vector3(s.mScreenPosition);
+		mRotation = new Quaternion(s.mRotation);
+    	mRotationSpeed = new Quaternion(s.mRotationSpeed);
+    	mRotationDegree = new Vector3(s.mRotationDegree);
 	}
 
 	public void Update(float deltaTime) {
 		applyCurrentTask(deltaTime);
 
-		// f=m*a;
-		// v=a*t
-		// s=v*t
 		mLastStep.set(mSpeed.tmp().mul(deltaTime));
 		mPosition.add(mLastStep);		
+		mRotation.mul(mRotationSpeed);		
 	}
 	
 	public void SetDestinationSpeed(Vector3 cpy) {
@@ -75,8 +75,9 @@ public class PhysicItem {
 
 	public void setDestination(Vector3 destination) {
 		mDestination.set(destination);
-		destination.x += Par.THUMB_CORRECTION;
-		mSpeed.set(destination.tmp().sub(mPosition).mul(mMaxSpeed ));
+		destination.x += Par.THUMB_CORRECTION + mSize;
+		mSpeed.set(destination).sub(mPosition).mul(mMaxSpeed);
+		
 	}
 	
 	private void setDirection(Vector3 mValue) {
@@ -84,15 +85,22 @@ public class PhysicItem {
 	}
 
 	public void SetTarget(Vector3 target) {
-		
-		mHeading = (float) -MathUtils.radiansToDegrees
+		float tmp = (float) -MathUtils.radiansToDegrees
 				* MathUtils.atan2(target.z - mPosition.z, target.x
 						- mPosition.x);
-		if(mHeading>mHeadingMax)
-		mHeading = mHeadingMax;
+			
+		if(tmp>mHeadingMax)
+		{
+			tmp = mHeadingMax;
+		}
+		else if(tmp<mHeadingMin)
+		{
+			tmp = mHeadingMin;
+		}
 		
-		if(mHeading<mHeadingMin)
-			mHeading = mHeadingMin;
+		mRotationDegree.y = tmp;
+		mRotation.set(Vector3.Y, tmp);
+		
 	}
 
 	public void Stop() {
@@ -102,8 +110,8 @@ public class PhysicItem {
 	@Override
 	public String toString() {
 		String ret = String.format(
-				"Speed:%s\nLastStep:%s\nPosition: %s\nY_Angle:%f", mSpeed,
-				mLastStep, mPosition, mHeading);
+				"Speed:%s LastStep:%s Position: %s rotation", mSpeed,
+				mLastStep, mPosition, mRotation);
 		return ret;
 
 	}

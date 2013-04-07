@@ -3,13 +3,23 @@ package com.beegroove.turrets;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.badlogic.gdx.math.Vector3;
-
 public class Turret extends PhysicItem {
 	ArrayList<Shoot> shoots = new ArrayList<Shoot>();
 
 	enum TTYPE {
 		SINGLE_SMALL, DOUBLE_SMALL, SINGLE_MEDIUM, DOUBLE_AUTOCANNON, SINGLE_LARGE, DOUBLE_LARGE, TRIPLE_LARGE
+	}
+	
+	
+	public boolean canRotate()
+	{
+		return mRotationDegree.y<mHeadingMax && 
+			   mRotationDegree.y>mHeadingMin;
+	}
+	
+	private boolean canFire()
+	{
+		return mFire && canRotate();
 	}
 
 	public TTYPE type;
@@ -19,8 +29,8 @@ public class Turret extends PhysicItem {
 	public void Update(float deltaTime) {
 		super.Update(deltaTime);
 		
-		if (mFire && 
-				(mHeading<mHeadingMax && mHeading>mHeadingMin)) {
+		if (canFire()) {
+				
 			if (lastfire < System.currentTimeMillis() - firerate) {
 				
 				HighscoreAndStats.sNumberOfShoot++;

@@ -2,7 +2,6 @@ package com.beegroove.turrets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
@@ -26,7 +25,6 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 				6000);
 		simulation = new PlaySimulation();
 		simulation.listener = this;
-
 		
 		switch (level) {
 		case Par.Level_1:
@@ -190,9 +188,9 @@ public class PlayScreen extends GenericScreen implements SimulationListener {
 			simulation.SetStarshipDirection(DIRECTION.RIGHT);
 
 		if (Gdx.input.isKeyPressed(Keys.DPAD_UP))
-			simulation.rotateTurret(Par.KEY_ANGLE_STEP);
+			simulation.rotateTurret(0,Par.KEY_ANGLE_STEP,0);
 		else if (Gdx.input.isKeyPressed(Keys.DPAD_DOWN))
-			simulation.rotateTurret(-Par.KEY_ANGLE_STEP);
+			simulation.rotateTurret(0,-Par.KEY_ANGLE_STEP,0);
 
 		if (Gdx.input.isKeyPressed(Keys.Y))
 			simulation.moveCameraAddX(-Par.CAMERA_STEP,
