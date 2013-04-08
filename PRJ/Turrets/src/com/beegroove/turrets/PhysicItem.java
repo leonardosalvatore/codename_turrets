@@ -77,7 +77,6 @@ public class PhysicItem {
 		mDestination.set(destination);
 		destination.x += Par.THUMB_CORRECTION + mSize;
 		mSpeed.set(destination).sub(mPosition).mul(mMaxSpeed);
-		
 	}
 	
 	private void setDirection(Vector3 mValue) {
@@ -100,9 +99,8 @@ public class PhysicItem {
 		
 		mRotationDegree.y = tmp;
 		mRotation.set(Vector3.Y, tmp);
-		
 	}
-
+	
 	public void Stop() {
 		mSpeed.mul(0.90f);
 	}

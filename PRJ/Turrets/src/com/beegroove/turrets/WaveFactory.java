@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.beegroove.turrets.Enemy.ETYPE;
+import com.beegroove.turrets.Asteroid.ETYPE;
 import com.beegroove.turrets.PhysicItem.TASK_TYPE;
 
 public class WaveFactory {
@@ -25,13 +25,13 @@ public class WaveFactory {
 		return instance;
 	}
 
-	public Array<Enemy> getMeteoriteWave(Vector3 mShipPosition) {
+	public Array<Asteroid> getMeteoriteWave(Vector3 mShipPosition) {
 		mWaveNumber++;
-		Array<Enemy> ret = new Array<Enemy>();
+		Array<Asteroid> ret = new Array<Asteroid>();
 		int number = Par.INITIAL_WAVE_NUMBER;
 
 		for (int i = 0; i < number + mWaveNumber/4; i++) {
-			Enemy temp = new Enemy();
+			Asteroid temp = new Asteroid();
 			temp.mSize = rand.nextInt(3)+1;
 			temp.mEnergy = (int) (temp.mSize*temp.mSize);
 			temp.mPosition = new Vector3(40 + (rand.nextInt(100)), // WAVE
@@ -49,7 +49,7 @@ public class WaveFactory {
 		}
 		
 		for (int i = 0; i < mWaveNumber ; i++) {
-			Enemy temp = new Enemy();
+			Asteroid temp = new Asteroid();
 			temp.mSize = Math.min(rand.nextInt(mWaveNumber) ,9);
 			temp.mEnergy = (int) (temp.mSize*temp.mSize*3);
 			temp.mPosition = new Vector3(40 + (rand.nextInt(100)), // WAVE
@@ -70,7 +70,7 @@ public class WaveFactory {
 		return ret;
 	}
 
-	public void GenerateRandomFormation(Enemy.ETYPE type, int number) {
+	public void GenerateRandomFormation(Asteroid.ETYPE type, int number) {
 		for (int k = 0; k < number; k++) {
 			// TODO use the Physic item tasks...
 		}

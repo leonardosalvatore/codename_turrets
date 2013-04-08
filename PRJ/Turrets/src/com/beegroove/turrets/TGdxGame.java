@@ -1,12 +1,7 @@
 package com.beegroove.turrets;
 
-import java.util.Hashtable;
-
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputAdapter;
 import com.beegroove.turrets.StateMachine.STATE;
 
 public class TGdxGame extends Game {

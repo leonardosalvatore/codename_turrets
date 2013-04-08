@@ -1,25 +1,15 @@
 package com.beegroove.turrets;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import sun.text.normalizer.UProperty;
 
 import com.badlogic.gdx.math.Vector3;
 
-public class StarShip extends PhysicItem {
+public class SpaceShip extends PhysicItem {
 
-	enum STYPE
- 	{
-		BASIC,
-		BASIC_DOUBLE, 
-		STANDARD,
-		STANDARD_DOUBLE,
-		ADVANCED_DOUBLE,
-		GUNSIHP_DOUBLE, 
-		BATTLECRUISER
+	enum STYPE {
+		BASIC, BASIC_DOUBLE, STANDARD, STANDARD_DOUBLE, ADVANCED_DOUBLE, GUNSIHP_DOUBLE, BATTLECRUISER
 	}
-	
+
 	ArrayList<Turret> turrets = new ArrayList<Turret>();
 	private boolean mFiring = false;
 	public STYPE type;
@@ -27,8 +17,7 @@ public class StarShip extends PhysicItem {
 	public int mEnergy_Initial;
 	public int mNextTo;
 	public boolean IsTheLast = false;
-	private int m_LastEnergy;
-
+	public boolean isHit;
 	@Override
 	public void Update(float deltaTime) {
 		super.Update(deltaTime);
@@ -39,34 +28,29 @@ public class StarShip extends PhysicItem {
 			turret.mPosition.add(mLastStep);
 			turret.Update(deltaTime);
 		}
-		
+
 	}
 
-	public void Fire(boolean b, boolean sFire)
-	{
+	@Override
+	public void setDestination(Vector3 destination) {
+		super.setDestination(destination);
+		//Just Roll propotional to the speed vector
+		mRotation.setEulerAngles(0, mSpeed.z, 0);
+	}
+
+	public void Fire(boolean b, boolean sFire) {
 		mFiring = b;
 		mSuperFire = sFire;
 	}
-	
-	public void StopShip() {
 
-		Stop(); 
-		
+	public void StopShip() {
+		Stop();
 		for (Turret turret : turrets) {
 			turret.Stop();
 		}
+
+		mRotation.idt();
 	}
 
-	public boolean IsSpaceShipHit()
-	{
-	if (m_LastEnergy == mEnergy) {
-		m_LastEnergy = mEnergy;
-		return false;
-	} else {
-		m_LastEnergy = mEnergy;
-		return true;
-	}
 
-	}
-
-	}
+}

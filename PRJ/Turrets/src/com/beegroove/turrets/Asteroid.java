@@ -2,7 +2,7 @@ package com.beegroove.turrets;
 
 import com.badlogic.gdx.math.Vector3;
 
-public class Enemy extends PhysicItem {
+public class Asteroid extends PhysicItem {
 
 	public enum ETYPE {
 		BONUS,
@@ -11,9 +11,9 @@ public class Enemy extends PhysicItem {
 	
 	public ETYPE mType;
 
-	public Enemy()	{}
+	public Asteroid()	{}
 	
-	public Enemy(Enemy s) {
+	public Asteroid(Asteroid s) {
 		mType = s.mType;
 		mRotationSpeed.set(s.mRotationSpeed);
 		mPosition=new Vector3();
@@ -33,9 +33,9 @@ public class Enemy extends PhysicItem {
 	}
 
 
-	public Enemy getPiece()
+	public Asteroid getPiece()
 	{
-		Enemy tmpE = new Enemy(this);
+		Asteroid tmpE = new Asteroid(this);
 		tmpE.mSize = Math.min(
 				mSize / 2, 1);
 		tmpE.mEnergy = (int) (3 * tmpE.mSize);

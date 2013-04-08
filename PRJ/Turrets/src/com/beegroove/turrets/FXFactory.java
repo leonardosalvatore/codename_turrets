@@ -11,6 +11,21 @@ public class FXFactory {
 		rand = new Random(System.currentTimeMillis());
 	}
 
+	static PhysicItem shootStart(PhysicItem shoot) {
+		PhysicItem tmp = new PhysicItem(
+				(PhysicItem) shoot);
+		tmp.mPosition.x -= tmp.mSize;	
+		tmp.mSize = 0.1f;
+		
+		tmp.scheduleTask(TASK_TYPE.SIZE_UP, new Vector3(0.03f, 0, 0), 25,
+				false, 0, 0);
+		tmp.scheduleTask(TASK_TYPE.SIZE_DOWN, new Vector3(0.03f, 0, 0), 25,
+				false, 0, 0);
+		tmp.scheduleTask(TASK_TYPE.DELETE, new Vector3(0.1f, 0, 0), 0, false,
+				0, 0);
+		return tmp;
+	}
+
 	static PhysicItem asteroidDamaged(PhysicItem shoot,float par) {
 		PhysicItem tmp = new PhysicItem(
 				(PhysicItem) shoot);
@@ -42,4 +57,5 @@ public class FXFactory {
 				0, 0);
 		return tmp;
 	}
+
 }

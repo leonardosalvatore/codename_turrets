@@ -31,6 +31,7 @@ public class IntroSceneManager extends OpenGLSceneManager{
 	private StillModel moonMesh;
 	private StillModel meteroriteMesh;
 	private Texture backgroundTexture;
+	private Texture explosionTexture;
 
 	public IntroSceneManager() {
 		try {
@@ -43,6 +44,10 @@ public class IntroSceneManager extends OpenGLSceneManager{
 
 			backgroundTexture = new Texture(
 					Gdx.files.internal("data/introbackground.png"));
+			
+			explosionTexture = new Texture(
+					Gdx.files.internal("data/explosion.png"));
+			
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -64,17 +69,16 @@ public class IntroSceneManager extends OpenGLSceneManager{
 		currentShader = lightTexShader;
 
 		if (StateMachine.GetTimeInCurrentState() < Par.MOON_DURATION) {
-			
 			renderMoon(simulation.moon);
 		}
 		
-		renderMeteorites(simulation.meteorites);
+		renderAsteroids(simulation.meteorites);
 
 		gl.glDisable(GL20.GL_CULL_FACE);
 		gl.glDisable(GL20.GL_DEPTH_TEST);
 
 		renderSprite(HUD.Instance(), simulation);
-
+		
 	}
 
 
@@ -85,11 +89,10 @@ public class IntroSceneManager extends OpenGLSceneManager{
 
 		transform.set(mCamera.combined);
 		transform.scale(Par.MOON_SCALE, Par.MOON_SCALE, Par.MOON_SCALE);
-
 		transform.translate(moon.mPosition.x, moon.mPosition.y,
 				moon.mPosition.z);
-		
 		transform.rotate(moon.mRotation);
+		
 		shaderSetup(transform, lightDirection, 1f, 1f, 1f);
 
 		moonMesh.render(currentShader);
@@ -97,17 +100,17 @@ public class IntroSceneManager extends OpenGLSceneManager{
 		currentShader.end();
 	}
 
-	private void renderMeteorites(Array<Enemy> meteorites) {
+	private void renderAsteroids(Array<Asteroid> meteorites) {
 		currentShader.begin();
 
-		for (Enemy en : meteorites) {
+		for (Asteroid en : meteorites) {
 			transform.set(mCamera.combined);
 			transform.scale(Par.MOON_METEORITES_SCALE,
 					Par.MOON_METEORITES_SCALE, Par.MOON_METEORITES_SCALE);
 			transform.translate(en.mPosition.x, en.mPosition.y, en.mPosition.z);
 			transform.rotate(en.mRotation);
+			
 			shaderSetup(transform, lightDirection, 1f, 1f, 1f);
-
 			meteroriteMesh.render(currentShader);
 		}
 
@@ -139,13 +142,18 @@ public class IntroSceneManager extends OpenGLSceneManager{
 
 	private final Message title = HUD.Instance().GetMainTitleMessage();
 	private final Message intro = HUD.Instance().GetIntroMessage();
-	private void renderSprite(HUD hud, Simulation simulation) {
+	private void renderSprite(HUD hud, IntroSimulation simulation) {
 		viewMatrix.setToOrtho2D(0, 0, Par.VIEWPORT_MAX_X, Par.VIEWPORT_MAX_Y);
 		spriteBatch.setProjectionMatrix(viewMatrix);
 		spriteBatch.begin();
 
 		spriteBatch.enableBlending();
 		
+		for (PhysicItem exp : simulation.explosions) {
+			spriteBatch.draw(explosionTexture, exp.mScreenPosition.x - 50
+					* exp.mSize, exp.mScreenPosition.y - 50 * exp.mSize,
+					100 * exp.mSize, 100 * exp.mSize);
+		}
 		
 		fontMainTitle.setColor(Color.WHITE);
 		fontLarge.setColor(Color.WHITE);
@@ -154,7 +162,7 @@ public class IntroSceneManager extends OpenGLSceneManager{
 		fontLarge.draw(spriteBatch,Par.SETTINGS_AUDIO_NAME+ (Par.SETTINGS_AUDIO?": ON":": OFF"),Par.SETTINGS_AUDIO_X,Par.SETTINGS_AUDIO_Y);
 		fontLarge.draw(spriteBatch,Par.SETTINGS_VIBRA_NAME+ (Par.SETTINGS_VIBRA?": ON":": OFF"),Par.SETTINGS_VIBRA_X,Par.SETTINGS_VIBRA_Y);
 		fontLarge.draw(spriteBatch,Par.SETTINGS_FX_NAME+ (Par.SETTINGS_FX?": ON":": OFF"),Par.SETTINGS_FX_X,Par.SETTINGS_FX_Y);
-		fontMainTitle.draw(spriteBatch, "START", Par.START_X, Par.START_Y);
+		fontMainTitle.draw(spriteBatch, "->START", Par.START_X, Par.START_Y);
 		
 		
 		if (Par.HUD_DEBUG) {

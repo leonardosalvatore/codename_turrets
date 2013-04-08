@@ -5,7 +5,9 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Vector3;
 
 public class Par {
-	public static final boolean HUD_DEBUG = true;
+	public static final boolean HUD_DEBUG = false;
+	public static final int Level_Start = Par.Level_1;
+	
 	public static final int INITIAL_COUNTDOWN = 10800;
 	public static final int INITIAL_WAVE_NUMBER = 40;
 	public static int STANDARD_FONT_SIZE = 26;
@@ -31,18 +33,15 @@ public class Par {
 	public static final Vector3 MOON_POSITION = new Vector3(0f, 0, -0.5f);
 	public static final float MOON_ROTATION_SPEED = 0.2f;
 	public static final float MOON_SCALE = 10;
-	public static final float MOON_DURATION = 5000;
+	public static final float MOON_DURATION = 3000;
 	public static final float MOON_EXPLOSION = 3000;
-	public static final float MOON_METEORITES_SCALE = 2;
-	public static final int MOON_METEORITES_NUMBER = 45;
+	public static final float MOON_METEORITES_SCALE = 1.5f;
+	public static final int MOON_METEORITES_NUMBER = 55;
 	public static final float MOON_METEORITES_SPEED = 10f;
 	public static final int MOON_METEORITES_SLEEP = 280;
 	public static final String TITLE_MSG = "MOON APOCALYPSE";
 	public static final String INTRO_MSG = "The Asteroid '2012 DA14' missed the Earth...\nBut it blew up our Moon!!!\nYou have 3 MINUTES to destroy \nthe moon shards ...\n\nFree game preview:\nReview and rate the beta\nfeedbacks needed to complete\nthe official game. ";
 
-	public static final Vector3 SINGLE_TURRET_POSITION = new Vector3(0,0,0);
-	public static final Vector3 DOUBLE_TURRET_POSITION = new Vector3(0,0,0);
-	
 	public static final Vector3 SHOOT_BASIC_SPEED = new Vector3(40, 0, 0);
 	public static final float TURRET_HEADING_MIN = -45;
 	public static final float TURRET_HEADING_MAX = 45;
@@ -61,11 +60,10 @@ public class Par {
 	public static final String MSG_NEW_ENEMY_WAVE = "ALERT -- NEW ENEMY WAVE APPROACHING -- ALERT";
 	public static final String MSG_NEW_SPACESHIP = "WOW!!! A NEW IMPROBABLE STARSHIP!!! GET THE NEXT ONE AT ";
 
-	public static final Vector3 SPACESHIP_BASIC_POSITION = new Vector3(-25f, 0,
+	public static final Vector3 SPACESHIP_INITIAL_POSITION = new Vector3(-25f, 0,
 			-10);
-	public static final Vector3 SPACESHIP_STANDARD_POSITION = new Vector3(-25f,
-			0, -10);
-
+	public static final float TURRET_HALF_DIAMETER = 1.4f;
+	
 	public static final Vector3 SPACESHIP_STANDARD_POSITION_TURRET_LEFT_CORRECTION = new Vector3(
 			0.45f, 0.1f, 0.1f);
 	public static final float SPACESHIP_STANDARD_POSITION_TURRET_LEFT_HEADING_MIN = -40;
@@ -177,11 +175,8 @@ public class Par {
 	public static final float TOUCH_Y_SCALE = 8;
 	public static final float KEY_Y_SCALE = 60;
 	public static final float KEY_ANGLE_STEP = 3f;
-	public static final float TURRET_SINGLE_HALF_DIAMETER = 1.4f;
-	public static final float TURRET_DOUBLE_HALF_DIAMETER = 1.4f;
-	public static final float TURRET_DOUBLE_QUARTER_DIAMETER = 0.6f;
 	public static final int FPS = 30;
-	public static final float THUMB_CORRECTION = 6f;
+	public static final float THUMB_CORRECTION = 4f;
 	public static final int DRIVE_FINGER = 1;
 	public static final int TARGET_FINGER = 2;
 	public static final int NO_FINGER = 0;
@@ -204,6 +199,7 @@ public class Par {
 	public static final String MSG_TOUCH_TO_MOVE = "<-- touch here to MOVE";
 	public static final String MSG_TOUCH_TO_SHOT = "touch here to SHOT -->";
 	public static final String PREFENCES_FILE_NAME = "moonpreferences";
+	public static final float SHOOT_CORRECTION = 0.4f;
 	public static boolean SETTINGS_VIBRA = true;
 	public static String SETTINGS_VIBRA_NAME = "VIBRATION";
 	public static int SETTINGS_VIBRA_X = Par.MAIN_TITLE_FONT_SIZE;
@@ -216,7 +212,7 @@ public class Par {
 	public static String SETTINGS_FX_NAME = "FX";
 	public static int SETTINGS_FX_X = (int) Par.MAIN_TITLE_FONT_SIZE;
 	public static int SETTINGS_FX_Y = 240;
-	public static int SETTINGS_SIZE_X = 250;
+	public static int SETTINGS_SIZE_X = 400;
 	public static int SETTINGS_SIZE_Y = 45;
 
 	static private Preferences preferences;
